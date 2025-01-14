@@ -22,7 +22,7 @@ services:
       - ./data/postgres/data:/var/lib/postgresql/data/
     env_file:
       - ./dotenv_files/.env
-    
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -43,7 +43,7 @@ services:
       - SYS_ADMIN
     volumes:
       - ./data/anythingllm/storage:/app/server/storage
-      - ./dotenv_files/.env:/app/server/.env
+      - ./dotenv_files/.envanythingllm:/app/server/.env
     environment:
       STORAGE_DIR: "/app/server/storage"
     restart: always
