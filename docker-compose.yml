@@ -11,31 +11,32 @@ services:
       - ./data/web/media:/data/web/media/
     env_file:
       - ./dotenv_files/.env
-    depends_on:
+      # depends_on:
       # - psql
-      - pgadmin
-    # psql:
-    #   container_name: psql
-    #   image: postgres:13-alpine
-    #   ports:
-    #     - 5433:5432
-    #   volumes:
-    #     - ./data/postgres/data:/var/lib/postgresql/data/
-    #   env_file:
-    #     - ./dotenv_files/.env
+      # - pgadmin
 
-    # pgadmin:
-    #   container_name: pgadmin
-    #   image: dpage/pgadmin4
-    #   ports:
-    #     - 5050:80
-    #   env_file:
-    #     - ./dotenv_files/.env
-    # environment:
-    #   PGADMIN_DEFAULT_EMAIL: talisoncaedoso@gmail.com
-    #   PGADMIN_DEFAULT_PASSWORD: 07deOutubro.1234
-    # depends_on:
-    #   - psql
+      # psql:
+      #   container_name: psql
+      #   image: postgres:13-alpine
+      #   ports:
+      #     - 5433:5432
+      #   volumes:
+      #     - ./data/postgres/data:/var/lib/postgresql/data/
+      #   env_file:
+      #     - ./dotenv_files/.env
+
+      # pgadmin:
+      #   container_name: pgadmin
+      #   image: dpage/pgadmin4
+      #   ports:
+      #     - 5050:80
+      #   env_file:
+      #     - ./dotenv_files/.env
+      # environment:
+      #   PGADMIN_DEFAULT_EMAIL: talisoncaedoso@gmail.com
+      #   PGADMIN_DEFAULT_PASSWORD: 07deOutubro.1234
+      # depends_on:
+      #   - psql
 
   anythingllm:
     container_name: anythingllm
