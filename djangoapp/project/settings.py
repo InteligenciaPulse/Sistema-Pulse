@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'requests',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +84,9 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'change-me'),
         'HOST': os.getenv('POSTGRES_HOST', 'change-me'),
         'PORT': os.getenv('POSTGRES_PORT', 'change-me'),
+        'OPTIONS': {
+            'options': '-c search_path=sistema_pulse,public'
+        },
     }
 }
 
