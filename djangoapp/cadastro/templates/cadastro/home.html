@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Sistema Pulse</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background-color: #F2568A;
+            padding: 1em;
+            text-align: center;
+            color: white;
+        }
+        .navbar h1 {
+            margin: 0;
+        }
+        .content {
+            padding: 2em;
+            text-align: center;
+        }
+        .card {
+            display: inline-block;
+            background: white;
+            padding: 1.5em;
+            margin: 1em;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .card a {
+            text-decoration: none;
+            color: #F2568A;
+            font-weight: bold;
+        }
+        .dashboard-placeholder {
+            margin-top: 2em;
+            padding: 1.5em;
+            border: 2px dashed #F2568A;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .dashboard-placeholder h2 {
+            color: #F2568A;
+        }
+        footer {
+            margin-top: 2em;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .login-container {
+            text-align: right;
+            padding: 1em;
+            margin-right: 2em;
+        }
+        .login-container a {
+            text-decoration: none;
+            color: #F2568A;
+            font-weight: bold;
+            margin-left: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Sistema Pulse</h1>
+    </div>
+    <div class="login-container">
+        <!-- Links de Login/Logout (ajuste conforme a lógica de autenticação do Django) -->
+        {% if user.is_authenticated %}
+            <span>Bem-vindo, {{ user.username }}!</span>
+            <a href="">Logout</a>
+        {% else %}
+            <a href="">Login</a>
+        {% endif %}
+    </div>
+    <div class="content">
+        <h2>Bem-vindo ao Sistema Pulse</h2>
+        <div class="card">
+            <a href="/adicionar/">Adicionar Registros</a>
+        </div>
+        <div class="card">
+            <a href="/orcamentos/criar/">Criar Orçamento</a>
+        </div>
+        <div class="card">
+            <a href="/pesquisar/">Pesquisar Informações</a>
+        </div>
+        <div class="dashboard-placeholder">
+            <h2>Espaço para Dashboards</h2>
+            <p>Gráficos e estatísticas serão exibidos aqui futuramente.</p>
+        </div>
+    </div>
+    <footer>
+        &copy; 2025 Sistema Pulse - Todos os direitos reservados.
+    </footer>
+</body>
+</html>

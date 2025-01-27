@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Orçamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #F2568A;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        .sidebar label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        .sidebar input,
+        .sidebar select {
+            width: 100%; /* Mesma largura */
+            padding: 10px; /* Ajusta o tamanho interno */
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px; /* Fonte consistente */
+        }
+
+        .sidebar button {
+            width: 100%;
+            background-color: white;
+            color: #F2568A;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar button:hover {
+            background-color: #ffffffcc;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            background-color: #F2568A;
+            color: white;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #e04576;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Filtros</h2>
+            <label for="paciente">Paciente</label>
+            <input type="text" id="paciente" placeholder="Nome do paciente">
+
+            <label for="parceiro">Parceiro</label>
+            <select id="parceiro">
+                <option value="">Selecione um parceiro</option>
+                <option value="parceiro1">Parceiro 1</option>
+                <option value="parceiro2">Parceiro 2</option>
+            </select>
+
+            <label for="procedimento">Procedimento</label>
+            <select id="procedimento">
+                <option value="">Selecione um procedimento</option>
+                <option value="procedimento1">Procedimento 1</option>
+                <option value="procedimento2">Procedimento 2</option>
+            </select>
+
+            <label for="data">Data</label>
+            <input type="date" id="data">
+
+            <label for="pacote">Pacote</label>
+            <select id="pacote">
+                <option value="">Selecione um pacote</option>
+                <option value="pacote1">Pacote 1</option>
+                <option value="pacote2">Pacote 2</option>
+            </select>
+
+            <button>Filtrar</button>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-container">
+            <div class="chat-header">Chat</div>
+            <div class="chat-box">
+                <p><strong>IA:</strong> Como posso ajudar?</p>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Digite sua mensagem...">
+                <button>Enviar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

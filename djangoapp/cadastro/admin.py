@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import Paciente, Especialidade, Tipo, Subtipo, Parceiro, Procedimento, Status, ParceiroProcedimentos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento
+from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Procedimento, Status, ParceiroProcedimentos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes
 
 # Register your models here.
+@admin.register(Endereco)
+class EnderecoAdmin(admin.ModelAdmin):
+    list_display = ('rua', 'numero', 'bairro', 'cidade', 'estado', 'cep')
+    search_fields = ('rua', 'bairro', 'cidade', 'estado', 'cep')
+
 @admin.register(Paciente)
 class PacienteAdmin(admin.ModelAdmin):
     list_display = ('nome', 'cpf', 'email', 'telefone', 'data_nascimento', 'genero')
@@ -47,13 +52,11 @@ class ParceiroProcedimentosAdmin(admin.ModelAdmin):
 
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'procedimento', 'valor_total')
-    search_fields = ('procedimento__nome',)
-    list_filter = ('procedimento',)
+    list_display = ('id', 'status', 'data_aprovacao', 'valor_total')
 
 @admin.register(OrcamentoParceiros)
 class OrcamentoParceirosAdmin(admin.ModelAdmin):
-    list_display = ('orcamento', 'parceiro', 'valor')
+    list_display = ('orcamento', 'parceiro', 'valor_venda', 'valor_repasse')
     list_filter = ('orcamento', 'parceiro')
     search_fields = ('orcamento__id', 'parceiro__nome')
 
@@ -62,3 +65,21 @@ class SolicitacaoOrcamentoAdmin(admin.ModelAdmin):
     list_display = ('id', 'data_solicitacao', 'paciente', 'orcamento', 'status')
     list_filter = ('status', 'data_solicitacao')
     search_fields = ('paciente__nome', 'status__nome')
+
+@admin.register(Pacote)
+class PacoteAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'valor_base')
+    search_fields = ('nome', 'descricao')
+    list_filter = ('valor_base',)
+
+@admin.register(PacoteProcedimentos)
+class PacoteProcedimentosAdmin(admin.ModelAdmin):
+    list_display = ('pacote', 'procedimento')
+    list_filter = ('pacote', 'procedimento')
+    search_fields = ('pacote__nome', 'procedimento__nome')
+
+@admin.register(OrcamentoPacotes)
+class OrcamentoPacotesAdmin(admin.ModelAdmin):
+    list_display = ('orcamento', 'pacote', 'parceiro', 'valor_total')
+    list_filter = ('orcamento', 'pacote', 'parceiro')
+    search_fields = ('orcamento__id', 'pacote__nome', 'parceiro__nome')
