@@ -1,5 +1,7 @@
+import json
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import SolicitacaoOrcamento, Orcamento, Paciente
 
 def home(request):
@@ -47,3 +49,21 @@ def buscar_pacientes(request):
     pacientes = Paciente.objects.filter(nome__icontains=query)[:10]
     data = [{"id": p.id, "nome": p.nome} for p in pacientes]
     return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def cadastrar_paciente(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        nome = data.get("nome")
+        cpf = data.get("cpf")
+        telefone = data.get("telefone")
+
+        if Paciente.objects.filter(cpf=cpf).exists():
+            return JsonResponse({"status": "error", "message": "Paciente já cadastrado!"}, status=400)
+        
+        paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
+        
+        return JsonResponse({"status": "success", "paciente_id": paciente.id})
+
+    return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
