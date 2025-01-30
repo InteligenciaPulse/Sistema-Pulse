@@ -81,7 +81,6 @@
         <h1>Sistema Pulse</h1>
     </div>
     <div class="login-container">
-        <!-- Links de Login/Logout (ajuste conforme a lógica de autenticação do Django) -->
         {% if user.is_authenticated %}
             <span>Bem-vindo, {{ user.username }}!</span>
             <a href="">Logout</a>
@@ -98,7 +97,7 @@
             <a href="/orcamentos/criar/">Criar Orçamento</a>
         </div>
         <div class="card">
-            <a href="/pesquisar/">Pesquisar Informações</a>
+            <a href="/historico/">Histórico</a>
         </div>
         <div class="dashboard-placeholder">
             <h2>Espaço para Dashboards</h2>

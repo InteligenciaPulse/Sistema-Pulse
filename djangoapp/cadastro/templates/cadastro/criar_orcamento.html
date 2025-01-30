@@ -4,119 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Orçamento</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
 
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            width: 300px;
-            background-color: #F2568A;
-            color: white;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar h2 {
-            margin-top: 0;
-            font-size: 1.5em;
-        }
-
-        .sidebar label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-        }
-
-        .sidebar input,
-        .sidebar select {
-            width: 100%; /* Mesma largura */
-            padding: 10px; /* Ajusta o tamanho interno */
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px; /* Fonte consistente */
-        }
-
-        .sidebar button {
-            width: 100%;
-            background-color: white;
-            color: #F2568A;
-            font-weight: bold;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar button:hover {
-            background-color: #ffffffcc;
-        }
-
-        .chat-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .chat-header {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .chat-box {
-            flex-grow: 1;
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-input {
-            display: flex;
-            margin-top: 10px;
-        }
-
-        .chat-input input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .chat-input button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            margin-left: 10px;
-            background-color: #F2568A;
-            color: white;
-            cursor: pointer;
-        }
-
-        .chat-input button:hover {
-            background-color: #e04576;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'cadastro/css/criar_orcamento_style.css' %}">
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <h2>Filtros</h2>
+
+            <div class="filter-section">
+                <label for="paciente">Paciente</label>
+                <input type="text" id="paciente" placeholder="Digite o nome do paciente..." oninput="buscarPacientes()">
+                <div id="sugestoes-pacientes" class="dropdown"></div>
+                <button id="novo-paciente">➕ Cadastrar Novo Paciente</button>
+            </div>
+
             <label for="paciente">Paciente</label>
             <input type="text" id="paciente" placeholder="Nome do paciente">
 
@@ -147,9 +50,12 @@
             <button>Filtrar</button>
         </div>
 
-        <!-- Chat Section -->
         <div class="chat-container">
-            <div class="chat-header">Chat</div>
+            <div class="header">
+                <div class="chat-header">Chat</div>
+                <a href="/" class="back-btn">⬅ Voltar para Home</a>
+            </div>
+
             <div class="chat-box">
                 <p><strong>IA:</strong> Como posso ajudar?</p>
             </div>
@@ -159,5 +65,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        
+    </script>    
+
+    <script src="{% static 'cadastro/js/criar_orcamento_script.js' %}"></script>
+    
 </body>
 </html>
