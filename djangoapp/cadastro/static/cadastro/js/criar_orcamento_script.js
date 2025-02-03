@@ -42,14 +42,14 @@ document.addEventListener("click", function(event) {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const inputProcedimento = document.getElementById("procedimento");
     const dropdown = document.getElementById("sugestoes-procedimentos");
-    const tabelaBody = document.querySelector("#procedimentos-table tbody");
+    const listaProcedimentos = document.getElementById("procedimentos-list");
 
-    inputProcedimento.addEventListener("input", function() {
+    inputProcedimento.addEventListener("input", function () {
         const query = inputProcedimento.value.trim();
-        if (query.length < 1) {
+        if (query.length < 2) {
             dropdown.innerHTML = "";
             dropdown.style.display = "none";
             return;
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     option.textContent = procedimento.nome;
                     option.classList.add("dropdown-item");
 
-                    option.addEventListener("click", function() {
+                    option.addEventListener("click", function () {
                         inputProcedimento.value = procedimento.nome;
                         dropdown.style.display = "none";
                     });
@@ -82,13 +82,13 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error("Erro ao buscar procedimentos:", error));
     });
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", function (event) {
         if (!inputProcedimento.contains(event.target) && !dropdown.contains(event.target)) {
             dropdown.style.display = "none";
         }
     });
 
-    window.adicionarProcedimento = function() {
+    window.adicionarProcedimento = function () {
         const nome = inputProcedimento.value.trim();
 
         if (!nome) {
@@ -96,40 +96,38 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        let row = document.createElement("tr");
+        let procedimentoDiv = document.createElement("div");
+        procedimentoDiv.classList.add("procedimento-card");
 
-        let nomeTd = document.createElement("td");
-        nomeTd.textContent = nome;
+        let titulo = document.createElement("h5");
+        titulo.textContent = nome;
 
-        let parceiroTd = document.createElement("td");
-        parceiroTd.textContent = "Nenhum parceiro";
-        let adicionarParceiroTd = document.createElement("td");
-        let adicionarBtn = document.createElement("button");
-        adicionarBtn.textContent = "➕";
-        adicionarBtn.onclick = function() {
-            selecionarParceiro(parceiroTd);
+        let parceirosContainer = document.createElement("div");
+        parceirosContainer.classList.add("parceiros-container");
+
+        let adicionarParceiroBtn = document.createElement("button");
+        adicionarParceiroBtn.textContent = "Adicionar Parceiro";
+        adicionarParceiroBtn.onclick = function () {
+            adicionarParceiro(parceirosContainer);
         };
-        parceiroTd.appendChild(adicionarBtn);
 
-        let removerTd = document.createElement("td");
-        let removerBtn = document.createElement("button");
-        removerBtn.textContent = "❌";
-        removerBtn.onclick = function() {
-            row.remove();
+        let removerProcedimentoBtn = document.createElement("button");
+        removerProcedimentoBtn.textContent = "❌ Remover Procedimento";
+        removerProcedimentoBtn.onclick = function () {
+            procedimentoDiv.remove();
         };
-        removerTd.appendChild(removerBtn);
 
-        row.appendChild(nomeTd);
-        row.appendChild(parceiroTd);
-        row.appendChild(adicionarParceiroTd);
-        row.appendChild(removerTd);
+        procedimentoDiv.appendChild(titulo);
+        procedimentoDiv.appendChild(parceirosContainer);
+        procedimentoDiv.appendChild(adicionarParceiroBtn);
+        procedimentoDiv.appendChild(removerProcedimentoBtn);
 
-        tabelaBody.appendChild(row);
+        listaProcedimentos.appendChild(procedimentoDiv);
 
         inputProcedimento.value = "";
     };
 
-    function selecionarParceiro(parceiroTd) {
+    function adicionarParceiro(container) {
         fetch("/buscar_parceiros/")
             .then(response => response.json())
             .then(data => {
@@ -141,15 +139,37 @@ document.addEventListener("DOMContentLoaded", function() {
                     option.textContent = parceiro.nome;
                     option.classList.add("dropdown-item");
 
-                    option.addEventListener("click", function() {
-                        parceiroTd.textContent = parceiro.nome;
+                    option.addEventListener("click", function () {
+                        let parceiroItem = document.createElement("div");
+                        parceiroItem.classList.add("parceiro-item");
+
+                        let parceiroNome = document.createElement("span");
+                        parceiroNome.textContent = parceiro.nome;
+
+                        let valorInput = document.createElement("input");
+                        valorInput.type = "number";
+                        valorInput.placeholder = "Valor R$";
+                        valorInput.step = 0.01;
+                        valorInput.min = 0;
+
+                        let removerParceiroBtn = document.createElement("button");
+                        removerParceiroBtn.textContent = "❌";
+                        removerParceiroBtn.onclick = function () {
+                            parceiroItem.remove();
+                        };
+
+                        parceiroItem.appendChild(parceiroNome);
+                        parceiroItem.appendChild(valorInput);
+                        parceiroItem.appendChild(removerParceiroBtn);
+
+                        container.appendChild(parceiroItem);
                         dropdownParceiros.remove();
                     });
 
                     dropdownParceiros.appendChild(option);
                 });
 
-                parceiroTd.appendChild(dropdownParceiros);
+                container.appendChild(dropdownParceiros);
             })
             .catch(error => console.error("Erro ao buscar parceiros:", error));
     }

@@ -3,19 +3,28 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f9f9f9;
+  overflow: hidden;
 }
 
 .container {
   display: flex;
+  flex-direction: row;
   height: 100vh;
+  flex-direction: row;
+  overflow: hidden;
 }
 
 .sidebar {
-  width: 60vw;
+  width: 60%;
+  height: 100vh;
   background-color: #F2568A;
   color: white;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar label {
@@ -130,7 +139,115 @@ body {
   background-color: #e04576;
 }
 
-#sugestoes-procedimentos {
+#filter-procedimento button {
+  margin-top: 5px;
+}
+
+#lista-procedimentos h4 {
+  margin: 15px 0 5px;
+}
+
+.procedimento-card {
+  border: 2px solid #F2568A;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.procedimento-card h5 {
+  margin: 0;
+  font-size: 18px;
+  color: #F2568A;
+  font-weight: bold;
+}
+
+.parceiros-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parceiro-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FCE4EC;
+  padding: 5px;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.parceiro-item span {
+  flex: 2;
+  font-weight: bold;
+  color: black;
+}
+
+.parceiro-item input {
+  flex: 1;
+  min-width: 80px;
+  max-width: 100px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.parceiro-item button {
+  background-color: transparent;
+  color: #F2568A;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.parceiro-item button:hover {
+  color: red;
+}
+
+.procedimento-card button {
+  background-color: #F2568A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.procedimento-card button:hover {
+  background-color: #e04576;
+}
+
+.dropdown-parceiros {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  display: block;
+  z-index: 1000;
+  width: 220px;
+}
+
+.dropdown-parceiros .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-parceiros .dropdown-item:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
+/* #sugestoes-procedimentos {
   position: absolute;
   width: calc(100% - 20px);
   background: white;
@@ -197,7 +314,7 @@ body {
 
 #procedimentos-table button:hover {
   background-color: #d13660;
-}
+} */
 
 .dropdown-parceiros {
   position: absolute;

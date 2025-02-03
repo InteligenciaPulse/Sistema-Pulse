@@ -21,21 +21,17 @@
                     <div id="sugestoes-pacientes" class="dropdown"></div>
                 </div>
 
-                <div class="filter-procedimento">
-                    <label for="procedimento">Procedimento</label>
-                    <input type="text" id="procedimento" placeholder="Digite o nome do procedimento...">
-                    
+                <div id="filter-procedimento">
+                    <label for="procedimento">Procedimento:</label>
+                    <input type="text" id="procedimento" placeholder="Digite o nome do procedimento..." oninput="buscarProcedimentos()">
                     <div id="sugestoes-procedimentos" class="dropdown"></div>
-
-                    <button onclick="adicionarProcedimento()">Adicionar ao orçamento</button>
-
+                    <button onclick="adicionarProcedimento()">Adicionar Procedimento</button>
+                
                     <div id="lista-procedimentos">
                         <h4>Procedimentos Selecionados:</h4>
-                        <table id="procedimentos-table">
-                            <tbody>
-                                <!-- Procedimentos adicionados aparecerão aqui -->
-                            </tbody>
-                        </table>
+                        <div id="procedimentos-list">
+                            <!-- Procedimentos irão aparecer aqui -->
+                        </div>
                     </div>
                 </div>
                 
