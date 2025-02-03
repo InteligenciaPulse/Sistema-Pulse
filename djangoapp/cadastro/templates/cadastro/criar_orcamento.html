@@ -11,13 +11,13 @@
 <body>
     <div class="container">
         <div class="sidebar">
-            <h2>Filtros</h2>
-
             <div class="filter-section">
                 <label for="paciente">Paciente</label>
-                <input type="text" id="paciente" placeholder="Digite o nome do paciente..." oninput="buscarPacientes()">
+                <div class="paciente-container">
+                    <input type="text" id="paciente" placeholder="Digite o nome do paciente..." oninput="buscarPacientes()">
+                    <button id="novo-paciente">➕</button>
+                </div>
                 <div id="sugestoes-pacientes" class="dropdown"></div>
-                <button id="novo-paciente">➕ Cadastrar Novo Paciente</button>
             </div>
 
             <label for="paciente">Paciente</label>

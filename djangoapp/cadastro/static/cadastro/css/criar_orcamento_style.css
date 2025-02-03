@@ -18,11 +18,6 @@ body {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  font-size: 1.5em;
-}
-
 .sidebar label {
   display: block;
   margin: 15px 0 5px;
@@ -33,7 +28,6 @@ body {
 .sidebar select {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
   border: none;
   border-radius: 5px;
   box-sizing: border-box;
@@ -107,9 +101,37 @@ body {
   transform: scale(1.02);
 }
 
-#novo-paciente {
+.paciente-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  margin-top: 10px;
+}
+
+.paciente-container input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.paciente-container button {
+  background-color: #F2568A;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.paciente-container button:hover {
+  background-color: #e04576;
+}
+
+#novo-paciente {
+  width: 15%;
   padding: 10px;
   background-color: white;
   color: black;
