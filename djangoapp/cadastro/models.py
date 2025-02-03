@@ -120,7 +120,9 @@ class Status(models.Model):
 class ParceiroProcedimentos(models.Model):
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
     procedimento = models.ForeignKey('Procedimento', on_delete=models.CASCADE, verbose_name="Procedimento")
+    valor_particular = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Particular")
     valor_repasse = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor de Repasse")
+    valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor de Venda")
 
     class Meta:
         db_table = 'sistema_pulse"."parceiro_procedimentos'

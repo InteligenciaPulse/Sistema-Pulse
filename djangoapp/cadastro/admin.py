@@ -46,7 +46,7 @@ class StatusAdmin(admin.ModelAdmin):
 
 @admin.register(ParceiroProcedimentos)
 class ParceiroProcedimentosAdmin(admin.ModelAdmin):
-    list_display = ('parceiro', 'procedimento', 'valor_repasse')
+    list_display = ('parceiro', 'procedimento', 'valor_particular', 'valor_repasse', 'valor_venda')
     list_filter = ('parceiro', 'procedimento')
     search_fields = ('parceiro__nome', 'procedimento__nome')
 
