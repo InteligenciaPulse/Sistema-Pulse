@@ -128,11 +128,11 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'cadastro/static'),
-    DATA_DIR / 'static',
+    # DATA_DIR / 'static',
 ]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = DATA_DIR / 'media'
