@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import SolicitacaoOrcamento, Orcamento, Paciente
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -50,20 +50,29 @@ def buscar_pacientes(request):
     data = [{"id": p.id, "nome": p.nome} for p in pacientes]
     return JsonResponse(data, safe=False)
 
-@csrf_exempt
-def cadastrar_paciente(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
+def buscar_procedimentos(request):
+    query = request.GET.get('q', '').strip()
+    
+    if not query:
+        return JsonResponse([], safe=False)
+    
+    procedimentos = Procedimento.objects.filter(nome__icontains=query).values("id", "nome")
+    return JsonResponse(list(procedimentos), safe=False)
 
-        nome = data.get("nome")
-        cpf = data.get("cpf")
-        telefone = data.get("telefone")
+# @csrf_exempt
+# def cadastrar_paciente(request):
+#     if request.method == "POST":
+#         data = json.loads(request.body)
 
-        if Paciente.objects.filter(cpf=cpf).exists():
-            return JsonResponse({"status": "error", "message": "Paciente já cadastrado!"}, status=400)
+#         nome = data.get("nome")
+#         cpf = data.get("cpf")
+#         telefone = data.get("telefone")
+
+#         if Paciente.objects.filter(cpf=cpf).exists():
+#             return JsonResponse({"status": "error", "message": "Paciente já cadastrado!"}, status=400)
         
-        paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
+#         paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
         
-        return JsonResponse({"status": "success", "paciente_id": paciente.id})
+#         return JsonResponse({"status": "success", "paciente_id": paciente.id})
 
-    return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
+#     return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)

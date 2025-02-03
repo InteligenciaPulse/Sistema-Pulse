@@ -35,8 +35,8 @@ class ParceiroAdmin(admin.ModelAdmin):
 
 @admin.register(Procedimento)
 class ProcedimentoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'especialidade', 'valor_particular')
-    search_fields = ('nome', 'especialidade__nome')
+    list_display = ('id', 'nome', 'especialidade')
+    search_fields = ('nome',)
     list_filter = ('especialidade',)
 
 @admin.register(Status)

@@ -96,7 +96,6 @@ class Parceiro(models.Model):
 class Procedimento(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
     especialidade = models.ForeignKey('Especialidade', on_delete=models.SET_NULL, null=True, verbose_name="Especialidade")
-    valor_particular = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da Particular")
 
     class Meta:
         db_table = 'sistema_pulse"."procedimento'

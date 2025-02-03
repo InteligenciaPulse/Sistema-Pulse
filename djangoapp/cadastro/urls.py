@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import home, criar_orcamento, historico, buscar_pacientes, cadastrar_paciente
+from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos
 
 urlpatterns = [
     path('', home, name='home'),
     path('orcamentos/criar/', criar_orcamento, name='criar_orcamento'),
     path('historico/', historico, name='historico'),
     path('buscar_pacientes/', buscar_pacientes, name='buscar_pacientes'),
-    path("cadastrar_paciente/", cadastrar_paciente, name="cadastrar_paciente"),
+    path("buscar_procedimentos/", buscar_procedimentos, name="buscar_procedimentos"),
 ]

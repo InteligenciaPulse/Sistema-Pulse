@@ -11,7 +11,7 @@ body {
 }
 
 .sidebar {
-  width: 300px;
+  width: 60vw;
   background-color: #F2568A;
   color: white;
   padding: 20px;
@@ -104,7 +104,7 @@ body {
 .paciente-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   width: 100%;
 }
 
@@ -128,6 +128,69 @@ body {
 
 .paciente-container button:hover {
   background-color: #e04576;
+}
+
+#sugestoes-procedimentos {
+  position: absolute;
+  width: calc(100% - 20px);
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-item:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
+#procedimentos-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#procedimentos-table th,
+#procedimentos-table td {
+  padding: 2px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+#procedimentos-table th:first-child,
+#procedimentos-table td:first-child {
+  width: 100%;
+}
+
+#procedimentos-table th:last-child,
+#procedimentos-table td:last-child {
+  width: 10%;
+  text-align: center;
+}
+
+#procedimentos-table th {
+  background-color: #F2568A;
+  color: white;
+}
+
+#procedimentos-table button {
+  background-color: white;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#procedimentos-table button:hover {
+  background-color: #d13660;
 }
 
 #novo-paciente {

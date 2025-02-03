@@ -12,29 +12,40 @@
     <div class="container">
         <div class="sidebar">
             <div class="filter-section">
-                <label for="paciente">Paciente</label>
-                <div class="paciente-container">
-                    <input type="text" id="paciente" placeholder="Digite o nome do paciente..." oninput="buscarPacientes()">
-                    <button id="novo-paciente">➕</button>
+                <div class="filter-paciente">
+                    <label for="paciente">Paciente</label>
+                    <div class="paciente-container">
+                        <input type="text" id="paciente" placeholder="Digite o nome do paciente..." oninput="buscarPacientes()">
+                        <button id="novo-paciente">➕</button>
+                    </div>
+                    <div id="sugestoes-pacientes" class="dropdown"></div>
                 </div>
-                <div id="sugestoes-pacientes" class="dropdown"></div>
-            </div>
 
-            <label for="paciente">Paciente</label>
-            <input type="text" id="paciente" placeholder="Nome do paciente">
+                <div class="filter-procedimento">
+                    <label for="procedimento">Procedimento</label>
+                    <input type="text" id="procedimento" placeholder="Digite o nome do procedimento..." oninput="buscarProcedimentos()">
+                    
+                    <div id="sugestoes-procedimentos" class="dropdown"></div>
+
+                    <button onclick="adicionarProcedimento()">Adicionar ao orçamento</button>
+
+                    <div id="lista-procedimentos">
+                        <h4>Procedimentos Selecionados:</h4>
+                        <table id="procedimentos-table">
+                            <tbody>
+                                <!-- Procedimentos adicionados aparecerão aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
 
             <label for="parceiro">Parceiro</label>
             <select id="parceiro">
                 <option value="">Selecione um parceiro</option>
                 <option value="parceiro1">Parceiro 1</option>
                 <option value="parceiro2">Parceiro 2</option>
-            </select>
-
-            <label for="procedimento">Procedimento</label>
-            <select id="procedimento">
-                <option value="">Selecione um procedimento</option>
-                <option value="procedimento1">Procedimento 1</option>
-                <option value="procedimento2">Procedimento 2</option>
             </select>
 
             <label for="data">Data</label>
@@ -46,8 +57,6 @@
                 <option value="pacote1">Pacote 1</option>
                 <option value="pacote2">Pacote 2</option>
             </select>
-
-            <button>Filtrar</button>
         </div>
 
         <div class="chat-container">
