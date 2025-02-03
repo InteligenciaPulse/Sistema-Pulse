@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -58,6 +58,10 @@ def buscar_procedimentos(request):
     
     procedimentos = Procedimento.objects.filter(nome__icontains=query).values("id", "nome")
     return JsonResponse(list(procedimentos), safe=False)
+
+def buscar_parceiros(request):
+    parceiros = Parceiro.objects.values("id", "nome")
+    return JsonResponse(list(parceiros), safe=False)
 
 # @csrf_exempt
 # def cadastrar_paciente(request):

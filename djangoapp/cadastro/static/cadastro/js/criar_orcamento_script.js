@@ -106,6 +106,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let adicionarParceiroTd = document.createElement("td");
         let adicionarBtn = document.createElement("button");
         adicionarBtn.textContent = "➕";
+        adicionarBtn.onclick = function() {
+            selecionarParceiro(parceiroTd);
+        };
         parceiroTd.appendChild(adicionarBtn);
 
         let removerTd = document.createElement("td");
@@ -125,4 +128,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
         inputProcedimento.value = "";
     };
+
+    function selecionarParceiro(parceiroTd) {
+        fetch("/buscar_parceiros/")
+            .then(response => response.json())
+            .then(data => {
+                let dropdownParceiros = document.createElement("div");
+                dropdownParceiros.classList.add("dropdown-parceiros");
+
+                data.forEach(parceiro => {
+                    let option = document.createElement("div");
+                    option.textContent = parceiro.nome;
+                    option.classList.add("dropdown-item");
+
+                    option.addEventListener("click", function() {
+                        parceiroTd.textContent = parceiro.nome;
+                        dropdownParceiros.remove();
+                    });
+
+                    dropdownParceiros.appendChild(option);
+                });
+
+                parceiroTd.appendChild(dropdownParceiros);
+            })
+            .catch(error => console.error("Erro ao buscar parceiros:", error));
+    }
 });
