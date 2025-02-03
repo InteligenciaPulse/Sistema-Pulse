@@ -101,6 +101,13 @@ document.addEventListener("DOMContentLoaded", function() {
         let nomeTd = document.createElement("td");
         nomeTd.textContent = nome;
 
+        let parceiroTd = document.createElement("td");
+        parceiroTd.textContent = "Nenhum parceiro";
+        let adicionarParceiroTd = document.createElement("td");
+        let adicionarBtn = document.createElement("button");
+        adicionarBtn.textContent = "➕";
+        parceiroTd.appendChild(adicionarBtn);
+
         let removerTd = document.createElement("td");
         let removerBtn = document.createElement("button");
         removerBtn.textContent = "❌";
@@ -110,6 +117,8 @@ document.addEventListener("DOMContentLoaded", function() {
         removerTd.appendChild(removerBtn);
 
         row.appendChild(nomeTd);
+        row.appendChild(parceiroTd);
+        row.appendChild(adicionarParceiroTd);
         row.appendChild(removerTd);
 
         tabelaBody.appendChild(row);

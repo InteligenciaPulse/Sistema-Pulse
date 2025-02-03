@@ -169,9 +169,15 @@ body {
   width: 100%;
 }
 
+#procedimentos-table th:nth-child(2),
+#procedimentos-table td:nth-child(2) {
+  width: 30%;
+  text-align: center;
+}
+
 #procedimentos-table th:last-child,
 #procedimentos-table td:last-child {
-  width: 10%;
+  width: 5%;
   text-align: center;
 }
 
@@ -182,7 +188,7 @@ body {
 
 #procedimentos-table button {
   background-color: white;
-  color: white;
+  color: #ff1060;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
