@@ -1,3 +1,4 @@
+// ====================================== PACIENTE
 document.addEventListener("DOMContentLoaded", function () {
     const inputPaciente = document.getElementById("paciente");
     const dropdown = document.getElementById("sugestoes-pacientes");
@@ -40,50 +41,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// let timeout = null;
-
-// function buscarPacientes() {
-//   clearTimeout(timeout);
-//   let query = document.getElementById("paciente").value;
-//   let dropdown = document.getElementById("sugestoes-pacientes");
-
-//   if (query.length < 1) {
-//     dropdown.style.display = "none";
-//     return;
-//   }
-
-//   timeout = setTimeout(() => {
-//     fetch(`/buscar_pacientes/?q=${query}`)
-//       .then(response => response.json())
-//       .then(data => {
-//           dropdown.innerHTML = "";
-//           if (data.length > 0) {
-//               dropdown.style.display = "block";
-//               data.forEach(paciente => {
-//                   let div = document.createElement("div");
-//                   div.innerText = paciente.nome;
-//                   div.onclick = function () {
-//                       document.getElementById("paciente").value = paciente.nome;
-//                       dropdown.style.display = "none";
-//                   };
-//                   dropdown.appendChild(div);
-//               });
-//           } else {
-//               dropdown.style.display = "none";
-//           }
-//       })
-//       .catch(error => console.error("Erro ao buscar pacientes:", error));
-//   }, 50);
-// }
-
-// document.getElementById("paciente").addEventListener("input", buscarPacientes);
-
 document.addEventListener("click", function(event) {
     if (!event.target.closest(".filter-paciente")) {
         document.getElementById("sugestoes-pacientes").style.display = "none";
     }
 });
 
+// =================================================== PARCEIRO
 document.addEventListener("DOMContentLoaded", function () {
     const inputProcedimento = document.getElementById("procedimento");
     const dropdown = document.getElementById("sugestoes-procedimentos");
@@ -149,8 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let adicionarParceiroBtn = document.createElement("button");
         adicionarParceiroBtn.textContent = "Adicionar Parceiro";
+
         adicionarParceiroBtn.onclick = function () {
-            adicionarParceiro(parceirosContainer);
+            adicionarParceiro(parceirosContainer, titulo.textContent.trim());
         };
 
         let removerProcedimentoBtn = document.createElement("button");
@@ -168,54 +133,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
         inputProcedimento.value = "";
     };
+});
 
-    function adicionarParceiro(container) {
-        fetch("/buscar_parceiros/")
-            .then(response => response.json())
-            .then(data => {
-                let dropdownParceiros = document.createElement("div");
-                dropdownParceiros.classList.add("dropdown-parceiros");
+function adicionarParceiro(parceirosContainer, nomeProcedimento) {
+    fetch(`/buscar_parceiros_por_procedimento/?procedimento_nome=${encodeURIComponent(nomeProcedimento)}`)
+        .then(response => response.json())
+        .then(data => {
+            let dropdownParceiros = document.createElement("div");
+            dropdownParceiros.classList.add("dropdown-parceiros");
 
-                data.forEach(parceiro => {
-                    let option = document.createElement("div");
-                    option.textContent = parceiro.nome;
-                    option.classList.add("dropdown-item");
+            if (data.length === 0) {
+                alert("Nenhum parceiro disponível para este procedimento.");
+                return;
+            }
 
-                    option.addEventListener("click", function () {
-                        let parceiroItem = document.createElement("div");
-                        parceiroItem.classList.add("parceiro-item");
+            data.forEach(parceiro => {
+                let option = document.createElement("div");
+                option.textContent = parceiro.nome;
+                option.classList.add("dropdown-item");
 
-                        let parceiroNome = document.createElement("span");
-                        parceiroNome.textContent = parceiro.nome;
+                option.addEventListener("click", function () {
+                    let parceiroItem = document.createElement("div");
+                    parceiroItem.classList.add("parceiro-item");
 
-                        let valorInput = document.createElement("input");
-                        valorInput.type = "number";
-                        valorInput.placeholder = "Valor R$";
-                        valorInput.step = 0.01;
-                        valorInput.min = 0;
+                    let parceiroNome = document.createElement("span");
+                    parceiroNome.textContent = parceiro.nome;
 
-                        let removerParceiroBtn = document.createElement("button");
-                        removerParceiroBtn.textContent = "❌";
-                        removerParceiroBtn.onclick = function () {
-                            parceiroItem.remove();
-                        };
+                    // Criar select de subtipo do parceiro
+                    let subtipoSelect = document.createElement("select");
+                    subtipoSelect.classList.add("subtipo-select");
 
-                        parceiroItem.appendChild(parceiroNome);
-                        parceiroItem.appendChild(valorInput);
-                        parceiroItem.appendChild(removerParceiroBtn);
-
-                        container.appendChild(parceiroItem);
-                        dropdownParceiros.remove();
+                    parceiro.subtipos.forEach(subtipo => {
+                        let option = document.createElement("option");
+                        option.value = subtipo.id;
+                        option.textContent = subtipo.nome;
+                        subtipoSelect.appendChild(option);
                     });
 
-                    dropdownParceiros.appendChild(option);
+                    // Criar input de valor, preenchendo automaticamente com `valor_venda`
+                    let valorInput = document.createElement("input");
+                    valorInput.type = "number";
+                    valorInput.placeholder = "Valor R$";
+                    valorInput.step = 0.01;
+                    valorInput.min = 0;
+                    valorInput.value = parceiro.valor_venda; // Preenchendo com valor do banco
+
+                    let removerParceiroBtn = document.createElement("button");
+                    removerParceiroBtn.textContent = "❌";
+                    removerParceiroBtn.onclick = function () {
+                        parceiroItem.remove();
+                    };
+
+                    parceiroItem.appendChild(parceiroNome);
+                    parceiroItem.appendChild(subtipoSelect);
+                    parceiroItem.appendChild(valorInput);
+                    parceiroItem.appendChild(removerParceiroBtn);
+
+                    parceirosContainer.appendChild(parceiroItem);
+                    dropdownParceiros.remove();
                 });
 
-                container.appendChild(dropdownParceiros);
-            })
-            .catch(error => console.error("Erro ao buscar parceiros:", error));
-    }
-});
+                dropdownParceiros.appendChild(option);
+            });
+
+            parceirosContainer.appendChild(dropdownParceiros);
+        })
+        .catch(error => console.error("Erro ao buscar parceiros:", error));
+}
 
 document.addEventListener("click", function(event) {
     if (!event.target.closest(".filter-procedimento")) {

@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -64,23 +64,30 @@ def buscar_parceiros(request):
     return JsonResponse(list(parceiros), safe=False)
 
 def buscar_parceiros_por_procedimento(request):
-    procedimento_id = request.GET.get("procedimento_id", "")
+    procedimento_nome = request.GET.get("procedimento_nome", "").strip()
 
-    if not procedimento_id:
+    if not procedimento_nome:
         return JsonResponse([], safe=False)
 
-    parceiros = ParceiroProcedimentos.objects.filter(procedimento_id=procedimento_id)
+    try:
+        procedimento = Procedimento.objects.get(nome=procedimento_nome)
+        procedimento_id = procedimento.id
 
-    data = [
-        {
-            "id": p.parceiro.id,
-            "nome": p.parceiro.nome,
-            "valor_venda": p.valor_venda,
-        }
-        for p in parceiros
-    ]
+        parceiros_procedimentos = ParceiroProcedimentos.objects.filter(procedimento_id=procedimento_id)
 
-    return JsonResponse(data, safe=False)
+        resposta = [
+            {
+                "id": pp.parceiro.id,
+                "nome": pp.parceiro.nome,
+                "valor_venda": pp.valor_venda,
+            }
+            for pp in parceiros_procedimentos
+        ]
+
+        return JsonResponse(resposta, safe=False)
+
+    except Procedimento.DoesNotExist:
+        return JsonResponse([], safe=False)
 
 # @csrf_exempt
 # def cadastrar_paciente(request):
