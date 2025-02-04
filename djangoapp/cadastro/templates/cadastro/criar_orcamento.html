@@ -30,29 +30,26 @@
                     <div id="lista-procedimentos">
                         <h4>Procedimentos Selecionados:</h4>
                         <div id="procedimentos-list">
-                            <!-- Procedimentos irão aparecer aqui -->
+                            <!-- Os procedimentos aparecerão aqui -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="filter-pacote">
+                    <label for="pacote">Pacote:</label>
+                    <input type="text" id="pacote" placeholder="Digite o nome do pacote...">
+                    <div id="sugestoes-pacotes" class="dropdown"></div>
+                    <button onclick="adicionarProcedimento()">Adicionar Pacotes</button>
+                
+                    <div id="lista-pacotes">
+                        <h4>Pacotes Selecionados:</h4>
+                        <div id="pacotes-list">
+                            <!-- Os pacotes aparecerão aqui -->
                         </div>
                     </div>
                 </div>
                 
             </div>
-
-            <label for="parceiro">Parceiro</label>
-            <select id="parceiro">
-                <option value="">Selecione um parceiro</option>
-                <option value="parceiro1">Parceiro 1</option>
-                <option value="parceiro2">Parceiro 2</option>
-            </select>
-
-            <label for="data">Data</label>
-            <input type="date" id="data">
-
-            <label for="pacote">Pacote</label>
-            <select id="pacote">
-                <option value="">Selecione um pacote</option>
-                <option value="pacote1">Pacote 1</option>
-                <option value="pacote2">Pacote 2</option>
-            </select>
         </div>
 
         <div class="chat-container">

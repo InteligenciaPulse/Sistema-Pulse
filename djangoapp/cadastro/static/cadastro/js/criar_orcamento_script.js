@@ -160,15 +160,15 @@ function adicionarParceiro(parceirosContainer, nomeProcedimento) {
                     parceiroNome.textContent = parceiro.nome;
 
                     // Criar select de subtipo do parceiro
-                    let subtipoSelect = document.createElement("select");
-                    subtipoSelect.classList.add("subtipo-select");
+                    // let subtipoSelect = document.createElement("select");
+                    // subtipoSelect.classList.add("subtipo-select");
 
-                    parceiro.subtipos.forEach(subtipo => {
-                        let option = document.createElement("option");
-                        option.value = subtipo.id;
-                        option.textContent = subtipo.nome;
-                        subtipoSelect.appendChild(option);
-                    });
+                    // parceiro.subtipos.forEach(subtipo => {
+                    //     let option = document.createElement("option");
+                    //     option.value = subtipo.id;
+                    //     option.textContent = subtipo.nome;
+                    //     subtipoSelect.appendChild(option);
+                    // });
 
                     // Criar input de valor, preenchendo automaticamente com `valor_venda`
                     let valorInput = document.createElement("input");
@@ -185,7 +185,7 @@ function adicionarParceiro(parceirosContainer, nomeProcedimento) {
                     };
 
                     parceiroItem.appendChild(parceiroNome);
-                    parceiroItem.appendChild(subtipoSelect);
+                    // parceiroItem.appendChild(subtipoSelect);
                     parceiroItem.appendChild(valorInput);
                     parceiroItem.appendChild(removerParceiroBtn);
 
