@@ -15,7 +15,7 @@ body {
 }
 
 .sidebar {
-  width: 60%;
+  width: 50%;
   height: 100vh;
   background-color: #F2568A;
   color: white;
@@ -399,7 +399,7 @@ body {
 }
 
 #novo-paciente {
-  width: 15%;
+  width: 10%;
   padding: 10px;
   background-color: white;
   color: black;
