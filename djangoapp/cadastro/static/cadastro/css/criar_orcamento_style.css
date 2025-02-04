@@ -301,6 +301,12 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
+.parceirosPacote-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 /* #sugestoes-procedimentos {
   position: absolute;
   width: calc(100% - 20px);
