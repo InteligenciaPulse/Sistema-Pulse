@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -89,6 +89,35 @@ def buscar_parceiros_por_procedimento(request):
     except Procedimento.DoesNotExist:
         return JsonResponse([], safe=False)
 
+def buscar_pacotes(request):
+    query = request.GET.get('q', '').strip()
+    
+    if not query:
+        return JsonResponse([], safe=False)
+    
+    pacotes = Pacote.objects.filter(nome__icontains=query).values("id", "nome")
+    return JsonResponse(list(pacotes), safe=False)
+
+def buscar_procedimentos_por_pacote(request):
+    pacote_nome = request.GET.get("pacote_nome", "").strip()
+
+    try:
+        # Buscar o pacote pelo nome
+        pacote = Pacote.objects.get(nome=pacote_nome)
+
+        # Buscar os relacionamentos do pacote na tabela Pacote_Procedimentos
+        procedimentos_relacionados = PacoteProcedimentos.objects.filter(pacote=pacote)
+
+        # Obter os procedimentos baseados nos IDs encontrados
+        procedimentos = [
+            {"id": p.procedimento.id, "nome": p.procedimento.nome}
+            for p in procedimentos_relacionados
+        ]
+
+        return JsonResponse(procedimentos, safe=False)
+    except Pacote.DoesNotExist:
+        return JsonResponse([], safe=False)
+    
 # @csrf_exempt
 # def cadastrar_paciente(request):
 #     if request.method == "POST":

@@ -247,6 +247,60 @@ body {
   color: white;
 }
 
+#filter-pacote button {
+  margin-top: 5px;
+}
+
+#lista-pacotes h4 {
+  margin: 15px 0 5px;
+}
+
+.pacote-card {
+  border: 2px solid #F2568A;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pacote-card h5 {
+  margin: 0;
+  font-size: 18px;
+  color: #F2568A;
+  font-weight: bold;
+}
+
+/*----------------*/
+.pacote-card button {
+  background-color: #F2568A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.pacote-card button:hover {
+  background-color: #e04576;
+}
+
+.procedimentos-container {
+  background: #fce4ec;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.procedimento-item {
+  font-size: 14px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
 /* #sugestoes-procedimentos {
   position: absolute;
   width: calc(100% - 20px);
