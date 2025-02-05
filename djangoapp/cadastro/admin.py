@@ -29,9 +29,9 @@ class SubtipoAdmin(admin.ModelAdmin):
 
 @admin.register(Parceiro)
 class ParceiroAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'tipo', 'subtipo', 'especialidade', 'telefone', 'email')
+    list_display = ('nome', 'cpf_cnpj', 'tipo', 'subtipo', 'especialidade', 'telefone', 'email')
     list_filter = ('tipo', 'subtipo', 'especialidade')
-    search_fields = ('nome', 'email', 'telefone')
+    search_fields = ('nome', 'cpf_cnpj', 'email', 'telefone')
 
 @admin.register(Procedimento)
 class ProcedimentoAdmin(admin.ModelAdmin):
@@ -56,9 +56,9 @@ class OrcamentoAdmin(admin.ModelAdmin):
 
 @admin.register(OrcamentoParceiros)
 class OrcamentoParceirosAdmin(admin.ModelAdmin):
-    list_display = ('orcamento', 'parceiro', 'valor_venda', 'valor_repasse')
-    list_filter = ('orcamento', 'parceiro')
-    search_fields = ('orcamento__id', 'parceiro__nome')
+    list_display = ('orcamento', 'parceiro', 'procedimento', 'valor_venda', 'valor_repasse')
+    list_filter = ('orcamento', 'parceiro', 'procedimento')
+    search_fields = ('orcamento__id', 'parceiro__nome', 'procedimento__nome')
 
 @admin.register(SolicitacaoOrcamento)
 class SolicitacaoOrcamentoAdmin(admin.ModelAdmin):

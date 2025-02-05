@@ -78,6 +78,7 @@ class Subtipo(models.Model):
 
 class Parceiro(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
+    cpf_cnpj = models.CharField(max_length=11, unique=True, verbose_name="CPF", null=True)
     telefone = models.CharField(max_length=15, null=True, blank=True, verbose_name="Telefone")
     email = models.EmailField(null=True, blank=True, verbose_name="E-mail")
     endereco = models.ForeignKey('Endereco', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Endereço")
@@ -149,6 +150,7 @@ class Orcamento(models.Model):
 class OrcamentoParceiros(models.Model):
     orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, verbose_name="Orçamento")
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
+    procedimento = models.ForeignKey('Procedimento', on_delete=models.CASCADE, verbose_name="Procedimento", default=1)
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da venda")
     valor_repasse = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da repasse")
 
