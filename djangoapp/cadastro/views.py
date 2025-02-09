@@ -59,6 +59,15 @@ def buscar_procedimentos(request):
     procedimentos = Procedimento.objects.filter(nome__icontains=query).values("id", "nome")
     return JsonResponse(list(procedimentos), safe=False)
 
+def buscar_parceiros_by(request):
+    query = request.GET.get('q', '').strip()
+    
+    if not query:
+        return JsonResponse([], safe=False)
+    
+    parceiros = Parceiro.objects.filter(nome__icontains=query).values("id", "nome")
+    return JsonResponse(list(parceiros), safe=False)
+
 def buscar_parceiros(request):
     parceiros = Parceiro.objects.values("id", "nome")
     return JsonResponse(list(parceiros), safe=False)
@@ -87,6 +96,32 @@ def buscar_parceiros_por_procedimento(request):
         return JsonResponse(resposta, safe=False)
 
     except Procedimento.DoesNotExist:
+        return JsonResponse([], safe=False)
+
+def buscar_procedimentos_por_parceiro(request):
+    parceiro_nome = request.GET.get("parceiro_nome", "").strip()
+
+    if not parceiro_nome:
+        return JsonResponse([], safe=False)
+
+    try:
+        parceiro = Parceiro.objects.get(nome=parceiro_nome)
+        parceiro_id = parceiro.id
+
+        procedimentos_parceiro = ParceiroProcedimentos.objects.filter(parceiro_id=parceiro_id)
+
+        resposta = [
+            {
+                "id": pp.procedimento.id,
+                "nome": pp.procedimento.nome,
+                "valor_venda": pp.valor_venda,
+            }
+            for pp in procedimentos_parceiro
+        ]
+
+        return JsonResponse(resposta, safe=False)
+
+    except Parceiro.DoesNotExist:
         return JsonResponse([], safe=False)
 
 def buscar_pacotes(request):

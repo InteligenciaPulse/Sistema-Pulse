@@ -21,7 +21,21 @@
                     <div id="sugestoes-pacientes" class="dropdown"></div>
                 </div>
 
-                <div id="filter-procedimento">
+                <div id="filter-parceiro">
+                    <label for="parceiro">Parceiro:</label>
+                    <input type="text" id="parceiro" placeholder="Digite o nome do parceiro...">
+                    <div id="sugestoes-parceiros" class="dropdown"></div>
+                    <button onclick="adicionarParceiro()">Adicionar parceiro</button>
+                
+                    <div id="lista-parceiros">
+                        <h4>Parceiros Selecionados:</h4>
+                        <div id="parceiros-list">
+                            <!-- Os parceiros aparecerão aqui -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div id="filter-procedimento">
                     <label for="procedimento">Procedimento:</label>
                     <input type="text" id="procedimento" placeholder="Digite o nome do procedimento...">
                     <div id="sugestoes-procedimentos" class="dropdown"></div>
@@ -33,7 +47,7 @@
                             <!-- Os procedimentos aparecerão aqui -->
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div id="filter-pacote">
                     <label for="pacote">Pacote:</label>

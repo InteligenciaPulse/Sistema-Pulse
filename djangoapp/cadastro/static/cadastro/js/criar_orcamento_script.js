@@ -141,6 +141,162 @@ document.addEventListener("click", function(event) {
     }
 });
 
+
+// --------------------------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    const inputParceiro = document.getElementById("parceiro");
+    const dropdown = document.getElementById("sugestoes-parceiros");
+    const listaParceiros = document.getElementById("parceiros-list");
+
+    inputParceiro.addEventListener("input", function () {
+        const query = inputParceiro.value.trim();
+        if (query.length < 1) {
+            dropdown.innerHTML = "";
+            dropdown.style.display = "none";
+            return;
+        }
+
+        fetch(`/buscar_parceiros_by/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                dropdown.innerHTML = "";
+                if (data.length === 0) {
+                    dropdown.style.display = "none";
+                    return;
+                }
+
+                data.forEach(parceiro => {
+                    let option = document.createElement("div");
+                    option.textContent = parceiro.nome;
+                    option.classList.add("dropdown-item");
+
+                    option.addEventListener("click", function () {
+                        inputParceiro.value = parceiro.nome;
+                        dropdown.style.display = "none";
+                    });
+
+                    dropdown.appendChild(option);
+                });
+
+                dropdown.style.display = "block";
+            })
+            .catch(error => console.error("Erro ao buscar parceiros:", error));
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!inputParceiro.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = "none";
+        }
+    });
+
+    window.adicionarParceiro = function () {
+        const nome = inputParceiro.value.trim();
+
+        if (!nome) {
+            alert("Selecione um parceiro válido.");
+            return;
+        }
+
+        let parceiroDiv = document.createElement("div");
+        parceiroDiv.classList.add("parceiro-card");
+
+        let titulo = document.createElement("h5");
+        titulo.textContent = nome;
+
+        let procedimentosContainer = document.createElement("div");
+        procedimentosContainer.classList.add("procedimentos-container");
+
+        let adicionarProcedimentoBtn = document.createElement("button");
+        adicionarProcedimentoBtn.textContent = "Adicionar Procedimento";
+
+        adicionarProcedimentoBtn.onclick = function () {
+            adicionarProcedimentoBy(procedimentosContainer, titulo.textContent.trim());
+        };
+
+        let removerParceiroBtn = document.createElement("button");
+        removerParceiroBtn.textContent = "❌ Remover Parceiro";
+        removerParceiroBtn.onclick = function () {
+            parceiroDiv.remove();
+        };
+
+        parceiroDiv.appendChild(titulo);
+        parceiroDiv.appendChild(procedimentosContainer);
+        parceiroDiv.appendChild(adicionarProcedimentoBtn);
+        parceiroDiv.appendChild(removerParceiroBtn);
+
+        listaParceiros.appendChild(parceiroDiv);
+
+        inputParceiro.value = "";
+    };
+});
+
+document.addEventListener("click", function(event) {
+    if (!event.target.closest(".filter-parceiro")) {
+        document.getElementById("sugestoes-parceiros").style.display = "none";
+    }
+});
+
+// ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro) {
+    fetch(`/buscar_procedimentos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
+        .then(response => response.json())
+        .then(data => {
+            let dropdownProcedimentos = document.createElement("div");
+            dropdownProcedimentos.classList.add("dropdown-procedimentos");
+
+            if (data.length === 0) {
+                alert("Nenhum procedimento disponível para este parceiro.");
+                return;
+            }
+
+            data.forEach(procedimento => {
+                let option = document.createElement("div");
+                option.textContent = procedimento.nome;
+                option.classList.add("dropdown-item");
+
+                option.addEventListener("click", function () {
+                    let procedimentoItem = document.createElement("div");
+                    procedimentoItem.classList.add("procedimento-item");
+
+                    let procedimentoNome = document.createElement("span");
+                    procedimentoNome.textContent = procedimento.nome;
+
+                    let valorInput = document.createElement("input");
+                    valorInput.type = "number";
+                    valorInput.placeholder = "Valor R$";
+                    valorInput.step = 0.01;
+                    valorInput.min = 0;
+                    valorInput.value = procedimento.valor_venda;
+
+                    let removerProcedimentoBtn = document.createElement("button");
+                    removerProcedimentoBtn.textContent = "❌";
+                    removerProcedimentoBtn.onclick = function () {
+                        procedimentoItem.remove();
+                    };
+
+                    procedimentoItem.appendChild(procedimentoNome);
+                    procedimentoItem.appendChild(valorInput);
+                    procedimentoItem.appendChild(removerProcedimentoBtn);
+
+                    procedimentosContainer.appendChild(procedimentoItem);
+                    dropdownProcedimentos.remove();
+                });
+
+                dropdownProcedimentos.appendChild(option);
+            });
+
+            procedimentosContainer.appendChild(dropdownProcedimentos);
+        })
+        .catch(error => console.error("Erro ao buscar parceiros:", error));
+}
+
+document.addEventListener("click", function(event) {
+    if (!event.target.closest(".dropdown-procedimentos")) {
+        document.getElementById("dropdown-item").style.display = "none";
+    }
+});
+// --------------------------------------------------------------------------------------------
+
 // =================================================== PARCEIROS POR PROCEDIMENTO
 function adicionarParceiro(parceirosContainer, nomeProcedimento) {
     fetch(`/buscar_parceiros_por_procedimento/?procedimento_nome=${encodeURIComponent(nomeProcedimento)}`)

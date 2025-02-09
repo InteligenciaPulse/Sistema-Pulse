@@ -247,6 +247,119 @@ body {
   color: white;
 }
 
+/*##########################################################################################*/
+#filter-parceiro button {
+  margin-top: 5px;
+}
+
+#lista-parceiros h4 {
+  margin: 15px 0 5px;
+}
+
+.parceiro-card {
+  border: 2px solid #F2568A;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parceiro-card h5 {
+  margin: 0;
+  font-size: 18px;
+  color: #F2568A;
+  font-weight: bold;
+}
+
+.procedimentos-container {
+  background: #fce4ec;
+  margin-top: 0;
+  display: flex;
+  padding: 5px;
+  flex-direction: column;
+}
+
+.procedimento-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FCE4EC;
+  padding: 5px;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.procedimento-item span {
+  flex: 2;
+  font-weight: bold;
+  color: black;
+}
+
+.procedimento-item input {
+  flex: 1;
+  min-width: 80px;
+  max-width: 100px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.procedimento-item button {
+  background-color: transparent;
+  color: #F2568A;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.procedimento-item button:hover {
+  color: red;
+}
+
+.parceiro-card button {
+  background-color: #F2568A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.parceiro-card button:hover {
+  background-color: #e04576;
+}
+
+.dropdown-procedimentos {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 250px;
+  overflow-y: auto;
+  display: block;
+  z-index: 1000;
+  width: 95%;
+}
+
+.dropdown-procedimentos .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-procedimentos .dropdown-item:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
+/*##########################################################################################*/
+
 #filter-pacote button {
   margin-top: 5px;
 }
@@ -306,75 +419,6 @@ body {
   flex-direction: column;
   gap: 10px;
 }
-
-/* #sugestoes-procedimentos {
-  position: absolute;
-  width: calc(100% - 20px);
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  display: none;
-}
-
-.dropdown-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-}
-
-.dropdown-item:hover {
-  background-color: #F2568A;
-  color: white;
-}
-
-#procedimentos-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-#procedimentos-table th,
-#procedimentos-table td {
-  padding: 2px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-#procedimentos-table th:first-child,
-#procedimentos-table td:first-child {
-  width: 100%;
-}
-
-#procedimentos-table th:nth-child(2),
-#procedimentos-table td:nth-child(2) {
-  width: 30%;
-  text-align: center;
-}
-
-#procedimentos-table th:last-child,
-#procedimentos-table td:last-child {
-  width: 5%;
-  text-align: center;
-}
-
-#procedimentos-table th {
-  background-color: #F2568A;
-  color: white;
-}
-
-#procedimentos-table button {
-  background-color: white;
-  color: #ff1060;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-#procedimentos-table button:hover {
-  background-color: #d13660;
-} */
 
 .dropdown-parceiros {
   position: absolute;
