@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error("Erro ao buscar subtipos:", error));
 
-    inputParceiro.addEventListener("input", function () {
+    function buscarParceiros(){
         const query = inputParceiro.value.trim();
         const subtipoSelecionado = subtipoSelect.value;
         
@@ -201,13 +201,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 dropdown.style.display = "block";
             })
             .catch(error => console.error("Erro ao buscar parceiros:", error));
-    });
+    }
+
+    inputParceiro.addEventListener("input", buscarParceiros);
+    inputParceiro.addEventListener("focus", buscarParceiros);
+    subtipoSelect.addEventListener("change", buscarParceiros);
 
     document.addEventListener("click", function (event) {
         if (!inputParceiro.contains(event.target) && !dropdown.contains(event.target)) {
             dropdown.style.display = "none";
         }
     });
+
+    // document.addEventListener("click", function (event) {
+    //     const inputParceiro = document.getElementById("parceiro");
+    //     const dropdown = document.getElementById("sugestoes-parceiros");
+    
+    //     if (!inputParceiro.contains(event.target) && !dropdown.contains(event.target)) {
+    //         setTimeout(() => {
+    //             inputParceiro.blur();
+    //         }, 200);
+    //     }
+    // });
 
     window.adicionarParceiro = function () {
         const nome = inputParceiro.value.trim();

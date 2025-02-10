@@ -274,22 +274,13 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   appearance: none;
-}
-
-#parceiro-subtype select:focus {
-  border-color: #e04576;
-  box-shadow: 0 0 5px rgba(242, 86, 138, 0.5);
-  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 #parceiro-subtype select option {
   background-color: white;
   font-weight: bold;
-}
-
-#parceiro-subtype select option:hover {
-  background-color: #F2568A;
-  color: white;
 }
 
 /*##########################################################################################*/
