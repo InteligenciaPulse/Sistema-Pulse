@@ -135,28 +135,48 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 });
 
-document.addEventListener("click", function(event) {
-    if (!event.target.closest(".filter-procedimento")) {
-        document.getElementById("sugestoes-procedimentos").style.display = "none";
-    }
-});
+// document.addEventListener("click", function(event) {
+//     if (!event.target.closest(".filter-procedimento")) {
+//         document.getElementById("sugestoes-procedimentos").style.display = "none";
+//     }
+// });
 
 
-// --------------------------------------------------------------------------------------------
+// -------------------------------------PARCEIROS-------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
     const inputParceiro = document.getElementById("parceiro");
+    const parceiroSubtypeDiv = document.getElementById("parceiro-subtype");
     const dropdown = document.getElementById("sugestoes-parceiros");
     const listaParceiros = document.getElementById("parceiros-list");
 
+    const subtipoSelect = document.createElement("select");
+    subtipoSelect.id = "subtipo-select";
+    subtipoSelect.innerHTML = `<option value="">Selecione um Subtipo</option>`;
+    parceiroSubtypeDiv.appendChild(subtipoSelect);
+
+    fetch("/buscar_subtipos/")
+        .then(response => response.json())
+        .then(subtipos => {
+            subtipos.forEach(subtipo => {
+                let option = document.createElement("option");
+                option.value = subtipo.id;
+                option.textContent = subtipo.nome;
+                subtipoSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Erro ao buscar subtipos:", error));
+
     inputParceiro.addEventListener("input", function () {
         const query = inputParceiro.value.trim();
+        const subtipoSelecionado = subtipoSelect.value;
+        
         if (query.length < 1) {
             dropdown.innerHTML = "";
             dropdown.style.display = "none";
             return;
         }
 
-        fetch(`/buscar_parceiros_by/?q=${query}`)
+        fetch(`/buscar_parceiros_by/?q=${encodeURIComponent(query)}&subtipo=${subtipoSelecionado}`)
             .then(response => response.json())
             .then(data => {
                 dropdown.innerHTML = "";
@@ -203,6 +223,10 @@ document.addEventListener("DOMContentLoaded", function () {
         let titulo = document.createElement("h5");
         titulo.textContent = nome;
 
+        let subtotal = document.createElement("p");
+        subtotal.classList.add("subtotal");
+        subtotal.textContent = "Subtotal: R$ 0.00";
+        
         let procedimentosContainer = document.createElement("div");
         procedimentosContainer.classList.add("procedimentos-container");
 
@@ -210,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
         adicionarProcedimentoBtn.textContent = "Adicionar Procedimento";
 
         adicionarProcedimentoBtn.onclick = function () {
-            adicionarProcedimentoBy(procedimentosContainer, titulo.textContent.trim());
+            adicionarProcedimentoBy(procedimentosContainer, titulo.textContent.trim(), subtotal);
         };
 
         let removerParceiroBtn = document.createElement("button");
@@ -219,10 +243,16 @@ document.addEventListener("DOMContentLoaded", function () {
             parceiroDiv.remove();
         };
 
-        parceiroDiv.appendChild(titulo);
+        let headerDiv = document.createElement("div");
+        headerDiv.classList.add("procedimentos-container-header");
+        headerDiv.appendChild(titulo)
+        headerDiv.appendChild(removerParceiroBtn);
+        
+        // parceiroDiv.appendChild(titulo);
+        parceiroDiv.appendChild(headerDiv);
         parceiroDiv.appendChild(procedimentosContainer);
         parceiroDiv.appendChild(adicionarProcedimentoBtn);
-        parceiroDiv.appendChild(removerParceiroBtn);
+        parceiroDiv.appendChild(subtotal);
 
         listaParceiros.appendChild(parceiroDiv);
 
@@ -237,7 +267,7 @@ document.addEventListener("click", function(event) {
 });
 
 // ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
-function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro) {
+function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro, subtotalElement) {
     fetch(`/buscar_procedimentos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
         .then(response => response.json())
         .then(data => {
@@ -268,10 +298,15 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro) {
                     valorInput.min = 0;
                     valorInput.value = procedimento.valor_venda;
 
+                    valorInput.addEventListener("input", function () {
+                        atualizarSubtotal(procedimentosContainer, subtotalElement);
+                    });
+
                     let removerProcedimentoBtn = document.createElement("button");
                     removerProcedimentoBtn.textContent = "❌";
                     removerProcedimentoBtn.onclick = function () {
                         procedimentoItem.remove();
+                        atualizarSubtotal(procedimentosContainer, subtotalElement);
                     };
 
                     procedimentoItem.appendChild(procedimentoNome);
@@ -280,6 +315,7 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro) {
 
                     procedimentosContainer.appendChild(procedimentoItem);
                     dropdownProcedimentos.remove();
+                    atualizarSubtotal(procedimentosContainer, subtotalElement);
                 });
 
                 dropdownProcedimentos.appendChild(option);
@@ -290,11 +326,21 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro) {
         .catch(error => console.error("Erro ao buscar parceiros:", error));
 }
 
-document.addEventListener("click", function(event) {
-    if (!event.target.closest(".dropdown-procedimentos")) {
-        document.getElementById("dropdown-item").style.display = "none";
-    }
-});
+// document.addEventListener("click", function(event) {
+//     if (!event.target.closest(".dropdown-procedimentos")) {
+//         document.getElementById("dropdown-item").style.display = "none";
+//     }
+// });
+
+function atualizarSubtotal(procedimentosContainer, subtotalElement) {
+    let total = 0;
+
+    procedimentosContainer.querySelectorAll("input[type='number']").forEach(input => {
+        total += parseFloat(input.value) || 0;
+    });
+
+    subtotalElement.textContent = `Subtotal: ${total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`;
+}
 // --------------------------------------------------------------------------------------------
 
 // =================================================== PARCEIROS POR PROCEDIMENTO
@@ -363,11 +409,11 @@ function adicionarParceiro(parceirosContainer, nomeProcedimento) {
         .catch(error => console.error("Erro ao buscar parceiros:", error));
 }
 
-document.addEventListener("click", function(event) {
-    if (!event.target.closest(".dropdown-parceiros")) {
-        document.getElementById("dropdown-item").style.display = "none";
-    }
-});
+// document.addEventListener("click", function(event) {
+//     if (!event.target.closest(".dropdown-parceiros")) {
+//         document.getElementById("dropdown-item").style.display = "none";
+//     }
+// });
 
 // =================================================== PACOTES
 document.addEventListener("DOMContentLoaded", function () {

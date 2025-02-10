@@ -61,11 +61,18 @@ def buscar_procedimentos(request):
 
 def buscar_parceiros_by(request):
     query = request.GET.get('q', '').strip()
+    subtipo_id = request.GET.get('subtipo', '').strip()
     
     if not query:
         return JsonResponse([], safe=False)
     
-    parceiros = Parceiro.objects.filter(nome__icontains=query).values("id", "nome")
+    parceiros = Parceiro.objects.filter(nome__icontains=query)
+
+    if subtipo_id:
+        parceiros = parceiros.filter(subtipo_id=subtipo_id)
+    
+    parceiros = parceiros.values("id", "nome")
+    
     return JsonResponse(list(parceiros), safe=False)
 
 def buscar_parceiros(request):
@@ -152,6 +159,15 @@ def buscar_procedimentos_por_pacote(request):
         return JsonResponse(procedimentos, safe=False)
     except Pacote.DoesNotExist:
         return JsonResponse([], safe=False)
+    
+def buscar_subtipos(request):
+    subtipos = Subtipo.objects.all().values("id", "nome")
+    return JsonResponse(list(subtipos), safe=False)
+
+def buscar_parceiros_por_subtipo(request):
+    subtipo_id = request.GET.get("subtipo")
+    parceiros = ParceiroProcedimentos.objects.filter(parceiro__subtipo_id=subtipo_id).values("parceiro__id", "parceiro__nome", "valor_venda")
+    return JsonResponse(list(parceiros), safe=False)
     
 # @csrf_exempt
 # def cadastrar_paciente(request):

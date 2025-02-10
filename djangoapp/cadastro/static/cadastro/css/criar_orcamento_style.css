@@ -247,6 +247,51 @@ body {
   color: white;
 }
 
+.procedimentos-container-header {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#parceiro-subtype {
+  display: flex;
+  gap: 5px;
+}
+
+#parceiro-subtype input {
+  width: 100%;
+}
+
+#parceiro-subtype select {
+  width: 45%;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: white;
+  color: #F2568A;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+#parceiro-subtype select:focus {
+  border-color: #e04576;
+  box-shadow: 0 0 5px rgba(242, 86, 138, 0.5);
+  outline: none;
+}
+
+#parceiro-subtype select option {
+  background-color: white;
+  font-weight: bold;
+}
+
+#parceiro-subtype select option:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
 /*##########################################################################################*/
 #filter-parceiro button {
   margin-top: 5px;
@@ -358,6 +403,14 @@ body {
   color: white;
 }
 
+.subtotal {
+  font-weight: bold;
+  color: #F2568A;
+  font-size: 16px;
+  text-align: right;
+  margin-top: 5px;
+}
+
 /*##########################################################################################*/
 
 #filter-pacote button {
@@ -403,9 +456,9 @@ body {
 
 .procedimentos-container {
   background: #fce4ec;
-  padding: 10px;
+  padding: 5px;
   border-radius: 5px;
-  margin-top: 5px;
+  margin-top: 0px;
 }
 
 .procedimento-item {
