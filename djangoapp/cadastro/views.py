@@ -144,13 +144,10 @@ def buscar_procedimentos_por_pacote(request):
     pacote_nome = request.GET.get("pacote_nome", "").strip()
 
     try:
-        # Buscar o pacote pelo nome
         pacote = Pacote.objects.get(nome=pacote_nome)
 
-        # Buscar os relacionamentos do pacote na tabela Pacote_Procedimentos
         procedimentos_relacionados = PacoteProcedimentos.objects.filter(pacote=pacote)
-
-        # Obter os procedimentos baseados nos IDs encontrados
+        
         procedimentos = [
             {"id": p.procedimento.id, "nome": p.procedimento.nome}
             for p in procedimentos_relacionados

@@ -407,6 +407,111 @@ body {
   gap: 5px;
 }
 
+/**=============================== PACOTE ================================ **/
+/* Estilização dos pacotes adicionados */
+.pacote-item {
+  display: flex;
+  flex-direction: column;
+  background: #ffebee;
+  padding: 3px;
+  border-radius: 5px;
+  border: 2px dashed #f2568a;
+  margin-top: 0px;
+}
+
+.pacote-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pacote-info span {
+  flex: 2;
+  font-weight: bold;
+  color: #d32f2f;
+}
+
+.valor-input {
+  flex: 1;
+  min-width: 80px;
+  max-width: 100px;
+  text-align: center;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.remover-pacote {
+  background: transparent;
+  border: none;
+  color: #f2568a;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remover-pacote:hover {
+  color: red;
+}
+
+.dropdown-pacotes {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.input-dropdown {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Lista de sugestões dentro do dropdown */
+.dropdown-list {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 5px;
+}
+
+.dropdown-list .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-list .dropdown-item:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
+/* Lista de procedimentos do pacote */
+.lista-procedimentos {
+  margin-top: 8px;
+  padding-left: 15px;
+  list-style-type: none;
+}
+
+.lista-procedimentos li {
+  font-size: 14px;
+  color: #555;
+  padding: 3px 0;
+}
+
+.lista-procedimentos li:before {
+  content: "✔ ";
+  color: green;
+}
+
+
 /*##########################################################################################*/
 
 #filter-pacote button {
