@@ -213,17 +213,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // document.addEventListener("click", function (event) {
-    //     const inputParceiro = document.getElementById("parceiro");
-    //     const dropdown = document.getElementById("sugestoes-parceiros");
-    
-    //     if (!inputParceiro.contains(event.target) && !dropdown.contains(event.target)) {
-    //         setTimeout(() => {
-    //             inputParceiro.blur();
-    //         }, 200);
-    //     }
-    // });
-
     window.adicionarParceiro = function () {
         const nome = inputParceiro.value.trim();
 
@@ -252,6 +241,19 @@ document.addEventListener("DOMContentLoaded", function () {
             adicionarProcedimentoBy(procedimentosContainer, titulo.textContent.trim(), subtotal);
         };
 
+        let adicionarPacoteBtn = document.createElement("button");
+        adicionarPacoteBtn.textContent = "Adicionar Pacote";
+
+        adicionarPacoteBtn.onclick = function () {
+            // adicionarPacote(procedimentosContainer, titulo.textContent.trim(), subtotal);
+            console.log("clique!");
+        };
+
+        let buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("procedimentos-container-buttons");
+        buttonsDiv.appendChild(adicionarProcedimentoBtn);
+        buttonsDiv.appendChild(adicionarPacoteBtn);
+
         let removerParceiroBtn = document.createElement("button");
         removerParceiroBtn.textContent = "❌ Remover Parceiro";
         removerParceiroBtn.onclick = function () {
@@ -266,7 +268,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // parceiroDiv.appendChild(titulo);
         parceiroDiv.appendChild(headerDiv);
         parceiroDiv.appendChild(procedimentosContainer);
-        parceiroDiv.appendChild(adicionarProcedimentoBtn);
+        // parceiroDiv.appendChild(adicionarProcedimentoBtn);
+        // parceiroDiv.appendChild(adicionarPacoteBtn);
+        parceiroDiv.appendChild(buttonsDiv);
         parceiroDiv.appendChild(subtotal);
 
         listaParceiros.appendChild(parceiroDiv);

@@ -284,7 +284,7 @@ body {
 }
 
 /*##########################################################################################*/
-#filter-parceiro button {
+#filter-parceiro-add-button {
   margin-top: 5px;
 }
 
@@ -400,6 +400,11 @@ body {
   font-size: 16px;
   text-align: right;
   margin-top: 5px;
+}
+
+.procedimentos-container-buttons {
+  display: flex;
+  gap: 5px;
 }
 
 /*##########################################################################################*/
