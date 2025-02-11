@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
         adicionarPacoteBtn.textContent = "Adicionar Pacote";
 
         adicionarPacoteBtn.onclick = function () {
-            adicionarPacote(pacoteDropdownDiv, procedimentosContainer);
+            adicionarPacote(pacoteDropdownDiv, procedimentosContainer, subtotal);
         };
 
         let pacoteDropdownDiv = document.createElement("div");
@@ -434,7 +434,7 @@ function atualizarSubtotal(procedimentosContainer, subtotalElement) {
 // });
 
 // =================================================== PACOTES
-function adicionarPacote(container, procedimentosContainer) {
+function adicionarPacote(container, procedimentosContainer, subtotalElement) {
     let dropdownPacotes = document.createElement("div");
     dropdownPacotes.classList.add("dropdown-pacotes");
 
@@ -465,7 +465,7 @@ function adicionarPacote(container, procedimentosContainer) {
                     option.classList.add("dropdown-item");
 
                     option.addEventListener("click", function () {
-                        adicionarPacoteAoContainer(procedimentosContainer, pacote);
+                        adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElement);
                         dropdownPacotes.remove();
                         atualizarSubtotal(procedimentosContainer, subtotalElement);
                     });
@@ -482,9 +482,7 @@ function adicionarPacote(container, procedimentosContainer) {
     container.appendChild(dropdownPacotes);
 }
 
-function adicionarPacoteAoContainer(procedimentosContainer, pacote) {
-    const subtotalElement = document.getElementsByClassName("subtotal");
-
+function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElement) {
     let pacoteItem = document.createElement("div");
     pacoteItem.classList.add("pacote-item");
 
@@ -497,10 +495,6 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote) {
     valorInput.step = 0.01;
     valorInput.min = 0;
     valorInput.classList.add("valor-input");
-
-    valorInput.addEventListener("input", function () {
-        atualizarSubtotal(procedimentosContainer, subtotalElement);
-    });
 
     let listaProcedimentos = document.createElement("ul");
     listaProcedimentos.classList.add("lista-procedimentos");
@@ -540,6 +534,12 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote) {
         pacoteItem.appendChild(listaProcedimentos);
     
         procedimentosContainer.appendChild(pacoteItem);
+
+        valorInput.addEventListener("input", function () {
+            atualizarSubtotal(procedimentosContainer, subtotalElement);
+        });
+
+        atualizarSubtotal(procedimentosContainer, subtotalElement);
 }
 
 // document.addEventListener("DOMContentLoaded", function () {
