@@ -10,8 +10,7 @@ done
 
 echo "✅ Postgres Database Started Successfully ($POSTGRES_HOST:$POSTGRES_PORT)"
 
-mkdir -p /app/staticfiles
-chmod -R 777 /app/staticfiles
+mkdir -p /tmp/staticfiles
 
 python manage.py collectstatic --noinput
 python manage.py makemigrations --noinput
