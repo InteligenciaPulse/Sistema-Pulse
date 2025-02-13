@@ -137,7 +137,8 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 # STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_ROOT = "/tmp/staticfiles/"
+# STATIC_ROOT = "/tmp/staticfiles/"
+STATIC_ROOT = "/var/www/static/"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = DATA_DIR / 'media'

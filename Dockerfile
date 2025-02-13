@@ -32,11 +32,12 @@ RUN python -m venv /venv && \
   adduser --disabled-password --no-create-home duser && \
   mkdir -p /data/web/static && \
   mkdir -p /data/web/media && \
-  mkdir -p /tmp/staticfiles && \
+  mkdir -p /var/www/static && \
   chown -R duser:duser /venv && \
   chown -R duser:duser /data/web/static && \
   chown -R duser:duser /data/web/media && \
   chmod -R 755 /data/web/static && \
+  chmod -R 775 /var/www/static && \
   chmod -R 755 /data/web/media && \
   chmod -R +x /scripts
 
