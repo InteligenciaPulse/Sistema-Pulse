@@ -3,18 +3,12 @@
 # O shell irá encerrar a execução do script quando um comando falhar
 set -e
 
-echo "📂 Arquivos coletados em /data/web/static:"
-ls -lah /data/web/static/
-
 while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
   echo "🟡 Waiting for Postgres Database Startup ($POSTGRES_HOST $POSTGRES_PORT) ..."
   sleep 3
 done
 
 echo "✅ Postgres Database Started Successfully ($POSTGRES_HOST:$POSTGRES_PORT)"
-
-mkdir -p /var/www/static
-chmod -R 775 /var/www/static
 
 python manage.py collectstatic --noinput
 python manage.py makemigrations --noinput
