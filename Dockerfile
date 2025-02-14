@@ -39,7 +39,7 @@ RUN python -m venv /venv && \
   chmod -R 755 /data/web/media && \
   chmod -R +x /scripts
 
-RUN ls -lah / && ls -lah /djangoapp/cadastro && ls -lah /djangoapp/cadastro/static && ls -lah /data/web/static/
+RUN ls -lah / && ls -lah /djangoapp/cadastro && ls -lah /djangoapp/cadastro/static/cadastro/css && ls -lah /data/web/static/
 
 # Adiciona a pasta scripts e venv/bin 
 # no $PATH do container.
