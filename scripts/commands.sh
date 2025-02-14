@@ -3,6 +3,9 @@
 # O shell irá encerrar a execução do script quando um comando falhar
 set -e
 
+echo "📂 Arquivos coletados em /data/web/static:"
+ls -lah /data/web/static/
+
 while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
   echo "🟡 Waiting for Postgres Database Startup ($POSTGRES_HOST $POSTGRES_PORT) ..."
   sleep 3
