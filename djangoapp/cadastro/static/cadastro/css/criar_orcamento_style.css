@@ -512,40 +512,6 @@ body {
   color: green;
 }
 
-.total-container {
-  position: sticky;
-  bottom: 0;
-  background-color: #F2568A;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  border-top: 2px solid white;
-}
-
-.total-container h3 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.total-container button {
-  background-color: white;
-  color: #F2568A;
-  font-weight: bold;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-  width: 100%;
-  transition: background 0.3s ease-in-out;
-}
-
-.total-container button:hover {
-  background-color: #ffffffcc;
-}
-
 
 /*##########################################################################################*/
 
