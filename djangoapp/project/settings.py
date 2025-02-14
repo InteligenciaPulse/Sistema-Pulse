@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'cadastro/static')
-    os.path.join(BASE_DIR, 'djangoapp', 'cadastro', 'static')
+    os.path.join(BASE_DIR, 'cadastro', 'static')
 ]
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
