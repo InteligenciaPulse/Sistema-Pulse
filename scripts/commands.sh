@@ -12,7 +12,7 @@ echo "✅ Postgres Database Started Successfully ($POSTGRES_HOST:$POSTGRES_PORT)
 
 python manage.py collectstatic --noinput
 
-ls -lah /djangoapp/cadastro/static/cadastro/css && ls -lah /data/web/static/
+ls -lah /data/web/static/cadastro/css && ls -lah /data/web/static/cadastro/js
 
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
