@@ -21,7 +21,7 @@ class Endereco(models.Model):
     
 class Paciente(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
-    cpf = models.CharField(max_length=11, unique=True, verbose_name="CPF")
+    cpf = models.CharField(max_length=14, unique=True, verbose_name="CPF")
     telefone = models.CharField(max_length=15, null=True, blank=True, verbose_name="Telefone")
     email = models.EmailField(null=True, blank=True, verbose_name="E-mail")
     endereco = models.ForeignKey('Endereco', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Endereço")
@@ -78,7 +78,7 @@ class Subtipo(models.Model):
 
 class Parceiro(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
-    cpf_cnpj = models.CharField(max_length=14, unique=True, verbose_name="CPF", null=True)
+    cpf_cnpj = models.CharField(max_length=18, unique=True, verbose_name="CPF", null=True)
     telefone = models.CharField(max_length=15, null=True, blank=True, verbose_name="Telefone")
     email = models.EmailField(null=True, blank=True, verbose_name="E-mail")
     endereco = models.ForeignKey('Endereco', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Endereço")
