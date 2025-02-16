@@ -136,6 +136,7 @@ class ParceiroProcedimentos(models.Model):
 
 class Orcamento(models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name="Status")
+    data_criacao = models.DateField(null=True, blank=True, verbose_name="Data de Criação")
     data_aprovacao = models.DateField(null=True, blank=True, verbose_name="Data de Aprovação")
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
 

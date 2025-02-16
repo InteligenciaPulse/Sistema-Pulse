@@ -52,7 +52,7 @@ class ParceiroProcedimentosAdmin(admin.ModelAdmin):
 
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'data_aprovacao', 'valor_total')
+    list_display = ('id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total')
 
 @admin.register(OrcamentoParceiros)
 class OrcamentoParceirosAdmin(admin.ModelAdmin):
