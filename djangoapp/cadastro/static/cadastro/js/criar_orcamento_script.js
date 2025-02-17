@@ -358,7 +358,34 @@ function atualizarSubtotal(procedimentosContainer, subtotalElement) {
     });
 
     subtotalElement.textContent = `Subtotal: ${total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`;
+    atualizarTotalGeral();
 }
+
+function atualizarTotalGeral() {
+    let totalGeral = 0;
+    let subtotais = document.querySelectorAll(".subtotal");
+
+    subtotais.forEach(subtotal => {
+        let valorTexto = subtotal.textContent.replace("Subtotal: R$", "").trim().replace(".", "").replace(",", ".");
+        let valor = parseFloat(valorTexto);
+        if (!isNaN(valor)) {
+            totalGeral += valor;
+        }
+    });
+
+    document.getElementById("total-geral").textContent = `Total: R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+document.getElementById("proximo-passo").addEventListener("click", function() {
+    let totalGeral = document.getElementById("total-geral").textContent.replace("Total: R$", "").trim();
+
+    if (parseFloat(totalGeral.replace(".", "").replace(",", ".")) === 0) {
+        alert("Adicione pelo menos um procedimento ou pacote antes de prosseguir.");
+        return;
+    }
+    
+    window.location.href = `/pagamento/?total=${encodeURIComponent(totalGeral)}`;
+});
 // --------------------------------------------------------------------------------------------
 
 // =================================================== PARCEIROS POR PROCEDIMENTO
