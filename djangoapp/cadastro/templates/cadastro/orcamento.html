@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento</title>
+    <link rel="stylesheet" href="{% static 'cadastro/css/orcamento_style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MODELO ORÇAMENTO</h1>
+        </header>
+
+        <section class="client-info">
+            <h2>CONFIRA SEU ORÇAMENTO</h2>
+            <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+            <p><strong>CPF:</strong> {{ cliente.cpf }}</p>
+            <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+            <p><strong>Email:</strong> {{ cliente.email }}</p>
+            <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+        </section>
+
+        <section class="procedimentos">
+            <h2>PROCEDIMENTOS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for procedimento in procedimentos %}
+                    <tr>
+                        <td>{{ procedimento.descricao }}</td>
+                        <td>{{ procedimento.observacao }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="valor-total">
+            <h2>VALOR TOTAL: R$ {{ valor_total }}</h2>
+        </section>
+
+        <section class="termos">
+            <h2>TERMOS & CONDIÇÕES:</h2>
+            <p>Este orçamento é válido por 30 dias e está sujeito a disponibilidade e possíveis ajustes conforme avaliação médica e hospitalar.</p>
+            <p>Agradecemos sua confiança! Estamos aqui para facilitar seu caminho.</p>
+        </section>
+
+        <footer>
+            <h2>PULSE LTDA</h2>
+            <p><strong>CNPJ:</strong> 50.579.365/0001-90</p>
+            <p><strong>Email:</strong> gestão@meupulse.com.br</p>
+            <p><strong>Telefone:</strong> (87) 9 8176-0222</p>
+            <p><strong>Endereço:</strong> R. Dr. Júlio de Melo, 538 - Centro, Petrolina - PE</p>
+            <p><strong>Instagram:</strong> @meupulse</p>
+        </footer>
+    </div>
+</body>
+</html>
