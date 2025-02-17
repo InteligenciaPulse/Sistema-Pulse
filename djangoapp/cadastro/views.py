@@ -5,8 +5,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos
 
-from weasyprint import HTML
+from django.http import HttpResponse
+from weasyprint import HTML, CSS
 import tempfile
+import os
+from django.conf import settings
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -171,13 +174,12 @@ def buscar_parceiros_por_subtipo(request):
     return JsonResponse(list(parceiros), safe=False)
 
 def visualizar_orcamento_pdf(request):
-    # Dados fictícios para exemplo
     cliente = {
         "nome": "Maria Estetiane da Silva",
         "cpf": "000.000.00-00",
-        "telefone": "(00) 0 0000-0000",
-        "email": "mariaestetiane@gmail.com",
-        "endereco": "Rua xxxxxxxx, Bairro xxxx, Cidade - UF"
+        "telefone": "(87) 9 8176-0222",
+        "email": "gestão@meupulse.com.br",
+        "endereco": "R. Dr. Júlio de Melo, 538 - Centro, Petrolina - PE"
     }
 
     procedimentos = [
@@ -187,21 +189,47 @@ def visualizar_orcamento_pdf(request):
 
     valor_total = "00.000,00"
 
-    html_string = render(request, "orcamento.html", {
+    # Renderiza o HTML
+    html_string = render(request, "cadastro/orcamento.html", {
         "cliente": cliente,
         "procedimentos": procedimentos,
         "valor_total": valor_total
     }).content.decode("utf-8")
 
-    # Criando a resposta HTTP para exibição no navegador
+    # Caminho absoluto do CSS estático
+    css_path = os.path.join(settings.BASE_DIR, 'cadastro/static/cadastro/css/orcamento_style.css')
+
+    # Geração do PDF com WeasyPrint usando o CSS externo
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'inline; filename="orcamento.pdf"'
     
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-        HTML(string=html_string).write_pdf(temp_file.name)
+        HTML(string=html_string).write_pdf(temp_file.name, stylesheets=[CSS(css_path)])
         response.write(open(temp_file.name, "rb").read())
 
     return response
+
+def visualizar_orcamento_html(request):
+    cliente = {
+        "nome": "Maria Estetiane da Silva",
+        "cpf": "000.000.00-00",
+        "telefone": "(87) 9 8176-0222",
+        "email": "gestão@meupulse.com.br",
+        "endereco": "R. Dr. Júlio de Melo, 538 - Centro, Petrolina - PE"
+    }
+
+    procedimentos = [
+        {"descricao": "Procedimento X", "observacao": "Observação Y"},
+        {"descricao": "Procedimento Z", "observacao": "Observação W"},
+    ]
+
+    valor_total = "00.000,00"
+
+    return render(request, "cadastro/orcamento.html", {
+        "cliente": cliente,
+        "procedimentos": procedimentos,
+        "valor_total": valor_total
+    })
 
 # @csrf_exempt
 # def cadastrar_paciente(request):

@@ -17,6 +17,19 @@ COPY scripts /scripts
 # Entra na pasta djangoapp no container
 WORKDIR /djangoapp
 
+# Atualiza repositórios e instala dependências do sistema
+RUN apk update && apk upgrade && apk add --no-cache \
+  py3-cffi \
+  gobject-introspection-dev \
+  cairo-dev \
+  pango-dev \
+  gdk-pixbuf-dev \
+  harfbuzz-dev \
+  freetype-dev \
+  fribidi \
+  ttf-opensans \
+  ttf-dejavu
+
 # A porta 8000 estará disponível para conexões externas ao container
 # É a porta que vamos usar para o Django.
 EXPOSE 8000
@@ -33,11 +46,13 @@ RUN python -m venv /venv && \
   mkdir -p /data/web/static && \
   mkdir -p /data/web/media && \
   mkdir -p /var/www/static && \
+  mkdir -p /var/cache/fontconfig && \
   chown -R duser:duser /venv && \
   chown -R duser:duser /data/web/static && \
   chown -R duser:duser /data/web/media && \
   chmod -R 755 /data/web/static && \
   chmod -R 775 /var/www/static && \
+  chmod 777 /var/cache/fontconfig && \
   chmod -R 755 /data/web/media && \
   chmod -R +x /scripts
 

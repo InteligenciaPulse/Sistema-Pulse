@@ -10,26 +10,37 @@
 </head>
 <body>
     <div class="container">
+        <!-- Cabeçalho -->
         <header>
-            <h1>MODELO ORÇAMENTO</h1>
+            <div class="header-container">
+                <!-- Logo -->
+                <img src="{% static 'cadastro/images/logo_pulse.png' %}" alt="Logo Pulse" class="logo">
+        
+                <!-- Linha degradê -->
+                <div class="gradient-line"></div>
+        
+                <!-- Decoração no canto superior direito -->
+                <div class="header-decoration"></div>
+            </div>
         </header>
 
+        <!-- Informações do Cliente -->
         <section class="client-info">
-            <h2>CONFIRA SEU ORÇAMENTO</h2>
-            <p><strong>Nome:</strong> {{ cliente.nome }}</p>
-            <p><strong>CPF:</strong> {{ cliente.cpf }}</p>
-            <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
-            <p><strong>Email:</strong> {{ cliente.email }}</p>
-            <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+            <div class="title-box">CONFIRA SEU ORÇAMENTO</div>
+            <h2>{{ cliente.nome }}</h2>
+            <p>📍 {{ cliente.cpf }}</p>
+            <p>📞 {{ cliente.telefone }}</p>
+            <p>📧 {{ cliente.email }}</p>
+            <p>🏠 {{ cliente.endereco }}</p>
         </section>
 
+        <!-- Tabela de Procedimentos -->
         <section class="procedimentos">
-            <h2>PROCEDIMENTOS</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Descrição</th>
-                        <th>Observações</th>
+                        <th class="pink-bg">PROCEDIMENTOS</th>
+                        <th class="green-bg">OBSERVAÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,23 +54,53 @@
             </table>
         </section>
 
+        <!-- Valor Total -->
         <section class="valor-total">
-            <h2>VALOR TOTAL: R$ {{ valor_total }}</h2>
+            <span>VALOR TOTAL:</span>
+            <strong>R$ {{ valor_total }}</strong>
         </section>
 
+        <!-- Termos e Condições -->
         <section class="termos">
-            <h2>TERMOS & CONDIÇÕES:</h2>
-            <p>Este orçamento é válido por 30 dias e está sujeito a disponibilidade e possíveis ajustes conforme avaliação médica e hospitalar.</p>
-            <p>Agradecemos sua confiança! Estamos aqui para facilitar seu caminho.</p>
+            <div class="termos-title">TERMOS & CONDIÇÕES:</div>
+            <p>Este orçamento é válido por 30 dias e está sujeito a <br> disponibilidade e possíveis ajustes conforme avaliação <br> médica e hospitalar.</p>
+            <p class="agradecimento">Agradecemos sua confiança! Estamos aqui para facilitar seu caminho.</p>
         </section>
 
+        <!-- Empresa -->
+        <div class="empresa">
+            <p><strong>PULSE LTDA</strong></p>
+            <p>50.579.365/0001-90</p>
+        </div>
+
+        <!-- Rodapé -->
         <footer>
-            <h2>PULSE LTDA</h2>
-            <p><strong>CNPJ:</strong> 50.579.365/0001-90</p>
-            <p><strong>Email:</strong> gestão@meupulse.com.br</p>
-            <p><strong>Telefone:</strong> (87) 9 8176-0222</p>
-            <p><strong>Endereço:</strong> R. Dr. Júlio de Melo, 538 - Centro, Petrolina - PE</p>
-            <p><strong>Instagram:</strong> @meupulse</p>
+            <div class="footer-container">
+                <div class="footer-item">
+                    <div class="icon-wrapper">
+                        <img src="{% static 'cadastro/images/email-icon.png' %}" alt="Email" class="icon">
+                    </div>
+                    <span>gestão@meupulse.com.br</span>
+                </div>
+                <div class="footer-item">
+                    <div class="icon-wrapper">
+                        <img src="{% static 'cadastro/images/location-icon.png' %}" alt="Localização" class="icon">
+                    </div>
+                    <span>R. Dr. Júlio de Melo, 538 - <br>Centro, Petrolina - PE</br></span>
+                </div>
+                <div class="footer-item">
+                    <div class="icon-wrapper">
+                        <img src="{% static 'cadastro/images/instagram-icon.png' %}" alt="Instagram" class="icon">
+                    </div>
+                    <span>@meupulse</span>
+                </div>
+                <div class="footer-item">
+                    <div class="icon-wrapper">
+                        <img src="{% static 'cadastro/images/phone-icon.png' %}" alt="Telefone" class="icon">
+                    </div>
+                    <span>(87) 9 8176-0222</span>
+                </div>
+            </div>
         </footer>
     </div>
 </body>
