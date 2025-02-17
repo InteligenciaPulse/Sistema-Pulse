@@ -5,6 +5,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos
 
+from weasyprint import HTML
+import tempfile
+
 def home(request):
     return render(request, 'cadastro/home.html')
 
@@ -184,7 +187,7 @@ def visualizar_orcamento_pdf(request):
 
     valor_total = "00.000,00"
 
-    html_string = render(request, "cadasto/templates/cadastro/orcamento.html", {
+    html_string = render(request, "orcamento.html", {
         "cliente": cliente,
         "procedimentos": procedimentos,
         "valor_total": valor_total
@@ -194,9 +197,9 @@ def visualizar_orcamento_pdf(request):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = 'inline; filename="orcamento.pdf"'
     
-    # with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-    #     HTML(string=html_string).write_pdf(temp_file.name)
-    #     response.write(open(temp_file.name, "rb").read())
+    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+        HTML(string=html_string).write_pdf(temp_file.name)
+        response.write(open(temp_file.name, "rb").read())
 
     return response
 
