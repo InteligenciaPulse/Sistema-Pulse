@@ -30,6 +30,10 @@ ALLOWED_HOSTS = [
     h.strip() for  h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://visistema-production.up.railway.app"
+]
+
 
 # Application definition
 
