@@ -24,9 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
             dropdown.style.display = "block";
             data.forEach(paciente => {
                 let div = document.createElement("div");
+                div.dataset.id = paciente.id;
                 div.innerText = paciente.nome;
                 div.onclick = function () {
-                    document.getElementById("paciente").value = paciente.nome;
+                    inputPaciente.value = paciente.nome;
+                    inputPaciente.dataset.id = paciente.id;
                     dropdown.style.display = "none";
                 };
                 dropdown.appendChild(div);
@@ -48,97 +50,91 @@ document.addEventListener("click", function(event) {
 });
 
 // =================================================== PROCEDIMENTOS
-document.addEventListener("DOMContentLoaded", function () {
-    const inputProcedimento = document.getElementById("procedimento");
-    const dropdown = document.getElementById("sugestoes-procedimentos");
-    const listaProcedimentos = document.getElementById("procedimentos-list");
+// document.addEventListener("DOMContentLoaded", function () {
+//     const inputProcedimento = document.getElementById("procedimento");
+//     const dropdown = document.getElementById("sugestoes-procedimentos");
+//     const listaProcedimentos = document.getElementById("procedimentos-list");
 
-    inputProcedimento.addEventListener("input", function () {
-        const query = inputProcedimento.value.trim();
-        if (query.length < 1) {
-            dropdown.innerHTML = "";
-            dropdown.style.display = "none";
-            return;
-        }
+//     inputProcedimento.addEventListener("input", function () {
+//         const query = inputProcedimento.value.trim();
+//         if (query.length < 1) {
+//             dropdown.innerHTML = "";
+//             dropdown.style.display = "none";
+//             return;
+//         }
 
-        fetch(`/buscar_procedimentos/?q=${query}`)
-            .then(response => response.json())
-            .then(data => {
-                dropdown.innerHTML = "";
-                if (data.length === 0) {
-                    dropdown.style.display = "none";
-                    return;
-                }
+//         fetch(`/buscar_procedimentos/?q=${query}`)
+//             .then(response => response.json())
+//             .then(data => {
+//                 dropdown.innerHTML = "";
+//                 if (data.length === 0) {
+//                     dropdown.style.display = "none";
+//                     return;
+//                 }
 
-                data.forEach(procedimento => {
-                    let option = document.createElement("div");
-                    option.textContent = procedimento.nome;
-                    option.classList.add("dropdown-item");
+//                 data.forEach(procedimento => {
+//                     let option = document.createElement("div");
+//                     option.textContent = procedimento.nome;
+//                     option.classList.add("dropdown-item");
 
-                    option.addEventListener("click", function () {
-                        inputProcedimento.value = procedimento.nome;
-                        dropdown.style.display = "none";
-                    });
+//                     option.addEventListener("click", function () {
+//                         inputProcedimento.value = procedimento.nome;
+//                         dropdown.style.display = "none";
+//                     });
 
-                    dropdown.appendChild(option);
-                });
+//                     dropdown.appendChild(option);
+//                 });
 
-                dropdown.style.display = "block";
-            })
-            .catch(error => console.error("Erro ao buscar procedimentos:", error));
-    });
+//                 dropdown.style.display = "block";
+//             })
+//             .catch(error => console.error("Erro ao buscar procedimentos:", error));
+//     });
 
-    document.addEventListener("click", function (event) {
-        if (!inputProcedimento.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.style.display = "none";
-        }
-    });
+//     document.addEventListener("click", function (event) {
+//         if (!inputProcedimento.contains(event.target) && !dropdown.contains(event.target)) {
+//             dropdown.style.display = "none";
+//         }
+//     });
 
-    window.adicionarProcedimento = function () {
-        const nome = inputProcedimento.value.trim();
+//     window.adicionarProcedimento = function () {
+//         const nome = inputProcedimento.value.trim();
 
-        if (!nome) {
-            alert("Selecione um procedimento válido.");
-            return;
-        }
+//         if (!nome) {
+//             alert("Selecione um procedimento válido.");
+//             return;
+//         }
 
-        let procedimentoDiv = document.createElement("div");
-        procedimentoDiv.classList.add("procedimento-card");
+//         let procedimentoDiv = document.createElement("div");
+//         procedimentoDiv.classList.add("procedimento-card");
 
-        let titulo = document.createElement("h5");
-        titulo.textContent = nome;
+//         let titulo = document.createElement("h5");
+//         titulo.textContent = nome;
 
-        let parceirosContainer = document.createElement("div");
-        parceirosContainer.classList.add("parceiros-container");
+//         let parceirosContainer = document.createElement("div");
+//         parceirosContainer.classList.add("parceiros-container");
 
-        let adicionarParceiroBtn = document.createElement("button");
-        adicionarParceiroBtn.textContent = "Adicionar Parceiro";
+//         let adicionarParceiroBtn = document.createElement("button");
+//         adicionarParceiroBtn.textContent = "Adicionar Parceiro";
 
-        adicionarParceiroBtn.onclick = function () {
-            adicionarParceiro(parceirosContainer, titulo.textContent.trim());
-        };
+//         adicionarParceiroBtn.onclick = function () {
+//             adicionarParceiro(parceirosContainer, titulo.textContent.trim());
+//         };
 
-        let removerProcedimentoBtn = document.createElement("button");
-        removerProcedimentoBtn.textContent = "❌ Remover Procedimento";
-        removerProcedimentoBtn.onclick = function () {
-            procedimentoDiv.remove();
-        };
+//         let removerProcedimentoBtn = document.createElement("button");
+//         removerProcedimentoBtn.textContent = "❌ Remover Procedimento";
+//         removerProcedimentoBtn.onclick = function () {
+//             procedimentoDiv.remove();
+//         };
 
-        procedimentoDiv.appendChild(titulo);
-        procedimentoDiv.appendChild(parceirosContainer);
-        procedimentoDiv.appendChild(adicionarParceiroBtn);
-        procedimentoDiv.appendChild(removerProcedimentoBtn);
+//         procedimentoDiv.appendChild(titulo);
+//         procedimentoDiv.appendChild(parceirosContainer);
+//         procedimentoDiv.appendChild(adicionarParceiroBtn);
+//         procedimentoDiv.appendChild(removerProcedimentoBtn);
 
-        listaProcedimentos.appendChild(procedimentoDiv);
+//         listaProcedimentos.appendChild(procedimentoDiv);
 
-        inputProcedimento.value = "";
-    };
-});
-
-// document.addEventListener("click", function(event) {
-//     if (!event.target.closest(".filter-procedimento")) {
-//         document.getElementById("sugestoes-procedimentos").style.display = "none";
-//     }
+//         inputProcedimento.value = "";
+//     };
 // });
 
 
@@ -189,9 +185,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     let option = document.createElement("div");
                     option.textContent = parceiro.nome;
                     option.classList.add("dropdown-item");
+                    option.setAttribute("data-id", parceiro.id);
 
                     option.addEventListener("click", function () {
                         inputParceiro.value = parceiro.nome;
+                        inputParceiro.setAttribute("data-id", parceiro.id);
                         dropdown.style.display = "none";
                     });
 
@@ -215,14 +213,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.adicionarParceiro = function () {
         const nome = inputParceiro.value.trim();
+        const idParceiro = inputParceiro.getAttribute("data-id");
 
-        if (!nome) {
+        if (!nome || !idParceiro) {
             alert("Selecione um parceiro válido.");
             return;
         }
 
         let parceiroDiv = document.createElement("div");
         parceiroDiv.classList.add("parceiro-card");
+        parceiroDiv.setAttribute("data-id", idParceiro);
 
         let titulo = document.createElement("h5");
         titulo.textContent = nome;
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
         adicionarProcedimentoBtn.textContent = "Adicionar Procedimento";
 
         adicionarProcedimentoBtn.onclick = function () {
-            adicionarProcedimentoBy(procedimentosContainer, titulo.textContent.trim(), subtotal);
+            adicionarProcedimentoBy(procedimentosContainer, idParceiro, titulo.textContent.trim(), subtotal);
         };
 
         let adicionarPacoteBtn = document.createElement("button");
@@ -275,6 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
         listaParceiros.appendChild(parceiroDiv);
 
         inputParceiro.value = "";
+        inputParceiro.removeAttribute("data-id");
     };
 });
 
@@ -285,7 +286,7 @@ document.addEventListener("click", function(event) {
 });
 
 // ================================================================ PROCEDIMENTOS
-function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro, subtotalElement) {
+function adicionarProcedimentoBy(procedimentosContainer, parceiroId, nomeParceiro, subtotalElement) {
     fetch(`/buscar_procedimentos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
         .then(response => response.json())
         .then(data => {
@@ -301,6 +302,8 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro, subtotalE
                 let option = document.createElement("div");
                 option.textContent = procedimento.nome;
                 option.classList.add("dropdown-item");
+                option.setAttribute("data-id", procedimento.id);
+                option.setAttribute("data-parceiro-id", parceiroId);
 
                 option.addEventListener("click", function () {
                     let procedimentoItem = document.createElement("div");
@@ -330,6 +333,8 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro, subtotalE
                     procedimentoItem.appendChild(procedimentoNome);
                     procedimentoItem.appendChild(valorInput);
                     procedimentoItem.appendChild(removerProcedimentoBtn);
+                    procedimentoItem.setAttribute("data-id", procedimento.id);
+                    procedimentoItem.setAttribute("data-parceiro-id", parceiroId);
 
                     procedimentosContainer.appendChild(procedimentoItem);
                     dropdownProcedimentos.remove();
@@ -409,6 +414,55 @@ document.getElementById('form-adicionar-paciente').addEventListener('submit', fu
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+// ----------------------------------------- ORCAMENTO ------------------------------------------------------
+document.getElementById("proximo-passo").addEventListener("click", function () {
+    const pacienteId = document.getElementById("paciente").dataset.id;
+    if (!pacienteId) {
+        alert("Selecione um paciente antes de finalizar o orçamento.");
+        return;
+    }
+
+    let procedimentosSelecionados = [];
+    document.querySelectorAll(".procedimento-item").forEach(item => {
+        procedimentosSelecionados.push({
+            parceiro_id: item.getAttribute("data-parceiro-id"),
+            procedimento_id: item.getAttribute("data-id"),
+            valor_venda: parseFloat(item.querySelector("input").value || 0),
+        });
+    });
+
+    const valorTotal = procedimentosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+
+    const payload = {
+        paciente_id: pacienteId,
+        valor_total: valorTotal.toFixed(2),
+        procedimentos: procedimentosSelecionados
+    };
+
+    console.log("Enviando payload:", payload);
+
+    fetch("/salvar_orcamento/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert("Orçamento criado com sucesso!");
+            location.reload();
+        } else {
+            alert("Erro ao criar orçamento: " + data.error);
+        }
+    })
+    .catch(error => console.error("Erro ao salvar orçamento:", error));
+});
+
+// ----------------------------------------------------------------------------------------------------------
+
 function atualizarSubtotal(procedimentosContainer, subtotalElement) {
     let total = 0;
 
@@ -434,17 +488,6 @@ function atualizarTotalGeral() {
 
     document.getElementById("total-geral").textContent = `Total: R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
-
-document.getElementById("proximo-passo").addEventListener("click", function() {
-    let totalGeral = document.getElementById("total-geral").textContent.replace("Total: R$", "").trim();
-
-    if (parseFloat(totalGeral.replace(".", "").replace(",", ".")) === 0) {
-        alert("Adicione pelo menos um procedimento ou pacote antes de prosseguir.");
-        return;
-    }
-    
-    window.location.href = `/pagamento/?total=${encodeURIComponent(totalGeral)}`;
-});
 // --------------------------------------------------------------------------------------------
 
 // =================================================== PARCEIROS POR PROCEDIMENTO

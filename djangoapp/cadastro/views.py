@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
 
 from django.http import HttpResponse
 from weasyprint import HTML, CSS
@@ -12,6 +12,7 @@ from django.conf import settings
 from django.db import transaction
 
 from django.views.decorators.csrf import csrf_protect
+from django.utils.timezone import now
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -275,3 +276,57 @@ def salvar_paciente(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+@csrf_protect
+def salvar_orcamento(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            with transaction.atomic():
+                paciente_id = data.get("paciente_id")
+                paciente = Paciente.objects.get(id=paciente_id)
+
+                status_padrao = Status.objects.get(nome="Pendente")
+
+                orcamento = Orcamento.objects.create(
+                    status=status_padrao, 
+                    valor_total=data.get("valor_total"),
+                    data_criacao=now()
+                )
+
+                solicitacao = SolicitacaoOrcamento.objects.create(
+                    paciente=paciente,
+                    orcamento=orcamento,
+                    status=status_padrao,
+                    data_solicitacao=now()
+                )
+
+                for item in data.get("procedimentos", []):
+                    parceiro_id = item["parceiro_id"]
+                    procedimento_id = item["procedimento_id"]
+                    valor_venda = item["valor_venda"]
+
+                    parceiro_procedimento = ParceiroProcedimentos.objects.get(
+                        parceiro_id=parceiro_id, 
+                        procedimento_id=procedimento_id
+                    )
+
+                    OrcamentoParceiros.objects.create(
+                        orcamento=orcamento,
+                        parceiro_id=parceiro_id,
+                        procedimento_id=procedimento_id,
+                        valor_venda=valor_venda,
+                        valor_repasse=parceiro_procedimento.valor_repasse
+                    )
+
+            return JsonResponse({"message": "Orçamento salvo com sucesso!"}, status=201)
+
+        except Paciente.DoesNotExist:
+            return JsonResponse({"error": "Paciente não encontrado."}, status=404)
+        except ParceiroProcedimentos.DoesNotExist:
+            return JsonResponse({"error": "Parceiro ou Procedimento inválido."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Método não permitido."}, status=405)

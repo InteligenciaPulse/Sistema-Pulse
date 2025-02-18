@@ -159,7 +159,7 @@ class OrcamentoParceiros(models.Model):
         db_table = 'sistema_pulse"."orcamento_parceiros'
         verbose_name = "Orçamento - Parceiro"
         verbose_name_plural = "Orçamentos - Parceiros"
-        unique_together = ('orcamento', 'parceiro')
+        unique_together = ('orcamento', 'parceiro', 'procedimento')
 
     def __str__(self):
         return f"{self.orcamento} - {self.parceiro.nome}"
