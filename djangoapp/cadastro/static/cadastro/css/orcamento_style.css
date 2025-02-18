@@ -8,7 +8,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 body {
@@ -85,8 +84,7 @@ td {
 }
 
 .client-info {
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10mm;
 }
 
 .client-info h2 {
@@ -116,16 +114,22 @@ td {
   color: white;
 }
 
-.valor-total {
-  margin-top: 20px;
-  font-size: 18px;
-  text-align: right;
-  padding-bottom: 5px;
+.procedimentos .gradient-line {
+  margin-top: 3mm;
+  margin-bottom: 3mm;
 }
 
-.termos {
-  margin-top: 20px;
+.valor-total {
+  font-size: 22px;
+  text-align: right;
 }
+
+.valor-total span {
+  font-weight: bold;
+  margin-right: 10mm;
+}
+
+.termos {}
 
 .termos-title {
   background-color: #f4548c;
