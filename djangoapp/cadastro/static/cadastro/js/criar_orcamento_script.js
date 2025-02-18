@@ -439,8 +439,6 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         procedimentos: procedimentosSelecionados
     };
 
-    console.log("Enviando payload:", payload);
-
     fetch("/salvar_orcamento/", {
         method: "POST",
         headers: {
@@ -451,9 +449,9 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message) {
+        if (data.success) {
             alert("Orçamento criado com sucesso!");
-            location.reload();
+            window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
         } else {
             alert("Erro ao criar orçamento: " + data.error);
         }

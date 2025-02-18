@@ -1,18 +1,16 @@
+import os
 import json
-from django.shortcuts import render, redirect
+import tempfile
+from django.conf import settings
+from weasyprint import HTML, CSS
+from django.db import transaction
 from django.http import JsonResponse
 from django.http import HttpResponse
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
-
-from django.http import HttpResponse
-from weasyprint import HTML, CSS
-import tempfile
-import os
-from django.conf import settings
-from django.db import transaction
-
-from django.views.decorators.csrf import csrf_protect
 from django.utils.timezone import now
+from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_protect
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -212,26 +210,37 @@ def visualizar_orcamento_pdf(request):
 
     return response
 
-def visualizar_orcamento_html(request):
+def visualizar_orcamento_html(request, orcamento_id):
+    orcamento = get_object_or_404(Orcamento, id=orcamento_id)
+
+    try:
+        solicitacao = SolicitacaoOrcamento.objects.get(orcamento=orcamento)
+    except SolicitacaoOrcamento.DoesNotExist:
+        return JsonResponse({"error": "Solicitação de orçamento não encontrada."}, status=404)
+    
+    paciente = solicitacao.paciente
+    procedimentos = OrcamentoParceiros.objects.filter(orcamento=orcamento).select_related("procedimento", "parceiro")
+
     cliente = {
-        "nome": "Maria Estetiane da Silva",
-        "cpf": "000.000.00-00",
-        "telefone": "(87) 9 8176-0222",
-        "email": "gestão@meupulse.com.br",
-        "endereco": "R. Dr. Júlio de Melo, 538 - Centro, Petrolina - PE"
+        "nome": paciente.nome,
+        "cpf": paciente.cpf,
+        "telefone": paciente.telefone,
+        "email": paciente.email,
+        "endereco": f"{paciente.endereco.rua}, {paciente.endereco.numero} - {paciente.endereco.bairro}, {paciente.endereco.cidade} - {paciente.endereco.estado}, {paciente.endereco.cep}",
     }
 
-    procedimentos = [
-        {"descricao": "Procedimento X", "observacao": "Observação Y"},
-        {"descricao": "Procedimento Z", "observacao": "Observação W"},
+    procedimentos_lista = [
+        {
+            "descricao": f"{proc.procedimento.nome} - {proc.parceiro.nome}",
+            "observacao": f"Valor: R$ {proc.valor_venda:.2f} - Repasse: R$ {proc.valor_repasse:.2f}"
+        }
+        for proc in procedimentos
     ]
-
-    valor_total = "00.000,00"
-
+    
     return render(request, "cadastro/orcamento.html", {
         "cliente": cliente,
-        "procedimentos": procedimentos,
-        "valor_total": valor_total
+        "procedimentos": procedimentos_lista,
+        "valor_total": f"R$ {orcamento.valor_total:.2f}"
     })
 
 @csrf_protect
@@ -320,7 +329,7 @@ def salvar_orcamento(request):
                         valor_repasse=parceiro_procedimento.valor_repasse
                     )
 
-            return JsonResponse({"message": "Orçamento salvo com sucesso!"}, status=201)
+            return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
 
         except Paciente.DoesNotExist:
             return JsonResponse({"error": "Paciente não encontrado."}, status=404)

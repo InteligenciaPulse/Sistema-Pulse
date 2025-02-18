@@ -17,6 +17,7 @@ urlpatterns = [
     path("buscar_procedimentos_por_pacote/", buscar_procedimentos_por_pacote, name="buscar_procedimentos_por_pacotes"),
     path("buscar_procedimentos_por_parceiro/", buscar_procedimentos_por_parceiro, name="buscar_procedimentos_por_parceiro"),
     path('visualizar-orcamento/', visualizar_orcamento_pdf, name='visualizar_orcamento'),
+    path('visualizar-orcamento-html/<int:orcamento_id>/', visualizar_orcamento_html, name='visualizar_orcamento'),
     path('visualizar-orcamento-html/', visualizar_orcamento_html, name='visualizar_orcamento_html'),
     path('salvar_paciente/', salvar_paciente, name='salvar_paciente'),
     path('salvar_orcamento/', salvar_orcamento, name='salvar_orcamento'),
