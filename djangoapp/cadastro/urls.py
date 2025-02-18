@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos, buscar_parceiros, buscar_procedimentos_por_pacote, buscar_pacotes, buscar_parceiros_por_procedimento, buscar_parceiros_by, buscar_procedimentos_por_parceiro, buscar_parceiros_por_subtipo, buscar_subtipos
-from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, cadastrar_paciente
+from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente
 
 urlpatterns = [
     path('', home, name='home'),
@@ -18,5 +18,5 @@ urlpatterns = [
     path("buscar_procedimentos_por_parceiro/", buscar_procedimentos_por_parceiro, name="buscar_procedimentos_por_parceiro"),
     path('visualizar-orcamento/', visualizar_orcamento_pdf, name='visualizar_orcamento'),
     path('visualizar-orcamento-html/', visualizar_orcamento_html, name='visualizar_orcamento_html'),
-    path("cadastrar-paciente/", cadastrar_paciente, name="cadastrar_paciente"),
+    path('salvar_paciente/', salvar_paciente, name='salvar_paciente'),
 ]

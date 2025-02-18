@@ -375,9 +375,38 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Garante que o modal esteja oculto ao carregar a página
     document.getElementById("modal-paciente").style.display = "none";
 });
+
+function getCSRFToken() {
+    let csrfTokenInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    return csrfTokenInput ? csrfTokenInput.value : '';
+}
+
+document.getElementById('form-adicionar-paciente').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch('/salvar_paciente/', {
+        method: 'POST',
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert('Erro: ' + data.error);
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+});
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 function atualizarSubtotal(procedimentosContainer, subtotalElement) {

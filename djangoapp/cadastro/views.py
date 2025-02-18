@@ -1,15 +1,17 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco
 
 from django.http import HttpResponse
 from weasyprint import HTML, CSS
 import tempfile
 import os
 from django.conf import settings
+from django.db import transaction
+
+from django.views.decorators.csrf import csrf_protect
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -231,19 +233,45 @@ def visualizar_orcamento_html(request):
         "valor_total": valor_total
     })
 
-@csrf_exempt  # Apenas para testes; no ambiente de produção, use CSRF Token corretamente
-def cadastrar_paciente(request):
-    if request.method == "POST":
-        nome = request.POST.get("nome")
-        cpf = request.POST.get("cpf")
-        telefone = request.POST.get("telefone")
+@csrf_protect
+def salvar_paciente(request):
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                # Capturando dados do endereço
+                rua = request.POST.get('rua')
+                numero = request.POST.get('numero')
+                bairro = request.POST.get('bairro')
+                cidade = request.POST.get('cidade')
+                estado = request.POST.get('estado')
+                cep = request.POST.get('cep')
+                complemento = request.POST.get('complemento', '')
+                referencia = request.POST.get('referencia', '')
 
-        # Verifica se o paciente já existe no banco
-        if Paciente.objects.filter(cpf=cpf).exists():
-            return JsonResponse({"error": "Paciente já cadastrado."}, status=400)
+                # Criando e salvando endereço
+                endereco = Endereco.objects.create(
+                    rua=rua, numero=numero, bairro=bairro, cidade=cidade,
+                    estado=estado, cep=cep, complemento=complemento, referencia=referencia
+                )
 
-        # Cria e salva o novo paciente
-        paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
-        return JsonResponse({"message": "Paciente cadastrado com sucesso!", "paciente_id": paciente.id})
+                # Capturando dados do paciente
+                nome = request.POST.get('nome')
+                cpf = request.POST.get('cpf')
+                telefone = request.POST.get('telefone')
+                email = request.POST.get('email', '')
+                data_nascimento = request.POST.get('data_nascimento')
+                genero = request.POST.get('genero')
+                anamnese = request.POST.get('anamnese', '')
 
-    return JsonResponse({"error": "Método não permitido."}, status=405)
+                # Criando e salvando paciente
+                paciente = Paciente.objects.create(
+                    nome=nome, cpf=cpf, telefone=telefone, email=email,
+                    data_nascimento=data_nascimento, genero=genero, anamnese=anamnese, endereco=endereco
+                )
+
+            return JsonResponse({'message': 'Paciente salvo com sucesso!'}, status=201)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
