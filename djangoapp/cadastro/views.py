@@ -231,20 +231,19 @@ def visualizar_orcamento_html(request):
         "valor_total": valor_total
     })
 
-# @csrf_exempt
-# def cadastrar_paciente(request):
-#     if request.method == "POST":
-#         data = json.loads(request.body)
+@csrf_exempt  # Apenas para testes; no ambiente de produção, use CSRF Token corretamente
+def cadastrar_paciente(request):
+    if request.method == "POST":
+        nome = request.POST.get("nome")
+        cpf = request.POST.get("cpf")
+        telefone = request.POST.get("telefone")
 
-#         nome = data.get("nome")
-#         cpf = data.get("cpf")
-#         telefone = data.get("telefone")
+        # Verifica se o paciente já existe no banco
+        if Paciente.objects.filter(cpf=cpf).exists():
+            return JsonResponse({"error": "Paciente já cadastrado."}, status=400)
 
-#         if Paciente.objects.filter(cpf=cpf).exists():
-#             return JsonResponse({"status": "error", "message": "Paciente já cadastrado!"}, status=400)
-        
-#         paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
-        
-#         return JsonResponse({"status": "success", "paciente_id": paciente.id})
+        # Cria e salva o novo paciente
+        paciente = Paciente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
+        return JsonResponse({"message": "Paciente cadastrado com sucesso!", "paciente_id": paciente.id})
 
-#     return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
+    return JsonResponse({"error": "Método não permitido."}, status=405)

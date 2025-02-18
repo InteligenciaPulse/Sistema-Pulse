@@ -344,11 +344,41 @@ function adicionarProcedimentoBy(procedimentosContainer, nomeParceiro, subtotalE
         .catch(error => console.error("Erro ao buscar parceiros:", error));
 }
 
-// document.addEventListener("click", function(event) {
-//     if (!event.target.closest(".dropdown-procedimentos")) {
-//         document.getElementById("dropdown-item").style.display = "none";
-//     }
-// });
+// ---------------------------------------------- MODAL ADICIONAR PACIENTE ---------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    var modal = document.getElementById("modal-paciente");
+    var modalContent = document.querySelector(".modal-content");
+    var btnAbrir = document.getElementById("novo-paciente");
+    var btnFechar = document.querySelector(".close");
+
+    if (!modal || !modalContent || !btnAbrir || !btnFechar) {
+        console.error("Erro: Algum elemento do modal não foi encontrado.");
+        return;
+    }
+
+    // Abrir o modal ao clicar no botão "+"
+    btnAbrir.addEventListener("click", function () {
+        modal.style.display = "flex"; // Usa flexbox para centralizar
+    });
+
+    // Fechar o modal ao clicar no botão "X"
+    btnFechar.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // Fechar ao clicar fora do modal
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Garante que o modal esteja oculto ao carregar a página
+    document.getElementById("modal-paciente").style.display = "none";
+});
+// ---------------------------------------------------------------------------------------------------------------------------
 
 function atualizarSubtotal(procedimentosContainer, subtotalElement) {
     let total = 0;
