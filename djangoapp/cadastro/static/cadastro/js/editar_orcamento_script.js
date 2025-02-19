@@ -167,11 +167,44 @@ document.addEventListener("DOMContentLoaded", function () {
       let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
 
       atualizarSubtotal(procedimentosContainer, subtotalElement);
-      
+
       procedimentosContainer.querySelectorAll("input[type='number']").forEach(input => {
           input.addEventListener("input", function () {
               atualizarSubtotal(procedimentosContainer, subtotalElement);
           });
+      });
+  });
+});
+
+// -------------------- ADICIONAR PROCEDIMENTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".adicionar-procedimento-btn").forEach(button => {
+      button.addEventListener("click", function () {
+        let parceiroCard = this.closest(".parceiro-card");
+        let subtotalElement = parceiroCard.querySelector(".subtotal");
+        let titulo = parceiroCard.querySelector(".parceiro-title");
+        let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
+        let idParceiro = parceiroCard.getAttribute("data-parceiro-id");
+
+        adicionarProcedimentoBy(procedimentosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
+        atualizarSubtotal(procedimentosContainer, subtotalElement);
+      });
+  });
+});
+
+// -------------------- REMOVER PROCEDIMENTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".remover-procedimento-btn").forEach(button => {
+      button.addEventListener("click", function () {
+        let parceiroCard = this.closest(".parceiro-card");
+        let subtotalElement = parceiroCard.querySelector(".subtotal");
+        let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
+        let procedimentoItem = this.closest(".procedimento-item");
+
+        if (procedimentoItem) {
+          procedimentoItem.remove();
+          atualizarSubtotal(procedimentosContainer, subtotalElement);
+        }
       });
   });
 });

@@ -40,7 +40,7 @@
                       {% for parceiro in parceiros %}
                           <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
                             <div class="procedimentos-container-header">
-                              <h5>{{ parceiro.parceiro_nome }}</h5>
+                              <h5 class="parceiro-title">{{ parceiro.parceiro_nome }}</h5>
                               <button class="remover-parceiro-btn">❌ Remover Parceiro</button>
                             </div>
 
@@ -49,13 +49,13 @@
                                 <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
                                     <span>{{ procedimento.procedimento_nome }}</span>
                                     <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
-                                    <button onclick="removerProcedimento(this)">❌</button>
+                                    <button class="remover-procedimento-btn">❌</button>
                                 </div>
                                 {% endfor %}
                             </div>
 
                             <div class="procedimentos-container-buttons">
-                              <button onclick="adicionarProcedimentoBy(this)">Adicionar Procedimento</button>
+                              <button class="adicionar-procedimento-btn">Adicionar Procedimento</button>
                               <button>Adicionar Pacote</button>
                             </div>
                             <div></div>

@@ -244,70 +244,6 @@ document.addEventListener("click", function(event) {
     }
 });
 
-// ================================================================ PROCEDIMENTOS
-function adicionarProcedimentoBy(procedimentosContainer, parceiroId, nomeParceiro, subtotalElement) {
-    fetch(`/buscar_procedimentos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
-        .then(response => response.json())
-        .then(data => {
-            let dropdownProcedimentos = document.createElement("div");
-            dropdownProcedimentos.classList.add("dropdown-procedimentos");
-
-            if (data.length === 0) {
-                alert("Nenhum procedimento disponível para este parceiro.");
-                return;
-            }
-
-            data.forEach(procedimento => {
-                let option = document.createElement("div");
-                option.textContent = procedimento.nome;
-                option.classList.add("dropdown-item");
-                option.setAttribute("data-id", procedimento.id);
-                option.setAttribute("data-parceiro-id", parceiroId);
-
-                option.addEventListener("click", function () {
-                    let procedimentoItem = document.createElement("div");
-                    procedimentoItem.classList.add("procedimento-item");
-
-                    let procedimentoNome = document.createElement("span");
-                    procedimentoNome.textContent = procedimento.nome;
-
-                    let valorInput = document.createElement("input");
-                    valorInput.type = "number";
-                    valorInput.placeholder = "Valor R$";
-                    valorInput.step = 0.01;
-                    valorInput.min = 0;
-                    valorInput.value = procedimento.valor_venda;
-
-                    valorInput.addEventListener("input", function () {
-                        atualizarSubtotal(procedimentosContainer, subtotalElement);
-                    });
-
-                    let removerProcedimentoBtn = document.createElement("button");
-                    removerProcedimentoBtn.textContent = "❌";
-                    removerProcedimentoBtn.onclick = function () {
-                        procedimentoItem.remove();
-                        atualizarSubtotal(procedimentosContainer, subtotalElement);
-                    };
-
-                    procedimentoItem.appendChild(procedimentoNome);
-                    procedimentoItem.appendChild(valorInput);
-                    procedimentoItem.appendChild(removerProcedimentoBtn);
-                    procedimentoItem.setAttribute("data-id", procedimento.id);
-                    procedimentoItem.setAttribute("data-parceiro-id", parceiroId);
-
-                    procedimentosContainer.appendChild(procedimentoItem);
-                    dropdownProcedimentos.remove();
-                    atualizarSubtotal(procedimentosContainer, subtotalElement);
-                });
-
-                dropdownProcedimentos.appendChild(option);
-            });
-
-            procedimentosContainer.appendChild(dropdownProcedimentos);
-        })
-        .catch(error => console.error("Erro ao buscar parceiros:", error));
-}
-
 // ---------------------------------------------- MODAL ADICIONAR PACIENTE ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
     var modal = document.getElementById("modal-paciente");
@@ -329,8 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
     btnFechar.addEventListener("click", function () {
         modal.style.display = "none";
     });
-
-    // Fechar ao clicar fora do modal
+    
     window.addEventListener("click", function (event) {
         if (event.target === modal) {
             modal.style.display = "none";

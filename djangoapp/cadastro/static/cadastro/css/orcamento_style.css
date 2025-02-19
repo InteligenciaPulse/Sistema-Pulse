@@ -156,6 +156,7 @@ footer {
   margin-left: -20mm;
   margin-right: -20mm;
   margin-bottom: -20mm;
+  margin-top: auto;
   width: calc(100% + 40mm);
   height: 130px;
   background: linear-gradient(to right, #f0578b, #9e91a6, #0df0cf);
