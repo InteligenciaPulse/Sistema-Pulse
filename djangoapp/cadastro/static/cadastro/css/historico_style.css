@@ -154,3 +154,21 @@ th {
 .print-btn i {
   margin-right: 5px;
 }
+
+/* ---------------------- */
+.edit-btn {
+  background-color: #007bff;
+  /* Azul */
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+  /* Azul mais escuro ao passar o mouse */
+}
