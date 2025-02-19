@@ -12,68 +12,69 @@
     <script src="{% static 'cadastro/js/editar_orcamento_script.js' %}" defer></script>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="filter-section">
-                
-                <!-- Paciente -->
-                <div class="filter-paciente">
-                    <label for="paciente">Paciente</label>
-                    <div class="paciente-container">
-                        <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
-                    </div>
-                </div>
-
-                <!-- Filtro de parceiros -->
-                <div id="filter-parceiro">
-                  <label for="parceiro">Parceiro:</label>
-                  <div id="parceiro-subtype">
-                      <input type="text" id="parceiro" placeholder="Digite o nome do parceiro...">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+  <div class="container">
+      <div class="sidebar">
+          <div class="filter-section">
+              
+              <!-- Paciente -->
+              <div class="filter-paciente">
+                  <label for="paciente">Paciente</label>
+                  <div class="paciente-container">
+                      <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
                   </div>
-                  <div id="sugestoes-parceiros" class="dropdown"></div>
-                  <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
-                  
-                  <!-- Parceiros e Procedimentos -->
-                  <div id="lista-parceiros">
-                    <h4>Parceiros Selecionados:</h4>
-                    <div id="parceiro-list">
-                      {% for parceiro in parceiros %}
-                          <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
-                            <div class="procedimentos-container-header">
-                              <h5 class="parceiro-title">{{ parceiro.parceiro_nome }}</h5>
-                              <button class="remover-parceiro-btn">❌ Remover Parceiro</button>
-                            </div>
+              </div>
 
-                            <div class="procedimentos-container">
-                              {% for procedimento in parceiro.procedimentos %}
-                                <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
-                                    <span>{{ procedimento.procedimento_nome }}</span>
-                                    <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
-                                    <button class="remover-procedimento-btn">❌</button>
-                                </div>
-                                {% endfor %}
-                            </div>
-
-                            <div class="procedimentos-container-buttons">
-                              <button class="adicionar-procedimento-btn">Adicionar Procedimento</button>
-                              <button>Adicionar Pacote</button>
-                            </div>
-                            <div></div>
-                            <p class="subtotal">Subtotal: R$&nbsp;0,00</p>
+              <!-- Filtro de parceiros -->
+              <div id="filter-parceiro">
+                <label for="parceiro">Parceiro:</label>
+                <div id="parceiro-subtype">
+                    <input type="text" id="parceiro" placeholder="Digite o nome do parceiro...">
+                </div>
+                <div id="sugestoes-parceiros" class="dropdown"></div>
+                <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
+                
+                <!-- Parceiros e Procedimentos -->
+                <div id="lista-parceiros">
+                  <h4>Parceiros Selecionados:</h4>
+                  <div id="parceiro-list">
+                    {% for parceiro in parceiros %}
+                        <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                          <div class="procedimentos-container-header">
+                            <h5 class="parceiro-title">{{ parceiro.parceiro_nome }}</h5>
+                            <button class="remover-parceiro-btn">❌ Remover Parceiro</button>
                           </div>
-                      {% endfor %}
-                    </div>
+
+                          <div class="procedimentos-container">
+                            {% for procedimento in parceiro.procedimentos %}
+                              <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                                  <span>{{ procedimento.procedimento_nome }}</span>
+                                  <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
+                                  <button class="remover-procedimento-btn">❌</button>
+                              </div>
+                              {% endfor %}
+                          </div>
+
+                          <div class="procedimentos-container-buttons">
+                            <button class="adicionar-procedimento-btn">Adicionar Procedimento</button>
+                            <button>Adicionar Pacote</button>
+                          </div>
+                          <div></div>
+                          <p class="subtotal">Subtotal: R$&nbsp;0,00</p>
+                        </div>
+                    {% endfor %}
                   </div>
                 </div>
+              </div>
 
-                <!-- Total -->
-                <div class="total-container">
-                    <h3 id="total-geral">Total: R$ {{ orcamento.valor_total }}</h3>
-                    <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
-                </div>
-                
-            </div>
-        </div>
-    </div>
+              <!-- Total -->
+              <div class="total-container">
+                  <h3 id="total-geral">Total: R$ {{ orcamento.valor_total }}</h3>
+                  <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
+              </div>
+              
+          </div>
+      </div>
+  </div>
 </body>
 </html>

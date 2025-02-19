@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import tempfile
 from django.conf import settings
 from weasyprint import HTML, CSS
@@ -7,6 +8,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.utils.timezone import now
+from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -371,13 +373,18 @@ def editar_orcamento(request, orcamento_id):
     }
     
     return render(request, "cadastro/editar_orcamento.html", context)
-    
+
 @csrf_protect
-def atualizar_orcamento(request):
+def atualizar_orcamento(request, orcamento_id=None):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            orcamento = Orcamento.objects.get(id=data["orcamento_id"])
+            orcamento_id = data.get("orcamento_id", orcamento_id)
+
+            if not orcamento_id:
+                return JsonResponse({"error": "Orçamento ID não fornecido"}, status=400)
+
+            orcamento = Orcamento.objects.get(id=orcamento_id)
 
             with transaction.atomic():
                 orcamento.valor_total = data["valor_total"]

@@ -26,5 +26,4 @@ urlpatterns = [
     path("editar_orcamento/<int:orcamento_id>/", editar_orcamento, name="editar_orcamento"),
     path('atualizar_orcamento/', atualizar_orcamento, name='atualizar_orcamento'),
     path('atualizar_orcamento/<int:orcamento_id>/', atualizar_orcamento, name='atualizar_orcamento'),
-
 ]
