@@ -19,38 +19,18 @@ def criar_orcamento(request):
     return render(request, 'cadastro/criar_orcamento.html')
 
 def historico(request):
-    tipo = request.GET.get('tipo', 'solicitacoes')
+    tipo = request.GET.get("tipo", "solicitacoes")
 
-    paciente = request.GET.get('paciente')
-    especialidade = request.GET.get('especialidade')
-    procedimento = request.GET.get('procedimento')
-    parceiro = request.GET.get('parceiro')
-    data_criacao = request.GET.get('data_criacao')
-    data_aprovacao = request.GET.get('data_aprovacao')
-
-    if tipo == 'solicitacoes':
-        atividades = SolicitacaoOrcamento.objects.all().order_by('-data_solicitacao')[:10]
+    if tipo == "solicitacoes":
+        atividades = SolicitacaoOrcamento.objects.select_related("paciente", "orcamento", "status").order_by("-data_solicitacao")
     else:
-        atividades = Orcamento.objects.all().order_by('-data_aprovacao')[:10]
-
-    if paciente:
-        atividades = atividades.filter(paciente__nome__icontains=paciente)
-    if especialidade:
-        atividades = atividades.filter(procedimento__especialidade__nome__icontains=especialidade)
-    if procedimento:
-        atividades = atividades.filter(procedimento__nome__icontains=procedimento)
-    if parceiro:
-        atividades = atividades.filter(parceiro__nome__icontains=parceiro)
-    if data_criacao:
-        atividades = atividades.filter(data_solicitacao=data_criacao)
-    if data_aprovacao and tipo == 'orcamentos':
-        atividades = atividades.filter(data_aprovacao=data_aprovacao)
+        atividades = Orcamento.objects.select_related("solicitacao_orcamento__paciente", "status").prefetch_related("orcamentoparceiros__parceiro", "orcamentoparceiros__procedimento").order_by("-data_criacao")
 
     context = {
-        'atividades': atividades,
-        'tipo': tipo,
+        "atividades": atividades,
+        "tipo": tipo,
     }
-    return render(request, 'cadastro/historico.html', context)
+    return render(request, "cadastro/historico.html", context)
 
 def buscar_pacientes(request):
     query = request.GET.get('q', '')
@@ -339,3 +319,87 @@ def salvar_orcamento(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Método não permitido."}, status=405)
+
+def atualizar_status(request, orcamento_id):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            novo_status = data.get("status")
+
+            orcamento = Orcamento.objects.get(id=orcamento_id)
+            orcamento.status_id = novo_status
+            orcamento.save()
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+    return JsonResponse({"error": "Método não permitido"}, status=405)
+
+def editar_orcamento(request, orcamento_id):
+    try:
+        orcamento = Orcamento.objects.get(id=orcamento_id)
+        solicitacao = SolicitacaoOrcamento.objects.get(orcamento=orcamento)
+        parceiros_procedimentos = OrcamentoParceiros.objects.filter(orcamento=orcamento)
+
+        parceiros = {}
+        procedimentos = []
+
+        for item in parceiros_procedimentos:
+            if item.parceiro.id not in parceiros:
+                parceiros[item.parceiro.id] = {
+                    "id": item.parceiro.id,
+                    "nome": item.parceiro.nome,
+                    "procedimentos": []
+                }
+            parceiros[item.parceiro.id]["procedimentos"].append({
+                "id": item.procedimento.id,
+                "nome": item.procedimento.nome,
+                "valor_venda": item.valor_venda,
+                "valor_repasse": item.valor_repasse,
+            })
+        
+        context = {
+            "orcamento": orcamento,
+            "solicitacao": solicitacao,
+            "parceiros": list(parceiros.values()),
+            "valor_total": orcamento.valor_total,
+        }
+        
+        return render(request, "cadastro/editar_orcamento.html", context)
+
+    except Orcamento.DoesNotExist:
+        return JsonResponse({"error": "Orçamento não encontrado"}, status=404)
+    
+@csrf_protect
+def atualizar_orcamento(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            orcamento = Orcamento.objects.get(id=data["orcamento_id"])
+
+            with transaction.atomic():
+                orcamento.valor_total = data["valor_total"]
+                orcamento.save()
+
+                OrcamentoParceiros.objects.filter(orcamento=orcamento).delete()
+
+                for parceiro_data in data["parceiros"]:
+                    parceiro = Parceiro.objects.get(id=parceiro_data["parceiro_id"])
+
+                    for proc_data in parceiro_data["procedimentos"]:
+                        procedimento = Procedimento.objects.get(id=proc_data["procedimento_id"])
+
+                        OrcamentoParceiros.objects.create(
+                            orcamento=orcamento,
+                            parceiro=parceiro,
+                            procedimento=procedimento,
+                            valor_venda=proc_data["valor_venda"],
+                            valor_repasse=ParceiroProcedimentos.objects.get(parceiro=parceiro, procedimento=procedimento).valor_repasse
+                        )
+
+            return JsonResponse({"message": "Orçamento atualizado com sucesso!"})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Método não permitido"}, status=405)
