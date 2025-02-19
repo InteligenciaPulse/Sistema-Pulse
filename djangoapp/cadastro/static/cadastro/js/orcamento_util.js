@@ -29,6 +29,21 @@ function atualizarTotalGeral() {
   document.getElementById("total-geral").textContent = `Total: R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+// -------------------------------------- BUSCAR SUBTIPOS ---------------------------------------------
+function buscarSubTipos(subtipoSelect){
+  fetch("/buscar_subtipos/")
+  .then(response => response.json())
+  .then(subtipos => {
+    subtipos.forEach(subtipo => {
+        let option = document.createElement("option");
+        option.value = subtipo.id;
+        option.textContent = subtipo.nome;
+        subtipoSelect.appendChild(option);
+    });
+  })
+  .catch(error => console.error("Erro ao buscar subtipos:", error));
+}
+
 // -------------------------------------- BUSCAR PARCEIRO ---------------------------------------------
 function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
   const query = inputParceiro.value.trim();

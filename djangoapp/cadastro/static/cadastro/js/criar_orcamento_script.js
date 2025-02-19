@@ -150,17 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
     subtipoSelect.innerHTML = `<option value="">Selecione um Subtipo</option>`;
     parceiroSubtypeDiv.appendChild(subtipoSelect);
 
-    fetch("/buscar_subtipos/")
-        .then(response => response.json())
-        .then(subtipos => {
-            subtipos.forEach(subtipo => {
-                let option = document.createElement("option");
-                option.value = subtipo.id;
-                option.textContent = subtipo.nome;
-                subtipoSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error("Erro ao buscar subtipos:", error));
+    buscarSubTipos(subtipoSelect);
 
     inputParceiro.addEventListener("input", function () {
         buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);

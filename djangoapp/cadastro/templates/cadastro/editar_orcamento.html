@@ -39,17 +39,27 @@
                     <div id="parceiro-list">
                       {% for parceiro in parceiros %}
                           <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                            <div class="procedimentos-container-header">
                               <h5>{{ parceiro.parceiro_nome }}</h5>
-                              <div class="procedimentos-container">
-                                {% for procedimento in parceiro.procedimentos %}
-                                  <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.id }}">
-                                      <span>{{ procedimento.procedimento_nome }}</span>
-                                      <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
-                                      <button onclick="removerProcedimento(this)">❌</button>
-                                  </div>
-                                  {% endfor %}
-                              </div>
+                              <button class="remover-parceiro-btn">❌ Remover Parceiro</button>
+                            </div>
+
+                            <div class="procedimentos-container">
+                              {% for procedimento in parceiro.procedimentos %}
+                                <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                                    <span>{{ procedimento.procedimento_nome }}</span>
+                                    <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
+                                    <button onclick="removerProcedimento(this)">❌</button>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="procedimentos-container-buttons">
                               <button onclick="adicionarProcedimentoBy(this)">Adicionar Procedimento</button>
+                              <button>Adicionar Pacote</button>
+                            </div>
+                            <div></div>
+                            <p class="subtotal">Subtotal: R$&nbsp;0,00</p>
                           </div>
                       {% endfor %}
                     </div>
