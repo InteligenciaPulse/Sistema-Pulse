@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -13,38 +14,41 @@
     <div class="container">
         <div class="sidebar">
             <div class="filter-section">
+                
+                <!-- Paciente -->
                 <div class="filter-paciente">
                     <label for="paciente">Paciente</label>
-                    <input type="text" id="paciente" value="{{ solicitacao.paciente.nome }}" readonly>
-                </div>
-
-                <div id="filter-parceiro">
-                    <label for="parceiro">Parceiros:</label>
-                    <div id="lista-parceiros">
-                        {% for parceiro in parceiros %}
-                            <div class="parceiro-card" data-parceiro-id="{{ parceiro.id }}">
-                                <h5>{{ parceiro.nome }}</h5>
-                                <button class="remover-parceiro">❌ Remover</button>
-
-                                <div class="procedimentos-container">
-                                    {% for procedimento in parceiro.procedimentos %}
-                                        <div class="procedimento-item" data-id="{{ procedimento.id }}">
-                                            <span>{{ procedimento.nome }}</span>
-                                            <input type="number" value="{{ procedimento.valor_venda }}" class="valor-venda">
-                                            <button class="remover-procedimento">❌</button>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <button class="adicionar-procedimento">Adicionar Procedimento</button>
-                            </div>
-                        {% endfor %}
+                    <div class="paciente-container">
+                        <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
                     </div>
                 </div>
 
-                <div class="total-container">
-                    <h3 id="total-geral">Total: R$ {{ valor_total }}</h3>
-                    <button id="salvar-edicao">Salvar Alterações</button>
+                <!-- Parceiros e Procedimentos -->
+                <div id="lista-parceiros">
+                    <h4>Parceiros Selecionados:</h4>
+                    {% for parceiro in parceiros %}
+                        <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                            <h5>{{ parceiro.parceiro_nome }}</h5>
+                            <div class="procedimentos-container">
+                              {% for procedimento in parceiro.procedimentos %}
+                                <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.id }}">
+                                    <span>{{ procedimento.procedimento_nome }}</span>
+                                    <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
+                                    <button onclick="removerProcedimento(this)">❌</button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button onclick="adicionarProcedimentoBy(this)">Adicionar Procedimento</button>
+                        </div>
+                    {% endfor %}
                 </div>
+
+                <!-- Total -->
+                <div class="total-container">
+                    <h3 id="total-geral">Total: R$ {{ orcamento.valor_total }}</h3>
+                    <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
+                </div>
+                
             </div>
         </div>
     </div>

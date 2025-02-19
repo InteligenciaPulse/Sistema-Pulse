@@ -336,39 +336,41 @@ def atualizar_status(request, orcamento_id):
     return JsonResponse({"error": "Método não permitido"}, status=405)
 
 def editar_orcamento(request, orcamento_id):
+    orcamento = get_object_or_404(Orcamento, id=orcamento_id)
+
     try:
-        orcamento = Orcamento.objects.get(id=orcamento_id)
         solicitacao = SolicitacaoOrcamento.objects.get(orcamento=orcamento)
-        parceiros_procedimentos = OrcamentoParceiros.objects.filter(orcamento=orcamento)
-
-        parceiros = {}
-        procedimentos = []
-
-        for item in parceiros_procedimentos:
-            if item.parceiro.id not in parceiros:
-                parceiros[item.parceiro.id] = {
-                    "id": item.parceiro.id,
-                    "nome": item.parceiro.nome,
-                    "procedimentos": []
-                }
-            parceiros[item.parceiro.id]["procedimentos"].append({
-                "id": item.procedimento.id,
-                "nome": item.procedimento.nome,
-                "valor_venda": item.valor_venda,
-                "valor_repasse": item.valor_repasse,
-            })
+        paciente = solicitacao.paciente
+    except SolicitacaoOrcamento.DoesNotExist:
+        paciente = None
         
-        context = {
-            "orcamento": orcamento,
-            "solicitacao": solicitacao,
-            "parceiros": list(parceiros.values()),
-            "valor_total": orcamento.valor_total,
-        }
-        
-        return render(request, "cadastro/editar_orcamento.html", context)
+    parceiros_dict = {}
+    orcamento_parceiros = OrcamentoParceiros.objects.filter(orcamento=orcamento)
 
-    except Orcamento.DoesNotExist:
-        return JsonResponse({"error": "Orçamento não encontrado"}, status=404)
+    for orc_parc in orcamento_parceiros:
+        parceiro_id = orc_parc.parceiro.id
+
+        if parceiro_id not in parceiros_dict:
+            parceiros_dict[parceiro_id] = {
+                "parceiro_id": parceiro_id,
+                "parceiro_nome": orc_parc.parceiro.nome,
+                "procedimentos": []
+            }
+        
+        parceiros_dict[parceiro_id]["procedimentos"].append({
+            "procedimento_id": orc_parc.procedimento.id,
+            "procedimento_nome": orc_parc.procedimento.nome,
+            "valor_venda": str(orc_parc.valor_venda),
+            "valor_repasse": str(orc_parc.valor_repasse),
+        })
+
+    context = {
+        "orcamento": orcamento,
+        "paciente": paciente,
+        "parceiros": list(parceiros_dict.values())
+    }
+    
+    return render(request, "cadastro/editar_orcamento.html", context)
     
 @csrf_protect
 def atualizar_orcamento(request):

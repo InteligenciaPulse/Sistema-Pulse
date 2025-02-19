@@ -1,34 +1,28 @@
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("salvar-edicao").addEventListener("click", function () {
-      const orcamentoId = window.location.pathname.split("/").pop();
-      const parceiros = [];
+  document.getElementById("salvar-orcamento").addEventListener("click", function () {
+      const orcamentoId = this.getAttribute("data-id");
 
-      document.querySelectorAll(".parceiro-card").forEach(parceiroDiv => {
-          const parceiroId = parceiroDiv.getAttribute("data-parceiro-id");
-          const procedimentos = [];
-
-          parceiroDiv.querySelectorAll(".procedimento-item").forEach(proc => {
-              procedimentos.push({
-                  procedimento_id: proc.getAttribute("data-id"),
-                  valor_venda: parseFloat(proc.querySelector(".valor-venda").value)
-              });
-          });
-
-          parceiros.push({
-              parceiro_id: parceiroId,
-              procedimentos: procedimentos
+      let procedimentosSelecionados = [];
+      document.querySelectorAll(".procedimento-item").forEach(item => {
+          procedimentosSelecionados.push({
+              parceiro_id: item.getAttribute("data-parceiro-id"),
+              procedimento_id: item.getAttribute("data-id"),
+              valor_venda: parseFloat(item.querySelector("input").value || 0),
           });
       });
 
-      const valorTotal = parceiros.reduce((total, p) => total + p.procedimentos.reduce((sum, proc) => sum + proc.valor_venda, 0), 0);
+      const valorTotal = procedimentosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
 
       const payload = {
           orcamento_id: orcamentoId,
           valor_total: valorTotal.toFixed(2),
-          parceiros: parceiros
+          procedimentos: procedimentosSelecionados
       };
 
-      fetch(`/atualizar_orcamento/`, {
+      fetch(`/atualizar_orcamento/${orcamentoId}/`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
