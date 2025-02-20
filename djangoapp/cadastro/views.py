@@ -392,19 +392,19 @@ def atualizar_orcamento(request, orcamento_id=None):
 
                 OrcamentoParceiros.objects.filter(orcamento=orcamento).delete()
 
-                for parceiro_data in data["parceiros"]:
-                    parceiro = Parceiro.objects.get(id=parceiro_data["parceiro_id"])
+                for proc_data in data["procedimentos"]:
+                    parceiro = Parceiro.objects.get(id=proc_data["parceiro_id"])
+                    procedimento = Procedimento.objects.get(id=proc_data["procedimento_id"])
 
-                    for proc_data in parceiro_data["procedimentos"]:
-                        procedimento = Procedimento.objects.get(id=proc_data["procedimento_id"])
+                    orc = OrcamentoParceiros.objects.create(
+                        orcamento=orcamento,
+                        parceiro=parceiro,
+                        procedimento=procedimento,
+                        valor_venda=proc_data["valor_venda"],
+                        valor_repasse=ParceiroProcedimentos.objects.get(parceiro=parceiro, procedimento=procedimento).valor_repasse
+                    )
 
-                        OrcamentoParceiros.objects.create(
-                            orcamento=orcamento,
-                            parceiro=parceiro,
-                            procedimento=procedimento,
-                            valor_venda=proc_data["valor_venda"],
-                            valor_repasse=ParceiroProcedimentos.objects.get(parceiro=parceiro, procedimento=procedimento).valor_repasse
-                        )
+                    print(orc)
 
             return JsonResponse({"message": "Orçamento atualizado com sucesso!"})
 
