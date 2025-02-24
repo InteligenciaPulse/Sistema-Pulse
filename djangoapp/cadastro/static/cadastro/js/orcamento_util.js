@@ -145,3 +145,25 @@ function adicionarProcedimentoBy(procedimentosContainer, parceiroId, nomeParceir
       })
       .catch(error => console.error("Erro ao buscar parceiros:", error));
 }
+
+// ---------------------------------------- BUSCAR STATUS --------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/buscar_status/")
+        .then(response => response.json())
+        .then(data => {
+            const statusSelect = document.getElementById("status");
+            statusSelect.innerHTML = "";
+            
+            data.status.forEach(status => {
+                let option = document.createElement("option");
+                option.value = status.id;
+                option.textContent = status.nome;
+                statusSelect.appendChild(option);
+            });
+
+            if (statusSelect.hasAttribute("data-status-atual")) {
+                selecionarStatusAtual();
+            }
+        })
+        .catch(error => console.error("Erro ao carregar status:", error));
+});

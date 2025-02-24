@@ -16,6 +16,13 @@
   <div class="container">
       <div class="sidebar">
           <div class="filter-section">
+
+              <div class="status-container">
+                <label for="status">Status do Orçamento:</label>
+                <select id="status" name="status" data-status-atual="{{ status.id }}">
+                    <option value="">Carregando status...</option>
+                </select>
+              </div>
               
               <!-- Paciente -->
               <div class="filter-paciente">

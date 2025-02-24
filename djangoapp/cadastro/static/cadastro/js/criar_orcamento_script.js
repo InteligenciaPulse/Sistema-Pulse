@@ -306,6 +306,8 @@ document.getElementById('form-adicionar-paciente').addEventListener('submit', fu
 // ----------------------------------------- ORCAMENTO ------------------------------------------------------
 document.getElementById("proximo-passo").addEventListener("click", function () {
     const pacienteId = document.getElementById("paciente").dataset.id;
+    const statusSelecionado = document.getElementById("status").value;
+
     if (!pacienteId) {
         alert("Selecione um paciente antes de finalizar o orçamento.");
         return;
@@ -324,6 +326,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
 
     const payload = {
         paciente_id: pacienteId,
+        status: statusSelecionado,
         valor_total: valorTotal.toFixed(2),
         procedimentos: procedimentosSelecionados
     };

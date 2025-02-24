@@ -2,6 +2,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("salvar-orcamento").addEventListener("click", function () {
       const orcamentoId = this.getAttribute("data-id");
+      const statusSelecionado = document.getElementById("status").value;
 
       let procedimentosSelecionados = [];
       document.querySelectorAll(".procedimento-item").forEach(item => {
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const payload = {
           orcamento_id: orcamentoId,
+          status: statusSelecionado,
           valor_total: valorTotal.toFixed(2),
           procedimentos: procedimentosSelecionados
       };
@@ -208,3 +210,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 });
+
+// ------------------------------------------- PREENCHER COM STATUS ---------------------------------------------
+function selecionarStatusAtual() {
+    const statusSelect = document.getElementById("status");
+    const statusAtual = statusSelect.getAttribute("data-status-atual");
+
+    if (statusAtual) {
+        for (let option of statusSelect.options) {
+            if (option.value === statusAtual) {
+                option.selected = true;
+                break;
+            }
+        }
+    }
+}

@@ -277,11 +277,10 @@ def salvar_orcamento(request):
             with transaction.atomic():
                 paciente_id = data.get("paciente_id")
                 paciente = Paciente.objects.get(id=paciente_id)
-
-                status_padrao = Status.objects.get(nome="Pendente")
+                status = Status.objects.get(id=data.get('status'))
 
                 orcamento = Orcamento.objects.create(
-                    status=status_padrao, 
+                    status=status,
                     valor_total=data.get("valor_total"),
                     data_criacao=now()
                 )
@@ -289,7 +288,7 @@ def salvar_orcamento(request):
                 solicitacao = SolicitacaoOrcamento.objects.create(
                     paciente=paciente,
                     orcamento=orcamento,
-                    status=status_padrao,
+                    status=status,
                     data_solicitacao=now()
                 )
 
@@ -368,6 +367,7 @@ def editar_orcamento(request, orcamento_id):
 
     context = {
         "orcamento": orcamento,
+        "status": orcamento.status,
         "paciente": paciente,
         "parceiros": list(parceiros_dict.values())
     }
@@ -380,6 +380,7 @@ def atualizar_orcamento(request, orcamento_id=None):
         try:
             data = json.loads(request.body)
             orcamento_id = data.get("orcamento_id", orcamento_id)
+            status = Status.objects.get(id=data.get('status'))
 
             if not orcamento_id:
                 return JsonResponse({"error": "Orçamento ID não fornecido"}, status=400)
@@ -388,6 +389,7 @@ def atualizar_orcamento(request, orcamento_id=None):
 
             with transaction.atomic():
                 orcamento.valor_total = data["valor_total"]
+                orcamento.status = status
                 orcamento.save()
 
                 OrcamentoParceiros.objects.filter(orcamento=orcamento).delete()
@@ -403,12 +405,13 @@ def atualizar_orcamento(request, orcamento_id=None):
                         valor_venda=proc_data["valor_venda"],
                         valor_repasse=ParceiroProcedimentos.objects.get(parceiro=parceiro, procedimento=procedimento).valor_repasse
                     )
-
-                    print(orc)
-
             return JsonResponse({"message": "Orçamento atualizado com sucesso!"})
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "Método não permitido"}, status=405)
+
+def buscar_status(request):
+    status_list = list(Status.objects.values("id", "nome"))
+    return JsonResponse({"status": status_list})
