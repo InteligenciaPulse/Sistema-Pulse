@@ -26,7 +26,7 @@ def historico(request):
     if tipo == "solicitacoes":
         atividades = SolicitacaoOrcamento.objects.select_related("paciente", "orcamento", "status").order_by("-data_solicitacao")
     else:
-        atividades = Orcamento.objects.select_related("solicitacao_orcamento__paciente", "status").prefetch_related("orcamentoparceiros__parceiro", "orcamentoparceiros__procedimento").order_by("-data_criacao")
+        atividades = Orcamento.objects.select_related("solicitacaoorcamento__paciente", "status").prefetch_related("orcamento_parceiros__parceiro", "orcamento_parceiros__procedimento").order_by("-data_criacao")
 
     context = {
         "atividades": atividades,

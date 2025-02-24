@@ -69,7 +69,7 @@
                             {% if tipo == "solicitacoes" %}
                                 {{ atividade.data_solicitacao|date:"d/m/Y H:i" }}
                             {% else %}
-                                {{ atividade.data_criacao|date:"d/m/Y H:i" }}
+                                {{ atividade.data_criacao|date:"d/m/Y" }}
                             {% endif %}
                         </td>
                         <td>

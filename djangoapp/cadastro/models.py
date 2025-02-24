@@ -149,7 +149,7 @@ class Orcamento(models.Model):
         return f"Orçamento {self.id}"
     
 class OrcamentoParceiros(models.Model):
-    orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, verbose_name="Orçamento")
+    orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, verbose_name="Orçamento", related_name='orcamento_parceiros')
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
     procedimento = models.ForeignKey('Procedimento', on_delete=models.CASCADE, verbose_name="Procedimento", default=1)
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da venda")
