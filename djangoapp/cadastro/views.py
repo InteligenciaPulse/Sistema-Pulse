@@ -12,7 +12,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProcedimentos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -69,33 +69,33 @@ def buscar_parceiros(request):
     parceiros = Parceiro.objects.values("id", "nome")
     return JsonResponse(list(parceiros), safe=False)
 
-def buscar_parceiros_por_procedimento(request):
-    procedimento_nome = request.GET.get("procedimento_nome", "").strip()
+# def buscar_parceiros_por_procedimento(request):
+#     procedimento_nome = request.GET.get("procedimento_nome", "").strip()
 
-    if not procedimento_nome:
-        return JsonResponse([], safe=False)
+#     if not procedimento_nome:
+#         return JsonResponse([], safe=False)
 
-    try:
-        procedimento = Procedimento.objects.get(nome=procedimento_nome)
-        procedimento_id = procedimento.id
+#     try:
+#         procedimento = Procedimento.objects.get(nome=procedimento_nome)
+#         procedimento_id = procedimento.id
 
-        parceiros_procedimentos = ParceiroProcedimentos.objects.filter(procedimento_id=procedimento_id)
+#         parceiros_procedimentos = ParceiroProcedimentos.objects.filter(procedimento_id=procedimento_id)
 
-        resposta = [
-            {
-                "id": pp.parceiro.id,
-                "nome": pp.parceiro.nome,
-                "valor_venda": pp.valor_venda,
-            }
-            for pp in parceiros_procedimentos
-        ]
+#         resposta = [
+#             {
+#                 "id": pp.parceiro.id,
+#                 "nome": pp.parceiro.nome,
+#                 "valor_venda": pp.valor_venda,
+#             }
+#             for pp in parceiros_procedimentos
+#         ]
 
-        return JsonResponse(resposta, safe=False)
+#         return JsonResponse(resposta, safe=False)
 
-    except Procedimento.DoesNotExist:
-        return JsonResponse([], safe=False)
+#     except Procedimento.DoesNotExist:
+#         return JsonResponse([], safe=False)
 
-def buscar_procedimentos_por_parceiro(request):
+def buscar_produtos_por_parceiro(request):
     parceiro_nome = request.GET.get("parceiro_nome", "").strip()
 
     if not parceiro_nome:
@@ -105,15 +105,15 @@ def buscar_procedimentos_por_parceiro(request):
         parceiro = Parceiro.objects.get(nome=parceiro_nome)
         parceiro_id = parceiro.id
 
-        procedimentos_parceiro = ParceiroProcedimentos.objects.filter(parceiro_id=parceiro_id)
+        produtos_parceiro = ParceiroProdutos.objects.filter(parceiro_id=parceiro_id)
 
         resposta = [
             {
-                "id": pp.procedimento.id,
-                "nome": pp.procedimento.nome,
+                "id": pp.produto.id,
+                "nome": pp.produto.nome,
                 "valor_venda": pp.valor_venda,
             }
-            for pp in procedimentos_parceiro
+            for pp in produtos_parceiro
         ]
 
         return JsonResponse(resposta, safe=False)
@@ -391,7 +391,7 @@ def atualizar_orcamento(request, orcamento_id=None):
                 orcamento.valor_total = data["valor_total"]
                 orcamento.status = status
                 orcamento.save()
-
+                
                 OrcamentoParceiros.objects.filter(orcamento=orcamento).delete()
 
                 for proc_data in data["procedimentos"]:

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos, buscar_parceiros, buscar_procedimentos_por_pacote, buscar_pacotes, buscar_parceiros_por_procedimento, buscar_parceiros_by, buscar_procedimentos_por_parceiro, buscar_parceiros_por_subtipo, buscar_subtipos
+from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos, buscar_parceiros, buscar_procedimentos_por_pacote, buscar_pacotes, buscar_parceiros_by, buscar_produtos_por_parceiro, buscar_parceiros_por_subtipo, buscar_subtipos
 from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente
 from .views import salvar_orcamento, editar_orcamento, atualizar_orcamento, atualizar_status, buscar_status
 
@@ -11,12 +11,11 @@ urlpatterns = [
     path("buscar_procedimentos/", buscar_procedimentos, name="buscar_procedimentos"),
     path('buscar_parceiros/', buscar_parceiros, name='buscar_parceiros'),
     path('buscar_parceiros_by/', buscar_parceiros_by, name='buscar_parceiros_by'),
-    path("buscar_parceiros_por_procedimento/", buscar_parceiros_por_procedimento, name="buscar_parceiros_por_procedimento"),
     path('buscar_pacotes/', buscar_pacotes, name='buscar_pacotes'),
     path('buscar_parceiros_por_subtipo/', buscar_parceiros_por_subtipo, name='buscar_parceiros_por_subtipo'),
     path('buscar_subtipos/', buscar_subtipos, name='buscar_subtipos'),
     path("buscar_procedimentos_por_pacote/", buscar_procedimentos_por_pacote, name="buscar_procedimentos_por_pacotes"),
-    path("buscar_procedimentos_por_parceiro/", buscar_procedimentos_por_parceiro, name="buscar_procedimentos_por_parceiro"),
+    path("buscar_produtos_por_parceiro/", buscar_produtos_por_parceiro, name="buscar_produtos_por_parceiro"),
     path('visualizar-orcamento/', visualizar_orcamento_pdf, name='visualizar_orcamento'),
     path('visualizar-orcamento-html/<int:orcamento_id>/', visualizar_orcamento_html, name='visualizar_orcamento_html'),
     path('visualizar-orcamento-html/', visualizar_orcamento_html, name='visualizar_orcamento_html'),

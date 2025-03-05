@@ -94,6 +94,17 @@ class Parceiro(models.Model):
     def __str__(self):
         return self.nome
 
+class Produto(models.Model):
+    nome = models.CharField(max_length=255, verbose_name="Nome")
+
+    class Meta:
+        db_table = 'sistema_pulse"."produto'
+        verbose_name = "Produto"
+        verbose_name_plural = "Produtos"
+
+    def __str__(self):
+        return self.nome
+    
 class Procedimento(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
     especialidade = models.ForeignKey('Especialidade', on_delete=models.SET_NULL, null=True, verbose_name="Especialidade")
@@ -106,6 +117,17 @@ class Procedimento(models.Model):
     def __str__(self):
         return self.nome
     
+class ProcedimentoProdutos(models.Model):
+    procedimento = models.ForeignKey('Procedimento', on_delete=models.SET_NULL, null=True, verbose_name="Procedimento")
+    produto = models.ForeignKey('Produto', on_delete=models.SET_NULL, null=True, verbose_name="Produto")
+
+    class Meta:
+        db_table = 'sistema_pulse"."procedimento_produtos'
+        verbose_name = "Procedimento - Produto"
+
+    def __str__(self):
+        return self.procedimento
+
 class Status(models.Model):
     nome = models.CharField(max_length=50, unique=True, verbose_name="Nome")
     descricao = models.TextField(null=True, blank=True, verbose_name="Descrição")
@@ -118,21 +140,21 @@ class Status(models.Model):
     def __str__(self):
         return self.nome
     
-class ParceiroProcedimentos(models.Model):
+class ParceiroProdutos(models.Model):
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
-    procedimento = models.ForeignKey('Procedimento', on_delete=models.CASCADE, verbose_name="Procedimento")
+    produto = models.ForeignKey('Produto', on_delete=models.CASCADE, verbose_name="Produto")
     valor_particular = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Particular")
     valor_repasse = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor de Repasse")
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor de Venda")
 
     class Meta:
-        db_table = 'sistema_pulse"."parceiro_procedimentos'
-        verbose_name = "Parceiro - Procedimento"
-        verbose_name_plural = "Parceiros - Procedimentos"
-        unique_together = ('parceiro', 'procedimento')
+        db_table = 'sistema_pulse"."parceiro_produtos'
+        verbose_name = "Parceiro - Produto"
+        verbose_name_plural = "Parceiros - Produtos"
+        unique_together = ('parceiro', 'produto')
 
     def __str__(self):
-        return f"{self.parceiro.nome} - {self.procedimento.nome}"
+        return f"{self.parceiro.nome} - {self.produto.nome}"
 
 class Orcamento(models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name="Status")
@@ -151,7 +173,7 @@ class Orcamento(models.Model):
 class OrcamentoParceiros(models.Model):
     orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, verbose_name="Orçamento", related_name='orcamento_parceiros')
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
-    procedimento = models.ForeignKey('Procedimento', on_delete=models.CASCADE, verbose_name="Procedimento", default=1)
+    produto = models.ForeignKey('Produto', on_delete=models.CASCADE, verbose_name="Produto", default=2)
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da venda")
     valor_repasse = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da repasse")
 
@@ -159,7 +181,7 @@ class OrcamentoParceiros(models.Model):
         db_table = 'sistema_pulse"."orcamento_parceiros'
         verbose_name = "Orçamento - Parceiro"
         verbose_name_plural = "Orçamentos - Parceiros"
-        unique_together = ('orcamento', 'parceiro', 'procedimento')
+        unique_together = ('orcamento', 'parceiro', 'produto')
 
     def __str__(self):
         return f"{self.orcamento} - {self.parceiro.nome}"
