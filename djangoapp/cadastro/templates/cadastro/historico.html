@@ -42,26 +42,26 @@
                     {% for atividade in atividades %}
                     <tr>
                         <td>{{ atividade.id }}</td>
-                        <td>{{ atividade.paciente.nome }}</td>
+                        <td>{{ atividade.solicitacao_orcamento.paciente.nome }}</td>
                         <td>
                             {% if tipo == "solicitacoes" %}
-                                {% for parceiro in atividade.orcamento.orcamentoparceiros.all %}
+                                {% for parceiro in atividade.orcamento.orcamento_parceiros.all %}
                                     {{ parceiro.parceiro.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% else %}
-                                {% for parceiro in atividade.orcamentoparceiros.all %}
+                                {% for parceiro in atividade.orcamento_parceiros.all %}
                                     {{ parceiro.parceiro.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </td>
                         <td>
                             {% if tipo == "solicitacoes" %}
-                                {% for proc in atividade.orcamento.orcamentoparceiros.all %}
-                                    {{ proc.produto.nome }}{% if not forloop.last %}, {% endif %}
+                                {% for prod in atividade.orcamento.orcamento_parceiros.all %}
+                                    {{ prod.produto.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% else %}
-                                {% for proc in atividade.orcamentoparceiros.all %}
-                                    {{ proc.produto.nome }}{% if not forloop.last %}, {% endif %}
+                                {% for prod in atividade.orcamento_parceiros.all %}
+                                    {{ prod.produto.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </td>
@@ -74,11 +74,12 @@
                         </td>
                         <td>
                             {{ atividade.status.nome }}
+                            {{ atividade.orcamento.id }}
                         </td>
                         <td>
                             <a href="{% url 'visualizar_orcamento_html' atividade.id %}" class="view-btn">Ver</a>
-                            <button class="edit-btn" data-id="{{ atividade.orcamento.id }}">Editar</button>
-                            <button class="print-btn" data-id="{{ atividade.orcamento.id }}">Baixar</button>
+                            <button class="edit-btn" data-id="{{ atividade.id }}">Editar</button>
+                            <button class="print-btn" data-id="{{ atividade.id }}">Baixar</button>
                         </td>
                     </tr>
                     {% empty %}

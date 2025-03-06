@@ -61,11 +61,20 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  table-layout: fixed;
 }
+
+/* .table th,
+.table td {
+  text-align: left;
+  padding: 8px;
+  word-wrap: break-word;
+  white-space: normal;
+} */
 
 th,
 td {
-  padding: 10px;
+  padding: 8px;
   border-bottom: 1px solid #ddd;
   text-align: left;
 }
@@ -75,6 +84,35 @@ th {
   color: white;
 }
 
+th:nth-child(1) {
+  width: 5%;
+}
+
+th:nth-child(2) {
+  width: 20%;
+}
+
+th:nth-child(3) {
+  width: 20%;
+}
+
+th:nth-child(4) {
+  width: 25%;
+}
+
+th:nth-child(5) {
+  width: 10%;
+}
+
+th:nth-child(6) {
+  width: 10%;
+}
+
+th:nth-child(7) {
+  width: 20%;
+  text-align: center;
+}
+
 .view-btn {
   background-color: #F2568A;
   color: white;
@@ -82,6 +120,8 @@ th {
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
 }
 
 .modal {
@@ -136,7 +176,7 @@ th {
   background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
@@ -160,7 +200,7 @@ th {
   background-color: #007bff;
   /* Azul */
   color: white;
-  padding: 8px 12px;
+  padding: 5px 10px;
   border: none;
   cursor: pointer;
   border-radius: 5px;

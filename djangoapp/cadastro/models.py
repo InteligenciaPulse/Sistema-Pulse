@@ -189,7 +189,7 @@ class OrcamentoParceiros(models.Model):
 class SolicitacaoOrcamento(models.Model):
     data_solicitacao = models.DateTimeField(auto_now_add=True, verbose_name="Data da Solicitação")
     paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE, verbose_name="Paciente")
-    orcamento = models.OneToOneField('Orcamento', null=True, blank=True, on_delete=models.SET_NULL, verbose_name="Orçamento")
+    orcamento = models.OneToOneField('Orcamento', null=True, blank=True, on_delete=models.SET_NULL, verbose_name="Orçamento", related_name='solicitacao_orcamento')
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name="Status")
 
     class Meta:

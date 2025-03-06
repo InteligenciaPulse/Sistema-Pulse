@@ -21,12 +21,16 @@ def criar_orcamento(request):
     return render(request, 'cadastro/criar_orcamento.html')
 
 def historico(request):
-    tipo = request.GET.get("tipo", "solicitacoes")
+    tipo = request.GET.get("tipo", "orcamento")
 
     if tipo == "solicitacoes":
         atividades = SolicitacaoOrcamento.objects.select_related("paciente", "orcamento", "status").order_by("-data_solicitacao")
     else:
-        atividades = Orcamento.objects.select_related("solicitacaoorcamento__paciente", "status").prefetch_related("orcamento_parceiros__parceiro", "orcamento_parceiros__produto").order_by("-data_criacao")
+        atividades = Orcamento.objects.select_related("status").prefetch_related(
+            "solicitacao_orcamento__paciente",
+            "orcamento_parceiros__parceiro",
+            "orcamento_parceiros__produto"
+        ).order_by("-data_criacao")
 
     context = {
         "atividades": atividades,
