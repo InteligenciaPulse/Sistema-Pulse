@@ -14,7 +14,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -70,6 +70,22 @@ def buscar_parceiros_by(request):
     parceiros = parceiros.values("id", "nome")
     
     return JsonResponse(list(parceiros), safe=False)
+
+def buscar_procedimentos_by(request):
+    query = request.GET.get('q', '').strip()
+    especialidade_id = request.GET.get('especialidade', '').strip()
+    
+    if not query:
+        return JsonResponse([], safe=False)
+    
+    procedimentos = Procedimento.objects.filter(nome__icontains=query)
+
+    if especialidade_id:
+        procedimentos = procedimentos.filter(especialidade_id=especialidade_id)
+    
+    procedimentos = procedimentos.values("id", "nome")
+    
+    return JsonResponse(list(procedimentos), safe=False)
 
 def buscar_parceiros(request):
     parceiros = Parceiro.objects.values("id", "nome")
@@ -156,6 +172,10 @@ def buscar_procedimentos_por_pacote(request):
 def buscar_subtipos(request):
     subtipos = Subtipo.objects.all().values("id", "nome")
     return JsonResponse(list(subtipos), safe=False)
+
+def buscar_especialidades(request):
+    especialidades = Especialidade.objects.all().values("id", "nome")
+    return JsonResponse(list(especialidades), safe=False)
 
 def buscar_parceiros_por_subtipo(request):
     subtipo_id = request.GET.get("subtipo")

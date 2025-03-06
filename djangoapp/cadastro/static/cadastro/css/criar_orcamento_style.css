@@ -642,6 +642,123 @@ body {
   font-weight: bold;
 }
 
+/* --------------------------------------------------------------------------------------------- */
+.dropdown-procedimentos {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  display: block;
+  z-index: 1000;
+  width: 220px;
+}
+
+.dropdown-procedimentos .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-procedimentos .dropdown-item:hover {
+  background-color: #F2568A;
+  color: white;
+}
+
+#procedimentos-specialty {
+  display: flex;
+  gap: 5px;
+}
+
+#procedimentos-specialty input {
+  width: 100%;
+}
+
+#procedimentos-specialty select {
+  width: 45%;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: white;
+  color: #F2568A;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#procedimentos-specialty select option {
+  background-color: white;
+  font-weight: bold;
+}
+
+#filter-procedimentos-add-button {
+  margin-top: 5px;
+}
+
+#lista-procedimentos h4 {
+  margin: 15px 0 5px;
+}
+
+/* --------------------------------------------------------------------------------------------- */
+.procedimento-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+}
+
+.procedimento-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: white;
+  padding: 3px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+}
+
+.procedimento-item:first-child {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.procedimento-item:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom: none;
+}
+
+.procedimento-item span {
+  flex: 19;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.procedimento-item button {
+  flex: 1;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 20px;
+}
+
+.procedimento-item button:hover {
+  color: white;
+}
+
+/* --------------------------------------------------------------------------------------------- */
+
 /* ------------------------------------- MODAL ----------------------------------------- */
 /* Fundo escuro cobrindo toda a tela */
 .modal {

@@ -82,7 +82,7 @@ function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
       .catch(error => console.error("Erro ao buscar parceiros:", error));
 }
 
-// --------------------------------------- ADICIONAR PROCEDIMENTOS ------------------------------------
+// --------------------------------------- ADICIONAR PRODUTOS ------------------------------------
 function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
   fetch(`/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
       .then(response => response.json())
@@ -167,3 +167,56 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error("Erro ao carregar status:", error));
 });
+
+// -------------------------------------- BUSCAR ESPECIALIDADES ---------------------------------------------
+function buscarEspecialidades(specialtySelect){
+    fetch("/buscar_especialidades/")
+    .then(response => response.json())
+    .then(especialidades => {
+      especialidades.forEach(especialidade => {
+          let option = document.createElement("option");
+          option.value = especialidade.id;
+          option.textContent = especialidade.nome;
+          specialtySelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error("Erro ao buscar especialidades:", error));
+  }
+
+  // -------------------------------------- BUSCAR PROCEDIMENTOS ---------------------------------------------
+function buscarProcedimentos(dropdown, inputProcedimentos, especialidadeSelecionada){
+    const query = inputProcedimentos.value.trim();
+    if (query.length < 1) {
+        dropdown.innerHTML = "";
+        dropdown.style.display = "none";
+        return;
+    }
+  
+    fetch(`/buscar_procedimentos_by/?q=${encodeURIComponent(query)}&especialidade=${especialidadeSelecionada}`)
+        .then(response => response.json())
+        .then(data => {
+            dropdown.innerHTML = "";
+            if (data.length === 0) {
+                dropdown.style.display = "none";
+                return;
+            }
+  
+            data.forEach(procedimento => {
+                let option = document.createElement("div");
+                option.textContent = procedimento.nome;
+                option.classList.add("dropdown-item");
+                option.setAttribute("data-id", procedimento.id);
+  
+                option.addEventListener("click", function () {
+                    inputProcedimentos.value = procedimento.nome;
+                    inputProcedimentos.setAttribute("data-id", procedimento.id);
+                    dropdown.style.display = "none";
+                });
+  
+                dropdown.appendChild(option);
+            });
+  
+            dropdown.style.display = "block";
+        })
+        .catch(error => console.error("Erro ao buscar prcoedimentos:", error));
+  }

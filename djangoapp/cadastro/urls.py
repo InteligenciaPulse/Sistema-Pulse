@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos, buscar_parceiros, buscar_procedimentos_por_pacote, buscar_pacotes, buscar_parceiros_by, buscar_produtos_por_parceiro, buscar_parceiros_por_subtipo, buscar_subtipos
-from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente
+from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente, buscar_especialidades, buscar_procedimentos_by
 from .views import salvar_orcamento, editar_orcamento, atualizar_orcamento, atualizar_status, buscar_status, exportar_historico_excel
 
 urlpatterns = [
@@ -27,4 +27,6 @@ urlpatterns = [
     path('atualizar_orcamento/<int:orcamento_id>/', atualizar_orcamento, name='atualizar_orcamento'),
     path('buscar_status/', buscar_status, name='buscar_status'),
     path("exportar-historico/", exportar_historico_excel, name="exportar_historico_excel"),
+    path('buscar_especialidades/', buscar_especialidades, name='buscar_especialidades'),
+    path('buscar_procedimentos_by/', buscar_procedimentos_by, name='buscar_procedimentos_by'),
 ]

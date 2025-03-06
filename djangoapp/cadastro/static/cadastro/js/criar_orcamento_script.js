@@ -720,3 +720,74 @@ function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) 
 //         }
 //     }, { once: true }); // Para remover o event listener após um clique
 // }
+
+// --------------------------------------------- PROCEDIMENTOS -------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    const inputProcedimentos = document.getElementById("procedimentos");
+    const procedimentosSpecialtyDiv = document.getElementById("procedimentos-specialty");
+    const dropdown = document.getElementById("sugestoes-procedimentos");
+    const listaProcedimentos = document.getElementById("procedimentos-list");
+
+    const specialtySelect = document.createElement("select");
+    specialtySelect.id = "specialty-select";
+    specialtySelect.innerHTML = `<option value="">Especialidade</option>`;
+    procedimentosSpecialtyDiv.appendChild(specialtySelect);
+
+    buscarEspecialidades(specialtySelect);
+
+    inputProcedimentos.addEventListener("input", function () {
+        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
+    });
+
+    inputProcedimentos.addEventListener("focus", function () {
+        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
+    });
+
+    specialtySelect.addEventListener("change", function () {
+        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!inputProcedimentos.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = "none";
+        }
+    });
+
+    window.adicionarProcedimentos = function () {
+        const nome = inputProcedimentos.value.trim();
+        const idProcedimento = inputProcedimentos.getAttribute("data-id");
+
+        if (!nome || !idProcedimento) {
+            alert("Selecione um procedimento válido.");
+            return;
+        }
+
+        let listaProcedimentos = document.getElementById("procedimentos-list");
+
+        let procedimentoItem = document.createElement("li");
+        procedimentoItem.classList.add("procedimento-item");
+
+        let titulo = document.createElement("span");
+        titulo.textContent = nome;
+
+        let removerBtn = document.createElement("button");
+        removerBtn.textContent = "❌";
+        removerBtn.onclick = function () {
+            procedimentoItem.remove();
+        };
+
+        procedimentoItem.appendChild(titulo);
+        procedimentoItem.appendChild(removerBtn);
+
+        listaProcedimentos.appendChild(procedimentoItem);
+
+        inputProcedimentos.value = "";
+        inputProcedimentos.removeAttribute("data-id");
+    };
+});
+
+document.addEventListener("click", function(event) {
+    if (!event.target.closest(".filter-procedimentos")) {
+        document.getElementById("sugestoes-procedimentos").style.display = "none";
+    }
+});

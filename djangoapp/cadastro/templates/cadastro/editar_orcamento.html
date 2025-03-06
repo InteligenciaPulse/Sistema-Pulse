@@ -24,6 +24,22 @@
                     <option value="">Carregando status...</option>
                 </select>
               </div>
+
+              <div class="filter-procedimentos">
+                <label for="procedimentos">Procedimentos</label>
+                <div id="procedimentos-specialty">
+                    <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento...">
+                </div>
+                <div id="sugestoes-procedimentos" class="dropdown"></div>
+                <button id= "filter-procedimentos-add-button" onclick="adicionarProcedimentos()">Adicionar procedimento</button>
+
+                <div id="lista-procedimentos">
+                    <h4>Procedimentos Selecionados:</h4>
+                    <div id="procedimentos-list">
+                        <!-- Os procedimentos aparecerão aqui -->
+                    </div>
+                </div>
+              </div>
               
               <!-- Paciente -->
               <div class="filter-paciente">
