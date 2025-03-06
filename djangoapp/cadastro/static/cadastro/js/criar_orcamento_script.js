@@ -51,19 +51,19 @@ document.addEventListener("click", function(event) {
 
 // =================================================== PROCEDIMENTOS
 // document.addEventListener("DOMContentLoaded", function () {
-//     const inputProcedimento = document.getElementById("procedimento");
-//     const dropdown = document.getElementById("sugestoes-procedimentos");
-//     const listaProcedimentos = document.getElementById("procedimentos-list");
+//     const inputProduto = document.getElementById("produto");
+//     const dropdown = document.getElementById("sugestoes-produtos");
+//     const listaProdutos = document.getElementById("produtos-list");
 
-//     inputProcedimento.addEventListener("input", function () {
-//         const query = inputProcedimento.value.trim();
+//     inputProduto.addEventListener("input", function () {
+//         const query = inputProduto.value.trim();
 //         if (query.length < 1) {
 //             dropdown.innerHTML = "";
 //             dropdown.style.display = "none";
 //             return;
 //         }
 
-//         fetch(`/buscar_procedimentos/?q=${query}`)
+//         fetch(`/buscar_produtos/?q=${query}`)
 //             .then(response => response.json())
 //             .then(data => {
 //                 dropdown.innerHTML = "";
@@ -72,13 +72,13 @@ document.addEventListener("click", function(event) {
 //                     return;
 //                 }
 
-//                 data.forEach(procedimento => {
+//                 data.forEach(produto => {
 //                     let option = document.createElement("div");
-//                     option.textContent = procedimento.nome;
+//                     option.textContent = produto.nome;
 //                     option.classList.add("dropdown-item");
 
 //                     option.addEventListener("click", function () {
-//                         inputProcedimento.value = procedimento.nome;
+//                         inputProduto.value = produto.nome;
 //                         dropdown.style.display = "none";
 //                     });
 
@@ -87,25 +87,25 @@ document.addEventListener("click", function(event) {
 
 //                 dropdown.style.display = "block";
 //             })
-//             .catch(error => console.error("Erro ao buscar procedimentos:", error));
+//             .catch(error => console.error("Erro ao buscar produtos:", error));
 //     });
 
 //     document.addEventListener("click", function (event) {
-//         if (!inputProcedimento.contains(event.target) && !dropdown.contains(event.target)) {
+//         if (!inputProduto.contains(event.target) && !dropdown.contains(event.target)) {
 //             dropdown.style.display = "none";
 //         }
 //     });
 
-//     window.adicionarProcedimento = function () {
-//         const nome = inputProcedimento.value.trim();
+//     window.adicionarProduto = function () {
+//         const nome = inputProduto.value.trim();
 
 //         if (!nome) {
-//             alert("Selecione um procedimento válido.");
+//             alert("Selecione um produto válido.");
 //             return;
 //         }
 
-//         let procedimentoDiv = document.createElement("div");
-//         procedimentoDiv.classList.add("procedimento-card");
+//         let produtoDiv = document.createElement("div");
+//         produtoDiv.classList.add("produto-card");
 
 //         let titulo = document.createElement("h5");
 //         titulo.textContent = nome;
@@ -120,20 +120,20 @@ document.addEventListener("click", function(event) {
 //             adicionarParceiro(parceirosContainer, titulo.textContent.trim());
 //         };
 
-//         let removerProcedimentoBtn = document.createElement("button");
-//         removerProcedimentoBtn.textContent = "❌ Remover Procedimento";
-//         removerProcedimentoBtn.onclick = function () {
-//             procedimentoDiv.remove();
+//         let removerProdutoBtn = document.createElement("button");
+//         removerProdutoBtn.textContent = "❌ Remover Produto";
+//         removerProdutoBtn.onclick = function () {
+//             produtoDiv.remove();
 //         };
 
-//         procedimentoDiv.appendChild(titulo);
-//         procedimentoDiv.appendChild(parceirosContainer);
-//         procedimentoDiv.appendChild(adicionarParceiroBtn);
-//         procedimentoDiv.appendChild(removerProcedimentoBtn);
+//         produtoDiv.appendChild(titulo);
+//         produtoDiv.appendChild(parceirosContainer);
+//         produtoDiv.appendChild(adicionarParceiroBtn);
+//         produtoDiv.appendChild(removerProdutoBtn);
 
-//         listaProcedimentos.appendChild(procedimentoDiv);
+//         listaProdutos.appendChild(produtoDiv);
 
-//         inputProcedimento.value = "";
+//         inputProduto.value = "";
 //     };
 // });
 
@@ -190,28 +190,28 @@ document.addEventListener("DOMContentLoaded", function () {
         subtotal.classList.add("subtotal");
         subtotal.textContent = "Subtotal: R$ 0.00";
         
-        let procedimentosContainer = document.createElement("div");
-        procedimentosContainer.classList.add("procedimentos-container");
+        let produtosContainer = document.createElement("div");
+        produtosContainer.classList.add("produtos-container");
 
-        let adicionarProcedimentoBtn = document.createElement("button");
-        adicionarProcedimentoBtn.textContent = "Adicionar Procedimento";
+        let adicionarProdutoBtn = document.createElement("button");
+        adicionarProdutoBtn.textContent = "Adicionar Produto";
 
-        adicionarProcedimentoBtn.onclick = function () {
-            adicionarProcedimentoBy(procedimentosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+        adicionarProdutoBtn.onclick = function () {
+            adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
         };
 
         let adicionarPacoteBtn = document.createElement("button");
         adicionarPacoteBtn.textContent = "Adicionar Pacote";
 
         adicionarPacoteBtn.onclick = function () {
-            adicionarPacote(pacoteDropdownDiv, procedimentosContainer, subtotal);
+            adicionarPacote(pacoteDropdownDiv, produtosContainer, subtotal);
         };
 
         let pacoteDropdownDiv = document.createElement("div");
 
         let buttonsDiv = document.createElement("div");
-        buttonsDiv.classList.add("procedimentos-container-buttons");
-        buttonsDiv.appendChild(adicionarProcedimentoBtn);
+        buttonsDiv.classList.add("produtos-container-buttons");
+        buttonsDiv.appendChild(adicionarProdutoBtn);
         buttonsDiv.appendChild(adicionarPacoteBtn);
 
         let removerParceiroBtn = document.createElement("button");
@@ -221,12 +221,12 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         let headerDiv = document.createElement("div");
-        headerDiv.classList.add("procedimentos-container-header");
+        headerDiv.classList.add("produtos-container-header");
         headerDiv.appendChild(titulo)
         headerDiv.appendChild(removerParceiroBtn);
         
         parceiroDiv.appendChild(headerDiv);
-        parceiroDiv.appendChild(procedimentosContainer);
+        parceiroDiv.appendChild(produtosContainer);
         parceiroDiv.appendChild(buttonsDiv);
         parceiroDiv.appendChild(pacoteDropdownDiv);
         parceiroDiv.appendChild(subtotal);
@@ -313,22 +313,22 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         return;
     }
 
-    let procedimentosSelecionados = [];
-    document.querySelectorAll(".procedimento-item").forEach(item => {
-        procedimentosSelecionados.push({
+    let produtosSelecionados = [];
+    document.querySelectorAll(".produto-item").forEach(item => {
+        produtosSelecionados.push({
             parceiro_id: item.getAttribute("data-parceiro-id"),
-            procedimento_id: item.getAttribute("data-id"),
+            produto_id: item.getAttribute("data-id"),
             valor_venda: parseFloat(item.querySelector("input").value || 0),
         });
     });
 
-    const valorTotal = procedimentosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+    const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
 
     const payload = {
         paciente_id: pacienteId,
         status: statusSelecionado,
         valor_total: valorTotal.toFixed(2),
-        procedimentos: procedimentosSelecionados
+        produtos: produtosSelecionados
     };
 
     fetch("/salvar_orcamento/", {
@@ -354,15 +354,15 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
 // ----------------------------------------------------------------------------------------------------------
 
 // =================================================== PARCEIROS POR PROCEDIMENTO
-// function adicionarParceiro(parceirosContainer, nomeProcedimento) {
-//     fetch(`/buscar_parceiros_por_procedimento/?procedimento_nome=${encodeURIComponent(nomeProcedimento)}`)
+// function adicionarParceiro(parceirosContainer, nomeProduto) {
+//     fetch(`/buscar_parceiros_por_produto/?produto_nome=${encodeURIComponent(nomeProduto)}`)
 //         .then(response => response.json())
 //         .then(data => {
 //             let dropdownParceiros = document.createElement("div");
 //             dropdownParceiros.classList.add("dropdown-parceiros");
 
 //             if (data.length === 0) {
-//                 alert("Nenhum parceiro disponível para este procedimento.");
+//                 alert("Nenhum parceiro disponível para este produto.");
 //                 return;
 //             }
 
@@ -426,7 +426,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
 // });
 
 // =================================================== PACOTES
-function adicionarPacote(container, procedimentosContainer, subtotalElement) {
+function adicionarPacote(container, produtosContainer, subtotalElement) {
     let dropdownPacotes = document.createElement("div");
     dropdownPacotes.classList.add("dropdown-pacotes");
 
@@ -457,9 +457,9 @@ function adicionarPacote(container, procedimentosContainer, subtotalElement) {
                     option.classList.add("dropdown-item");
 
                     option.addEventListener("click", function () {
-                        adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElement);
+                        adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement);
                         dropdownPacotes.remove();
-                        atualizarSubtotal(procedimentosContainer, subtotalElement);
+                        atualizarSubtotal(produtosContainer, subtotalElement);
                     });
 
                     sugestoesPacotes.appendChild(option);
@@ -474,7 +474,7 @@ function adicionarPacote(container, procedimentosContainer, subtotalElement) {
     container.appendChild(dropdownPacotes);
 }
 
-function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElement) {
+function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) {
     let pacoteItem = document.createElement("div");
     pacoteItem.classList.add("pacote-item");
 
@@ -488,32 +488,32 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElem
     valorInput.min = 0;
     valorInput.classList.add("valor-input");
 
-    let listaProcedimentos = document.createElement("ul");
-    listaProcedimentos.classList.add("lista-procedimentos");
+    let listaProdutos = document.createElement("ul");
+    listaProdutos.classList.add("lista-produtos");
 
-    fetch(`/buscar_procedimentos_por_pacote/?pacote_nome=${encodeURIComponent(pacote.nome)}`)
+    fetch(`/buscar_produtos_por_pacote/?pacote_nome=${encodeURIComponent(pacote.nome)}`)
         .then(response => response.json())
-        .then(procedimentos => {
-            if (procedimentos.length === 0) {
+        .then(produtos => {
+            if (produtos.length === 0) {
                 let item = document.createElement("li");
-                item.textContent = "Nenhum procedimento encontrado.";
-                listaProcedimentos.appendChild(item);
+                item.textContent = "Nenhum produto encontrado.";
+                listaProdutos.appendChild(item);
             } else {
-                procedimentos.forEach(proc => {
+                produtos.forEach(proc => {
                     let item = document.createElement("li");
                     item.textContent = `${proc.nome}`;
-                    listaProcedimentos.appendChild(item);
+                    listaProdutos.appendChild(item);
                 });
             }
         })
-        .catch(error => console.error("Erro ao buscar procedimentos do pacote:", error));
+        .catch(error => console.error("Erro ao buscar produtos do pacote:", error));
 
         let removerPacoteBtn = document.createElement("button");
         removerPacoteBtn.textContent = "❌";
         removerPacoteBtn.classList.add("remover-pacote");
         removerPacoteBtn.onclick = function () {
             pacoteItem.remove();
-            atualizarSubtotal(procedimentosContainer, subtotalElement);
+            atualizarSubtotal(produtosContainer, subtotalElement);
         };
     
         let infoContainer = document.createElement("div");
@@ -523,15 +523,15 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElem
         infoContainer.appendChild(removerPacoteBtn);
     
         pacoteItem.appendChild(infoContainer);
-        pacoteItem.appendChild(listaProcedimentos);
+        pacoteItem.appendChild(listaProdutos);
     
-        procedimentosContainer.appendChild(pacoteItem);
+        produtosContainer.appendChild(pacoteItem);
 
         valorInput.addEventListener("input", function () {
-            atualizarSubtotal(procedimentosContainer, subtotalElement);
+            atualizarSubtotal(produtosContainer, subtotalElement);
         });
 
-        atualizarSubtotal(procedimentosContainer, subtotalElement);
+        atualizarSubtotal(produtosContainer, subtotalElement);
 }
 
 // document.addEventListener("DOMContentLoaded", function () {
@@ -594,27 +594,27 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElem
 //         let titulo = document.createElement("h5");
 //         titulo.textContent = nomePacote;
     
-//         let procedimentosContainer = document.createElement("div");
-//         procedimentosContainer.classList.add("procedimentos-container");
+//         let produtosContainer = document.createElement("div");
+//         produtosContainer.classList.add("produtos-container");
     
-//         // Buscar procedimentos associados ao pacote
-//         fetch(`/buscar_procedimentos_por_pacote/?pacote_nome=${encodeURIComponent(nomePacote)}`)
+//         // Buscar produtos associados ao pacote
+//         fetch(`/buscar_produtos_por_pacote/?pacote_nome=${encodeURIComponent(nomePacote)}`)
 //             .then(response => response.json())
-//             .then(procedimentos => {
-//                 if (procedimentos.length === 0) {
+//             .then(produtos => {
+//                 if (produtos.length === 0) {
 //                     let emptyMessage = document.createElement("p");
-//                     emptyMessage.textContent = "Nenhum procedimento associado.";
-//                     procedimentosContainer.appendChild(emptyMessage);
+//                     emptyMessage.textContent = "Nenhum produto associado.";
+//                     produtosContainer.appendChild(emptyMessage);
 //                 } else {
-//                     procedimentos.forEach(proc => {
-//                         let procedimentoItem = document.createElement("div");
-//                         procedimentoItem.classList.add("procedimento-item");
-//                         procedimentoItem.textContent = proc.nome;
-//                         procedimentosContainer.appendChild(procedimentoItem);
+//                     produtos.forEach(proc => {
+//                         let produtoItem = document.createElement("div");
+//                         produtoItem.classList.add("produto-item");
+//                         produtoItem.textContent = proc.nome;
+//                         produtosContainer.appendChild(produtoItem);
 //                     });
 //                 }
 //             })
-//             .catch(error => console.error("Erro ao buscar procedimentos do pacote:", error));
+//             .catch(error => console.error("Erro ao buscar produtos do pacote:", error));
     
 //         let parceirosPacoteContainer = document.createElement("div");
 //         parceirosPacoteContainer.classList.add("parceirosPacote-container");
@@ -632,7 +632,7 @@ function adicionarPacoteAoContainer(procedimentosContainer, pacote, subtotalElem
 //         };
     
 //         pacoteDiv.appendChild(titulo);
-//         pacoteDiv.appendChild(procedimentosContainer);
+//         pacoteDiv.appendChild(produtosContainer);
 //         pacoteDiv.appendChild(parceirosPacoteContainer);
 //         pacoteDiv.appendChild(adicionarParceiroPacoteBtn);
 //         pacoteDiv.appendChild(removerPacoteBtn);

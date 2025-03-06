@@ -139,15 +139,15 @@ body {
   background-color: #e04576;
 }
 
-#filter-procedimento button {
+#filter-produto button {
   margin-top: 5px;
 }
 
-#lista-procedimentos h4 {
+#lista-produtos h4 {
   margin: 15px 0 5px;
 }
 
-.procedimento-card {
+.produto-card {
   border: 2px solid #F2568A;
   padding: 15px;
   margin: 10px 0;
@@ -159,7 +159,7 @@ body {
   gap: 10px;
 }
 
-.procedimento-card h5 {
+.produto-card h5 {
   margin: 0;
   font-size: 18px;
   color: #F2568A;
@@ -209,7 +209,7 @@ body {
   color: red;
 }
 
-.procedimento-card button {
+.produto-card button {
   background-color: #F2568A;
   color: white;
   border: none;
@@ -218,7 +218,7 @@ body {
   width: fit-content;
 }
 
-.procedimento-card button:hover {
+.produto-card button:hover {
   background-color: #e04576;
 }
 
@@ -247,7 +247,7 @@ body {
   color: white;
 }
 
-.procedimentos-container-header {
+.produtos-container-header {
   display: flex;
   align-content: center;
   justify-content: space-between;
@@ -311,7 +311,7 @@ body {
   font-weight: bold;
 }
 
-.procedimentos-container {
+.produtos-container {
   background: #fce4ec;
   margin-top: 0;
   display: flex;
@@ -319,7 +319,7 @@ body {
   flex-direction: column;
 }
 
-.procedimento-item {
+.produto-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -329,13 +329,13 @@ body {
   gap: 10px;
 }
 
-.procedimento-item span {
+.produto-item span {
   flex: 2;
   font-weight: bold;
   color: black;
 }
 
-.procedimento-item input {
+.produto-item input {
   flex: 1;
   min-width: 80px;
   max-width: 100px;
@@ -344,7 +344,7 @@ body {
   text-align: center;
 }
 
-.procedimento-item button {
+.produto-item button {
   background-color: transparent;
   color: #F2568A;
   border: none;
@@ -352,7 +352,7 @@ body {
   text-align: center;
 }
 
-.procedimento-item button:hover {
+.produto-item button:hover {
   color: red;
 }
 
@@ -369,7 +369,7 @@ body {
   background-color: #e04576;
 }
 
-.dropdown-procedimentos {
+.dropdown-produtos {
   position: absolute;
   background: white;
   border: 1px solid #ccc;
@@ -380,7 +380,7 @@ body {
   width: 95%;
 }
 
-.dropdown-procedimentos .dropdown-item {
+.dropdown-produtos .dropdown-item {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid #eee;
@@ -389,7 +389,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.dropdown-procedimentos .dropdown-item:hover {
+.dropdown-produtos .dropdown-item:hover {
   background-color: #F2568A;
   color: white;
 }
@@ -402,7 +402,7 @@ body {
   margin-top: 5px;
 }
 
-.procedimentos-container-buttons {
+.produtos-container-buttons {
   display: flex;
   gap: 5px;
 }
@@ -493,21 +493,21 @@ body {
   color: white;
 }
 
-/* Lista de procedimentos do pacote */
-.lista-procedimentos {
+/* Lista de produtos do pacote */
+.lista-produtos {
   margin-top: 8px;
   padding-left: 15px;
   list-style-type: none;
 }
 
-.lista-procedimentos li {
+.lista-produtos li {
   font-size: 14px;
   color: #555;
   padding: 3px 0;
   font-weight: bold;
 }
 
-.lista-procedimentos li:before {
+.lista-produtos li:before {
   content: "✔ ";
   color: green;
 }
@@ -590,14 +590,14 @@ body {
   background-color: #e04576;
 }
 
-.procedimentos-container {
+.produtos-container {
   background: #fce4ec;
   padding: 5px;
   border-radius: 5px;
   margin-top: 0px;
 }
 
-.procedimento-item {
+.produto-item {
   font-size: 14px;
   padding: 5px;
   border-bottom: 1px solid #ddd;

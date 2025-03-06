@@ -34,20 +34,20 @@
             <p>🏠 {{ cliente.endereco }}</p>
         </section>
 
-        <!-- Tabela de Procedimentos -->
-        <section class="procedimentos">
+        <!-- Tabela de Produtos -->
+        <section class="produtos">
             <table>
                 <thead>
                     <tr>
-                        <th class="pink-bg">PROCEDIMENTOS</th>
+                        <th class="pink-bg">PRODUTOS</th>
                         <th class="green-bg">OBSERVAÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for procedimento in procedimentos %}
+                    {% for produto in produtos %}
                     <tr>
-                        <td>{{ procedimento.descricao }}</td>
-                        <td>{{ procedimento.observacao }}</td>
+                        <td>{{ produto.descricao }}</td>
+                        <td>{{ produto.observacao }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

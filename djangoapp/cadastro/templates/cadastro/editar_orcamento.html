@@ -42,29 +42,29 @@
                 <div id="sugestoes-parceiros" class="dropdown"></div>
                 <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
                 
-                <!-- Parceiros e Procedimentos -->
+                <!-- Parceiros e Produtos -->
                 <div id="lista-parceiros">
                   <h4>Parceiros Selecionados:</h4>
                   <div id="parceiro-list">
                     {% for parceiro in parceiros %}
                         <div class="parceiro-card" data-parceiro-id="{{ parceiro.parceiro_id }}">
-                          <div class="procedimentos-container-header">
+                          <div class="produtos-container-header">
                             <h5 class="parceiro-title">{{ parceiro.parceiro_nome }}</h5>
                             <button class="remover-parceiro-btn">❌ Remover Parceiro</button>
                           </div>
 
-                          <div class="procedimentos-container">
-                            {% for procedimento in parceiro.procedimentos %}
-                              <div class="procedimento-item" data-id="{{ procedimento.procedimento_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
-                                  <span>{{ procedimento.procedimento_nome }}</span>
-                                  <input type="number" value="{{ procedimento.valor_venda }}" step="0.01">
-                                  <button class="remover-procedimento-btn">❌</button>
+                          <div class="produtos-container">
+                            {% for produto in parceiro.produtos %}
+                              <div class="produto-item" data-id="{{ produto.produto_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                                  <span>{{ produto.produto_nome }}</span>
+                                  <input type="number" value="{{ produto.valor_venda }}" step="0.01">
+                                  <button class="remover-produto-btn">❌</button>
                               </div>
                               {% endfor %}
                           </div>
 
-                          <div class="procedimentos-container-buttons">
-                            <button class="adicionar-procedimento-btn">Adicionar Procedimento</button>
+                          <div class="produtos-container-buttons">
+                            <button class="adicionar-produto-btn">Adicionar Produto</button>
                             <button>Adicionar Pacote</button>
                           </div>
                           <div></div>

@@ -126,7 +126,7 @@ class ProcedimentoProdutos(models.Model):
         verbose_name = "Procedimento - Produto"
 
     def __str__(self):
-        return self.procedimento
+        return self.procedimento.nome
 
 class Status(models.Model):
     nome = models.CharField(max_length=50, unique=True, verbose_name="Nome")

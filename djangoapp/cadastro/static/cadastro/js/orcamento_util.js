@@ -3,10 +3,10 @@ function getCSRFToken() {
   return csrfTokenInput ? csrfTokenInput.value : '';
 }
 
-function atualizarSubtotal(procedimentosContainer, subtotalElement) {
+function atualizarSubtotal(produtosContainer, subtotalElement) {
   let total = 0;
 
-  procedimentosContainer.querySelectorAll("input[type='number']").forEach(input => {
+  produtosContainer.querySelectorAll("input[type='number']").forEach(input => {
       total += parseFloat(input.value) || 0;
   });
 
@@ -83,65 +83,65 @@ function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
 }
 
 // --------------------------------------- ADICIONAR PROCEDIMENTOS ------------------------------------
-function adicionarProcedimentoBy(procedimentosContainer, parceiroId, nomeParceiro, subtotalElement) {
-  fetch(`/buscar_procedimentos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
+function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
+  fetch(`/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
       .then(response => response.json())
       .then(data => {
-          let dropdownProcedimentos = document.createElement("div");
-          dropdownProcedimentos.classList.add("dropdown-procedimentos");
+          let dropdownProdutos = document.createElement("div");
+          dropdownProdutos.classList.add("dropdown-produtos");
 
           if (data.length === 0) {
-              alert("Nenhum procedimento disponível para este parceiro.");
+              alert("Nenhum produto disponível para este parceiro.");
               return;
           }
 
-          data.forEach(procedimento => {
+          data.forEach(produto => {
               let option = document.createElement("div");
-              option.textContent = procedimento.nome;
+              option.textContent = produto.nome;
               option.classList.add("dropdown-item");
-              option.setAttribute("data-id", procedimento.id);
+              option.setAttribute("data-id", produto.id);
               option.setAttribute("data-parceiro-id", parceiroId);
 
               option.addEventListener("click", function () {
-                  let procedimentoItem = document.createElement("div");
-                  procedimentoItem.classList.add("procedimento-item");
+                  let produtoItem = document.createElement("div");
+                  produtoItem.classList.add("produto-item");
 
-                  let procedimentoNome = document.createElement("span");
-                  procedimentoNome.textContent = procedimento.nome;
+                  let produtoNome = document.createElement("span");
+                  produtoNome.textContent = produto.nome;
 
                   let valorInput = document.createElement("input");
                   valorInput.type = "number";
                   valorInput.placeholder = "Valor R$";
                   valorInput.step = 0.01;
                   valorInput.min = 0;
-                  valorInput.value = procedimento.valor_venda;
+                  valorInput.value = produto.valor_venda;
 
                   valorInput.addEventListener("input", function () {
-                      atualizarSubtotal(procedimentosContainer, subtotalElement);
+                      atualizarSubtotal(produtosContainer, subtotalElement);
                   });
 
-                  let removerProcedimentoBtn = document.createElement("button");
-                  removerProcedimentoBtn.textContent = "❌";
-                  removerProcedimentoBtn.onclick = function () {
-                      procedimentoItem.remove();
-                      atualizarSubtotal(procedimentosContainer, subtotalElement);
+                  let removerProdutoBtn = document.createElement("button");
+                  removerProdutoBtn.textContent = "❌";
+                  removerProdutoBtn.onclick = function () {
+                      produtoItem.remove();
+                      atualizarSubtotal(produtosContainer, subtotalElement);
                   };
                   
-                  procedimentoItem.appendChild(procedimentoNome);
-                  procedimentoItem.appendChild(valorInput);
-                  procedimentoItem.appendChild(removerProcedimentoBtn);
-                  procedimentoItem.setAttribute("data-id", procedimento.id);
-                  procedimentoItem.setAttribute("data-parceiro-id", parceiroId);
+                  produtoItem.appendChild(produtoNome);
+                  produtoItem.appendChild(valorInput);
+                  produtoItem.appendChild(removerProdutoBtn);
+                  produtoItem.setAttribute("data-id", produto.id);
+                  produtoItem.setAttribute("data-parceiro-id", parceiroId);
 
-                  procedimentosContainer.appendChild(procedimentoItem);
-                  dropdownProcedimentos.remove();
-                  atualizarSubtotal(procedimentosContainer, subtotalElement);
+                  produtosContainer.appendChild(produtoItem);
+                  dropdownProdutos.remove();
+                  atualizarSubtotal(produtosContainer, subtotalElement);
               });
 
-              dropdownProcedimentos.appendChild(option);
+              dropdownProdutos.appendChild(option);
           });
 
-          procedimentosContainer.appendChild(dropdownProcedimentos);
+          produtosContainer.appendChild(dropdownProdutos);
       })
       .catch(error => console.error("Erro ao buscar parceiros:", error));
 }

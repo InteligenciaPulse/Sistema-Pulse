@@ -92,13 +92,13 @@ td {
   margin-top: 5px;
 }
 
-.procedimentos table {
+.produtos table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.procedimentos th,
-.procedimentos td {
+.produtos th,
+.produtos td {
   padding: 10px;
   border: 1px solid black;
   text-align: left;
@@ -114,7 +114,7 @@ td {
   color: white;
 }
 
-.procedimentos .gradient-line {
+.produtos .gradient-line {
   margin-top: 3mm;
   margin-bottom: 3mm;
 }

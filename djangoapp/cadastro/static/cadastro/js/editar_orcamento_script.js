@@ -4,22 +4,22 @@ document.addEventListener("DOMContentLoaded", function () {
       const orcamentoId = this.getAttribute("data-id");
       const statusSelecionado = document.getElementById("status").value;
 
-      let procedimentosSelecionados = [];
-      document.querySelectorAll(".procedimento-item").forEach(item => {
-          procedimentosSelecionados.push({
+      let produtosSelecionados = [];
+      document.querySelectorAll(".produto-item").forEach(item => {
+          produtosSelecionados.push({
               parceiro_id: item.getAttribute("data-parceiro-id"),
-              procedimento_id: item.getAttribute("data-id"),
+              produto_id: item.getAttribute("data-id"),
               valor_venda: parseFloat(item.querySelector("input").value || 0),
           });
       });
 
-      const valorTotal = procedimentosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+      const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
 
       const payload = {
           orcamento_id: orcamentoId,
           status: statusSelecionado,
           valor_total: valorTotal.toFixed(2),
-          procedimentos: procedimentosSelecionados
+          produtos: produtosSelecionados
       };
 
       fetch(`/atualizar_orcamento/${orcamentoId}/`, {
@@ -95,28 +95,28 @@ document.addEventListener("DOMContentLoaded", function () {
       subtotal.classList.add("subtotal");
       subtotal.textContent = "Subtotal: R$ 0.00";
       
-      let procedimentosContainer = document.createElement("div");
-      procedimentosContainer.classList.add("procedimentos-container");
+      let produtosContainer = document.createElement("div");
+      produtosContainer.classList.add("produtos-container");
 
-      let adicionarProcedimentoBtn = document.createElement("button");
-      adicionarProcedimentoBtn.textContent = "Adicionar Procedimento";
+      let adicionarProdutoBtn = document.createElement("button");
+      adicionarProdutoBtn.textContent = "Adicionar Produto";
 
-      adicionarProcedimentoBtn.onclick = function () {
-          adicionarProcedimentoBy(procedimentosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+      adicionarProdutoBtn.onclick = function () {
+          adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
       };
 
       let adicionarPacoteBtn = document.createElement("button");
       adicionarPacoteBtn.textContent = "Adicionar Pacote";
 
       adicionarPacoteBtn.onclick = function () {
-          adicionarPacote(pacoteDropdownDiv, procedimentosContainer, subtotal);
+          adicionarPacote(pacoteDropdownDiv, produtosContainer, subtotal);
       };
 
       let pacoteDropdownDiv = document.createElement("div");
 
       let buttonsDiv = document.createElement("div");
-      buttonsDiv.classList.add("procedimentos-container-buttons");
-      buttonsDiv.appendChild(adicionarProcedimentoBtn);
+      buttonsDiv.classList.add("produtos-container-buttons");
+      buttonsDiv.appendChild(adicionarProdutoBtn);
       buttonsDiv.appendChild(adicionarPacoteBtn);
 
       let removerParceiroBtn = document.createElement("button");
@@ -126,12 +126,12 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       let headerDiv = document.createElement("div");
-      headerDiv.classList.add("procedimentos-container-header");
+      headerDiv.classList.add("produtos-container-header");
       headerDiv.appendChild(titulo)
       headerDiv.appendChild(removerParceiroBtn);
       
       parceiroDiv.appendChild(headerDiv);
-      parceiroDiv.appendChild(procedimentosContainer);
+      parceiroDiv.appendChild(produtosContainer);
       parceiroDiv.appendChild(buttonsDiv);
       parceiroDiv.appendChild(pacoteDropdownDiv);
       parceiroDiv.appendChild(subtotal);
@@ -166,46 +166,46 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".parceiro-card").forEach(parceiroCard => {
       let subtotalElement = parceiroCard.querySelector(".subtotal");
-      let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
+      let produtosContainer = parceiroCard.querySelector(".produtos-container");
 
-      atualizarSubtotal(procedimentosContainer, subtotalElement);
+      atualizarSubtotal(produtosContainer, subtotalElement);
 
-      procedimentosContainer.querySelectorAll("input[type='number']").forEach(input => {
+      produtosContainer.querySelectorAll("input[type='number']").forEach(input => {
           input.addEventListener("input", function () {
-              atualizarSubtotal(procedimentosContainer, subtotalElement);
+              atualizarSubtotal(produtosContainer, subtotalElement);
           });
       });
   });
 });
 
-// -------------------- ADICIONAR PROCEDIMENTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+// -------------------- ADICIONAR PROduTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".adicionar-procedimento-btn").forEach(button => {
+  document.querySelectorAll(".adicionar-produto-btn").forEach(button => {
       button.addEventListener("click", function () {
         let parceiroCard = this.closest(".parceiro-card");
         let subtotalElement = parceiroCard.querySelector(".subtotal");
         let titulo = parceiroCard.querySelector(".parceiro-title");
-        let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
+        let produtosContainer = parceiroCard.querySelector(".produtos-container");
         let idParceiro = parceiroCard.getAttribute("data-parceiro-id");
 
-        adicionarProcedimentoBy(procedimentosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
-        atualizarSubtotal(procedimentosContainer, subtotalElement);
+        adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
+        atualizarSubtotal(produtosContainer, subtotalElement);
       });
   });
 });
 
-// -------------------- REMOVER PROCEDIMENTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+// -------------------- REMOVER PROduTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".remover-procedimento-btn").forEach(button => {
+  document.querySelectorAll(".remover-produto-btn").forEach(button => {
       button.addEventListener("click", function () {
         let parceiroCard = this.closest(".parceiro-card");
         let subtotalElement = parceiroCard.querySelector(".subtotal");
-        let procedimentosContainer = parceiroCard.querySelector(".procedimentos-container");
-        let procedimentoItem = this.closest(".procedimento-item");
+        let produtosContainer = parceiroCard.querySelector(".produtos-container");
+        let produtoItem = this.closest(".produto-item");
 
-        if (procedimentoItem) {
-          procedimentoItem.remove();
-          atualizarSubtotal(procedimentosContainer, subtotalElement);
+        if (produtoItem) {
+          produtoItem.remove();
+          atualizarSubtotal(produtosContainer, subtotalElement);
         }
       });
   });

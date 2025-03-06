@@ -12,7 +12,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -26,7 +26,7 @@ def historico(request):
     if tipo == "solicitacoes":
         atividades = SolicitacaoOrcamento.objects.select_related("paciente", "orcamento", "status").order_by("-data_solicitacao")
     else:
-        atividades = Orcamento.objects.select_related("solicitacaoorcamento__paciente", "status").prefetch_related("orcamento_parceiros__parceiro", "orcamento_parceiros__procedimento").order_by("-data_criacao")
+        atividades = Orcamento.objects.select_related("solicitacaoorcamento__paciente", "status").prefetch_related("orcamento_parceiros__parceiro", "orcamento_parceiros__produto").order_by("-data_criacao")
 
     context = {
         "atividades": atividades,
@@ -153,7 +153,7 @@ def buscar_subtipos(request):
 
 def buscar_parceiros_por_subtipo(request):
     subtipo_id = request.GET.get("subtipo")
-    parceiros = ParceiroProcedimentos.objects.filter(parceiro__subtipo_id=subtipo_id).values("parceiro__id", "parceiro__nome", "valor_venda")
+    parceiros = ParceiroProdutos.objects.filter(parceiro__subtipo_id=subtipo_id).values("parceiro__id", "parceiro__nome", "valor_venda")
     return JsonResponse(list(parceiros), safe=False)
 
 def visualizar_orcamento_pdf(request):
@@ -201,7 +201,10 @@ def visualizar_orcamento_html(request, orcamento_id):
         return JsonResponse({"error": "Solicitação de orçamento não encontrada."}, status=404)
     
     paciente = solicitacao.paciente
-    procedimentos = OrcamentoParceiros.objects.filter(orcamento=orcamento).select_related("procedimento", "parceiro")
+    produtos = OrcamentoParceiros.objects.filter(orcamento=orcamento).select_related("produto", "parceiro")
+    
+    pp = OrcamentoParceiros.objects.filter(orcamento=orcamento)
+    print('fff', pp)
 
     cliente = {
         "nome": paciente.nome,
@@ -211,17 +214,17 @@ def visualizar_orcamento_html(request, orcamento_id):
         "endereco": f"{paciente.endereco.rua}, {paciente.endereco.numero} - {paciente.endereco.bairro}, {paciente.endereco.cidade} - {paciente.endereco.estado}, {paciente.endereco.cep}",
     }
 
-    procedimentos_lista = [
+    produtos_lista = [
         {
-            "descricao": f"{proc.procedimento.nome} - {proc.parceiro.nome}",
-            "observacao": f"Valor: R$ {proc.valor_venda:.2f} - Repasse: R$ {proc.valor_repasse:.2f}"
+            "descricao": f"{prod.produto.nome} - {prod.parceiro.nome}",
+            "observacao": f"Valor: R$ {prod.valor_venda:.2f} - Repasse: R$ {prod.valor_repasse:.2f}"
         }
-        for proc in procedimentos
+        for prod in produtos
     ]
     
     return render(request, "cadastro/orcamento.html", {
         "cliente": cliente,
-        "procedimentos": procedimentos_lista,
+        "produtos": produtos_lista,
         "valor_total": f"R$ {orcamento.valor_total:.2f}"
     })
 
@@ -292,30 +295,30 @@ def salvar_orcamento(request):
                     data_solicitacao=now()
                 )
 
-                for item in data.get("procedimentos", []):
+                for item in data.get("produtos", []):
                     parceiro_id = item["parceiro_id"]
-                    procedimento_id = item["procedimento_id"]
+                    produto_id = item["produto_id"]
                     valor_venda = item["valor_venda"]
 
-                    parceiro_procedimento = ParceiroProcedimentos.objects.get(
+                    parceiro_produto = ParceiroProdutos.objects.get(
                         parceiro_id=parceiro_id, 
-                        procedimento_id=procedimento_id
+                        produto_id=produto_id
                     )
 
                     OrcamentoParceiros.objects.create(
                         orcamento=orcamento,
                         parceiro_id=parceiro_id,
-                        procedimento_id=procedimento_id,
+                        produto_id=produto_id,
                         valor_venda=valor_venda,
-                        valor_repasse=parceiro_procedimento.valor_repasse
+                        valor_repasse=parceiro_produto.valor_repasse
                     )
 
             return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
 
         except Paciente.DoesNotExist:
             return JsonResponse({"error": "Paciente não encontrado."}, status=404)
-        except ParceiroProcedimentos.DoesNotExist:
-            return JsonResponse({"error": "Parceiro ou Procedimento inválido."}, status=400)
+        except ParceiroProdutos.DoesNotExist:
+            return JsonResponse({"error": "Parceiro ou Produto inválido."}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
@@ -355,12 +358,12 @@ def editar_orcamento(request, orcamento_id):
             parceiros_dict[parceiro_id] = {
                 "parceiro_id": parceiro_id,
                 "parceiro_nome": orc_parc.parceiro.nome,
-                "procedimentos": []
+                "produtos": []
             }
         
-        parceiros_dict[parceiro_id]["procedimentos"].append({
-            "procedimento_id": orc_parc.procedimento.id,
-            "procedimento_nome": orc_parc.procedimento.nome,
+        parceiros_dict[parceiro_id]["produtos"].append({
+            "produto_id": orc_parc.produto.id,
+            "produto_nome": orc_parc.produto.nome,
             "valor_venda": str(orc_parc.valor_venda),
             "valor_repasse": str(orc_parc.valor_repasse),
         })
@@ -394,16 +397,16 @@ def atualizar_orcamento(request, orcamento_id=None):
                 
                 OrcamentoParceiros.objects.filter(orcamento=orcamento).delete()
 
-                for proc_data in data["procedimentos"]:
-                    parceiro = Parceiro.objects.get(id=proc_data["parceiro_id"])
-                    procedimento = Procedimento.objects.get(id=proc_data["procedimento_id"])
+                for prod_data in data["produtos"]:
+                    parceiro = Parceiro.objects.get(id=prod_data["parceiro_id"])
+                    produto = Produto.objects.get(id=prod_data["produto_id"])
 
                     orc = OrcamentoParceiros.objects.create(
                         orcamento=orcamento,
                         parceiro=parceiro,
-                        procedimento=procedimento,
-                        valor_venda=proc_data["valor_venda"],
-                        valor_repasse=ParceiroProcedimentos.objects.get(parceiro=parceiro, procedimento=procedimento).valor_repasse
+                        produto=produto,
+                        valor_venda=prod_data["valor_venda"],
+                        valor_repasse=ParceiroProdutos.objects.get(parceiro=parceiro, produto=produto).valor_repasse
                     )
             return JsonResponse({"message": "Orçamento atualizado com sucesso!"})
 

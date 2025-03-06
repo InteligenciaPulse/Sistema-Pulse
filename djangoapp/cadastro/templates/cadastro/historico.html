@@ -34,7 +34,7 @@
                         <th>ID</th>
                         <th>Paciente</th>
                         <th>Parceiros</th>
-                        <th>Procedimentos</th>
+                        <th>Produtos</th>
                         <th>Data Criação</th>
                         <th>Status</th>
                         <th>Ações</th>
@@ -57,11 +57,11 @@
                         <td>
                             {% if tipo == "solicitacoes" %}
                                 {% for proc in atividade.orcamento.orcamentoparceiros.all %}
-                                    {{ proc.procedimento.nome }}{% if not forloop.last %}, {% endif %}
+                                    {{ proc.produto.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% else %}
                                 {% for proc in atividade.orcamentoparceiros.all %}
-                                    {{ proc.procedimento.nome }}{% if not forloop.last %}, {% endif %}
+                                    {{ proc.produto.nome }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </td>
