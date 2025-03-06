@@ -2,9 +2,11 @@ import os
 import json
 import logging
 import tempfile
+import openpyxl
 from django.conf import settings
 from weasyprint import HTML, CSS
 from django.db import transaction
+from openpyxl.styles import numbers
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.utils.timezone import now
@@ -422,3 +424,43 @@ def atualizar_orcamento(request, orcamento_id=None):
 def buscar_status(request):
     status_list = list(Status.objects.values("id", "nome"))
     return JsonResponse({"status": status_list})
+
+def exportar_historico_excel(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Histórico de Atividades"
+
+    headers = ["ID", "Paciente", "Parceiros", "Produtos", "Data Criação", "Valor Venda", "Valor Repasse", "Status"]
+    ws.append(headers)
+
+    atividades = Orcamento.objects.select_related("status").prefetch_related(
+        "solicitacao_orcamento__paciente",
+        "orcamento_parceiros__parceiro",
+        "orcamento_parceiros__produto"
+    )
+
+    for atividade in atividades:
+        paciente = atividade.solicitacao_orcamento.paciente.nome if atividade.solicitacao_orcamento else "N/A"
+        status = atividade.status.nome if atividade.status else "N/A"
+        data_criacao = atividade.data_criacao.strftime("%d/%m/%Y") if atividade.data_criacao else "N/A"
+
+        for orcamento_parceiro in atividade.orcamento_parceiros.all():
+            parceiro = orcamento_parceiro.parceiro.nome
+            produto = orcamento_parceiro.produto
+            valor_venda = orcamento_parceiro.valor_venda
+            valor_repasse = orcamento_parceiro.valor_repasse
+        
+            ws.append([atividade.id, paciente, parceiro, produto.nome, data_criacao, valor_venda, valor_repasse, status])
+
+    moeda_format = 'R$ #,##0.00'
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=6, max_col=7):
+        for cell in row:
+            cell.number_format = moeda_format
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="historico_atividades.xlsx"'
+
+    wb.save(response)
+    return response
