@@ -25,7 +25,7 @@
                 </select>
                 <button id="openFilters">🔍 Filtros Avançados</button>
                 <button type="submit">Pesquisar</button>
-                <a href="{% url 'exportar_historico_excel' %}" class="excel-btn">📥 Baixar Excel</a>
+                <a id="exportExcelBtn" href="{% url 'exportar_historico_excel' %}" class="excel-btn">📥 Baixar Excel</a>
             </div>
             
             <div class="table-container">
@@ -98,26 +98,37 @@
                 <form method="GET">
                     <select name="status" id="statusSelect">
                         <option value="">Selecione um Status</option>
+                        {% for status in status_list %}
+                            <option value="{{ status.id }}" {% if filtros.status == status.id|stringformat:"s" %}selected{% endif %}>
+                                {{ status.nome }}
+                            </option>
+                        {% endfor %}
                     </select>
-
-                    <input id='paciente' type="text" name="paciente" placeholder="Paciente">
+                
+                    <input id='paciente' type="text" name="paciente" placeholder="Paciente" value="{{ filtros.paciente|default:'' }}">
                     <div id="sugestoes-pacientes" class="dropdown"></div>
-
+                
                     <select name="especialidade" id="especialidadeSelect">
                         <option value="">Selecione uma Especialidade</option>
+                        {% for especialidade in especialidade_list %}
+                            <option value="{{ especialidade.id }}" {% if filtros.especialidade == especialidade.id|stringformat:"s" %}selected{% endif %}>
+                                {{ especialidade.nome }}
+                            </option>
+                        {% endfor %}
                     </select>
-
-                    <input id='procedimento' type="text" name="procedimento" placeholder="Procedimento">
+                
+                    <input id='procedimento' type="text" name="procedimento" placeholder="Procedimento" value="{{ filtros.procedimento|default:'' }}">
                     <div id="sugestoes-procedimentos" class="dropdown"></div>
-
-                    <input id="parceiro" type="text" name="parceiro" placeholder="Parceiro">
+                
+                    <input id="parceiro" type="text" name="parceiro" placeholder="Parceiro" value="{{ filtros.parceiro|default:'' }}">
                     <div id="sugestoes-parceiros" class="dropdown"></div>
-
+                
                     <label for="criacao_id">Data de criação:</label>
-                    <input id='criacao_id' type="date" name="data_criacao" placeholder="Data de Criação">
-
+                    <input id='criacao_id' type="date" name="data_criacao" value="{{ filtros.data_criacao|default:'' }}">
+                
                     <label for="aprovacao_id">Data de aprovação:</label>
-                    <input id='aprovacao_id' type="date" name="data_aprovacao" placeholder="Data de Aprovação">
+                    <input id='aprovacao_id' type="date" name="data_aprovacao" value="{{ filtros.data_aprovacao|default:'' }}">
+                
                     <button type="submit">Aplicar Filtros</button>
                 </form>
             </div>

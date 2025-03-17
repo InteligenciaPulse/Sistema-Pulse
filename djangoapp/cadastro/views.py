@@ -25,8 +25,29 @@ def criar_orcamento(request):
 def historico(request):
     tipo = request.GET.get("tipo", "orcamento")
 
+    status_id = request.GET.get("status")
+    paciente_nome = request.GET.get("paciente")
+    especialidade_id = request.GET.get("especialidade")
+    procedimento_nome = request.GET.get("procedimento")
+    parceiro_nome = request.GET.get("parceiro")
+    data_criacao = request.GET.get("data_criacao")
+    data_aprovacao = request.GET.get("data_aprovacao")
+
     if tipo == "solicitacoes":
         atividades = SolicitacaoOrcamento.objects.select_related("paciente", "orcamento", "status").order_by("-data_solicitacao")
+        
+        if status_id:
+            atividades = atividades.filter(status_id=status_id)
+        
+        if paciente_nome:
+            atividades = atividades.filter(paciente__nome__icontains=paciente_nome)
+        
+        if especialidade_id:
+            atividades = atividades.filter(especialidade_id=especialidade_id)
+        
+        if data_criacao:
+            atividades = atividades.filter(data_solicitacao=data_criacao)
+
     else:
         atividades = Orcamento.objects.select_related("status").prefetch_related(
             "solicitacao_orcamento__paciente",
@@ -34,10 +55,44 @@ def historico(request):
             "orcamento_parceiros__produto"
         ).order_by("-data_criacao")
 
+        if status_id:
+            atividades = atividades.filter(status_id=status_id)
+        
+        if paciente_nome:
+            atividades = atividades.filter(solicitacao_orcamento__paciente__nome__icontains=paciente_nome)
+        
+        if especialidade_id:
+            atividades = atividades.filter(solicitacao_orcamento__especialidade_id=especialidade_id)
+        
+        if procedimento_nome:
+            atividades = atividades.filter(orcamento_parceiros__produto__nome__icontains=procedimento_nome)
+        
+        if parceiro_nome:
+            atividades = atividades.filter(orcamento_parceiros__parceiro__nome__icontains=parceiro_nome)
+        
+        if data_criacao:
+            atividades = atividades.filter(data_criacao=data_criacao)
+        
+        if data_aprovacao:
+            atividades = atividades.filter(data_aprovacao=data_aprovacao)
+
+    status_list = Status.objects.all()
+
     context = {
         "atividades": atividades,
         "tipo": tipo,
+        "status_list": status_list,
+        "filtros": {
+            "status": status_id,
+            "paciente": paciente_nome,
+            "especialidade": especialidade_id,
+            "procedimento": procedimento_nome,
+            "parceiro": parceiro_nome,
+            "data_criacao": data_criacao,
+            "data_aprovacao": data_aprovacao,
+        }
     }
+
     return render(request, "cadastro/historico.html", context)
 
 def buscar_pacientes(request):
@@ -454,12 +509,41 @@ def exportar_historico_excel(request):
 
     headers = ["ID", "Paciente", "Parceiros", "Produtos", "Data Criação", "Valor Venda", "Valor Repasse", "Status"]
     ws.append(headers)
+    
+    status_id = request.GET.get("status")
+    paciente_nome = request.GET.get("paciente")
+    especialidade_id = request.GET.get("especialidade")
+    procedimento_nome = request.GET.get("procedimento")
+    parceiro_nome = request.GET.get("parceiro")
+    data_criacao = request.GET.get("data_criacao")
+    data_aprovacao = request.GET.get("data_aprovacao")
 
     atividades = Orcamento.objects.select_related("status").prefetch_related(
         "solicitacao_orcamento__paciente",
         "orcamento_parceiros__parceiro",
         "orcamento_parceiros__produto"
     )
+
+    if status_id:
+        atividades = atividades.filter(status_id=status_id)
+    
+    if paciente_nome:
+        atividades = atividades.filter(solicitacao_orcamento__paciente__nome__icontains=paciente_nome)
+    
+    if especialidade_id:
+        atividades = atividades.filter(solicitacao_orcamento__especialidade_id=especialidade_id)
+    
+    if procedimento_nome:
+        atividades = atividades.filter(orcamento_parceiros__produto__nome__icontains=procedimento_nome)
+    
+    if parceiro_nome:
+        atividades = atividades.filter(orcamento_parceiros__parceiro__nome__icontains=parceiro_nome)
+    
+    if data_criacao:
+        atividades = atividades.filter(data_criacao=data_criacao)
+    
+    if data_aprovacao:
+        atividades = atividades.filter(data_aprovacao=data_aprovacao)
 
     for atividade in atividades:
         paciente = atividade.solicitacao_orcamento.paciente.nome if atividade.solicitacao_orcamento else "N/A"
@@ -468,11 +552,11 @@ def exportar_historico_excel(request):
 
         for orcamento_parceiro in atividade.orcamento_parceiros.all():
             parceiro = orcamento_parceiro.parceiro.nome
-            produto = orcamento_parceiro.produto
+            produto = orcamento_parceiro.produto.nome
             valor_venda = orcamento_parceiro.valor_venda
             valor_repasse = orcamento_parceiro.valor_repasse
         
-            ws.append([atividade.id, paciente, parceiro, produto.nome, data_criacao, valor_venda, valor_repasse, status])
+            ws.append([atividade.id, paciente, parceiro, produto, data_criacao, valor_venda, valor_repasse, status])
 
     moeda_format = 'R$ #,##0.00'
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=6, max_col=7):

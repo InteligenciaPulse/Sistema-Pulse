@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const exportBtn = document.getElementById("exportExcelBtn");
+
+  exportBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      let params = new URLSearchParams(new FormData(document.querySelector("form")));
+      window.location.href = exportBtn.href + "?" + params.toString();
+  });
+});
+
 // ------------------------------------------ MODAL --------------------------------------
 document.getElementById("openFilters").onclick = function() {
   document.getElementById("filterModal").style.display = "block";
