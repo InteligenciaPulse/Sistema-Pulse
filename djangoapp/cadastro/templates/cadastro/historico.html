@@ -24,7 +24,6 @@
                     <option value="orcamentos">Últimos Orçamentos</option>
                 </select>
                 <button id="openFilters">🔍 Filtros Avançados</button>
-                <button type="submit">Pesquisar</button>
                 <a id="exportExcelBtn" href="{% url 'exportar_historico_excel' %}" class="excel-btn">📥 Baixar Excel</a>
             </div>
             
@@ -122,13 +121,19 @@
                 
                     <input id="parceiro" type="text" name="parceiro" placeholder="Parceiro" value="{{ filtros.parceiro|default:'' }}">
                     <div id="sugestoes-parceiros" class="dropdown"></div>
-                
-                    <label for="criacao_id">Data de criação:</label>
-                    <input id='criacao_id' type="date" name="data_criacao" value="{{ filtros.data_criacao|default:'' }}">
-                
-                    <label for="aprovacao_id">Data de aprovação:</label>
-                    <input id='aprovacao_id' type="date" name="data_aprovacao" value="{{ filtros.data_aprovacao|default:'' }}">
-                
+
+                    <div class="date-fields">
+                        <div class="date-group">
+                            <label for="criacao_id">Data de criação:</label>
+                            <input id='criacao_id' type="date" name="data_criacao" value="{{ filtros.data_criacao|default:'' }}">
+                        </div>
+                    
+                        <div class="date-group">
+                            <label for="aprovacao_id">Data de aprovação:</label>
+                            <input id='aprovacao_id' type="date" name="data_aprovacao" value="{{ filtros.data_aprovacao|default:'' }}">
+                        </div>
+                    </div>
+                    
                     <button type="submit">Aplicar Filtros</button>
                 </form>
             </div>
