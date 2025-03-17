@@ -88,8 +88,10 @@ def buscar_procedimentos_by(request):
     return JsonResponse(list(procedimentos), safe=False)
 
 def buscar_parceiros(request):
-    parceiros = Parceiro.objects.values("id", "nome")
-    return JsonResponse(list(parceiros), safe=False)
+    query = request.GET.get('q', '')
+    parceiros = Parceiro.objects.filter(nome__icontains=query)[:10]
+    data = [{"id": p.id, "nome": p.nome} for p in parceiros]
+    return JsonResponse(data, safe=False)
 
 # def buscar_parceiros_por_procedimento(request):
 #     procedimento_nome = request.GET.get("procedimento_nome", "").strip()

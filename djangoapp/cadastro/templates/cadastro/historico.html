@@ -20,15 +20,13 @@
             
             <div class="filters-bar">
                 <select name="tipo" id="tipo">
-                    <option value="solicitacoes">Últimas Solicitações</option>
+                    <!-- <option value="solicitacoes">Últimas Solicitações</option> -->
                     <option value="orcamentos">Últimos Orçamentos</option>
                 </select>
                 <button id="openFilters">🔍 Filtros Avançados</button>
                 <button type="submit">Pesquisar</button>
                 <a href="{% url 'exportar_historico_excel' %}" class="excel-btn">📥 Baixar Excel</a>
             </div>
-
-            
             
             <div class="table-container">
                 <table>
@@ -98,12 +96,28 @@
                 <span class="close-btn">&times;</span>
                 <h3>Filtros Avançados</h3>
                 <form method="GET">
-                    <input type="text" name="paciente" placeholder="Paciente">
-                    <input type="text" name="especialidade" placeholder="Especialidade">
-                    <input type="text" name="procedimento" placeholder="Procedimento">
-                    <input type="text" name="parceiro" placeholder="Parceiro">
-                    <input type="date" name="data_criacao" placeholder="Data de Criação">
-                    <input type="date" name="data_aprovacao" placeholder="Data de Aprovação">
+                    <select name="status" id="statusSelect">
+                        <option value="">Selecione um Status</option>
+                    </select>
+
+                    <input id='paciente' type="text" name="paciente" placeholder="Paciente">
+                    <div id="sugestoes-pacientes" class="dropdown"></div>
+
+                    <select name="especialidade" id="especialidadeSelect">
+                        <option value="">Selecione uma Especialidade</option>
+                    </select>
+
+                    <input id='procedimento' type="text" name="procedimento" placeholder="Procedimento">
+                    <div id="sugestoes-procedimentos" class="dropdown"></div>
+
+                    <input id="parceiro" type="text" name="parceiro" placeholder="Parceiro">
+                    <div id="sugestoes-parceiros" class="dropdown"></div>
+
+                    <label for="criacao_id">Data de criação:</label>
+                    <input id='criacao_id' type="date" name="data_criacao" placeholder="Data de Criação">
+
+                    <label for="aprovacao_id">Data de aprovação:</label>
+                    <input id='aprovacao_id' type="date" name="data_aprovacao" placeholder="Data de Aprovação">
                     <button type="submit">Aplicar Filtros</button>
                 </form>
             </div>
