@@ -77,11 +77,13 @@ def historico(request):
             atividades = atividades.filter(data_aprovacao=data_aprovacao)
 
     status_list = Status.objects.all()
+    especialidade_list = Especialidade.objects.all()
 
     context = {
         "atividades": atividades,
         "tipo": tipo,
         "status_list": status_list,
+        "especialidade_list": especialidade_list,
         "filtros": {
             "status": status_id,
             "paciente": paciente_nome,

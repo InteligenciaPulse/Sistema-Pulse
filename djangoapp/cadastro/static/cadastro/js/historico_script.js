@@ -24,36 +24,36 @@ window.onclick = function(event) {
 };
 
 // -------- STATUS ---------
-document.addEventListener("DOMContentLoaded", function () {
-  fetch('/buscar_status/')
-      .then(response => response.json())
-      .then(data => {
-          let statusSelect = document.getElementById("statusSelect");
-          data.status.forEach(status => {
-              let option = document.createElement("option");
-              option.value = status.id;
-              option.textContent = status.nome;
-              statusSelect.appendChild(option);
-          });
-      })
-      .catch(error => console.error("Erro ao buscar status:", error));
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   fetch('/buscar_status/')
+//       .then(response => response.json())
+//       .then(data => {
+//           let statusSelect = document.getElementById("statusSelect");
+//           data.status.forEach(status => {
+//               let option = document.createElement("option");
+//               option.value = status.id;
+//               option.textContent = status.nome;
+//               statusSelect.appendChild(option);
+//           });
+//       })
+//       .catch(error => console.error("Erro ao buscar status:", error));
+// });
 
 // -------- ESPECIALIDADE ---------
-document.addEventListener("DOMContentLoaded", function () {
-  fetch('/buscar_especialidades/')
-      .then(response => response.json())
-      .then(data => {
-          let select = document.getElementById('especialidadeSelect');
-          data.forEach(item => {
-              let option = document.createElement("option");
-              option.value = item.id;
-              option.textContent = item.nome;
-              select.appendChild(option);
-          });
-      })
-      .catch(error => console.error("Erro ao buscar dados de " + selectId + ":", error));
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   fetch('/buscar_especialidades/')
+//       .then(response => response.json())
+//       .then(data => {
+//           let select = document.getElementById('especialidadeSelect');
+//           data.forEach(item => {
+//               let option = document.createElement("option");
+//               option.value = item.id;
+//               option.textContent = item.nome;
+//               select.appendChild(option);
+//           });
+//       })
+//       .catch(error => console.error("Erro ao buscar dados de " + selectId + ":", error));
+// });
 
 // -------- PACIENTE ---------
 document.addEventListener("DOMContentLoaded", function () {
