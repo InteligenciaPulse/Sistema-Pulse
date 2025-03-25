@@ -205,6 +205,8 @@ def buscar_produtos_por_parceiro(request):
                 "id": pp.produto.id,
                 "nome": pp.produto.nome,
                 "valor_venda": pp.valor_venda,
+                "valor_particular": pp.valor_particular,
+                "valor_repasse": pp.valor_repasse
             }
             for pp in produtos_parceiro
         ]

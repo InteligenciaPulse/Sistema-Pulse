@@ -815,8 +815,33 @@ function aplicarValores() {
     const parceiroCards = document.querySelectorAll(".parceiro-card input");
 
     parceiroCards.forEach(function(input) {
-        input.value = input.value - (input.value * margemLucro / 100);
-        console.log(input.value);
+        let valor_particular = parseFloat(input.getAttribute('data-valor-particular'));
+        let valor_repasse = parseFloat(input.getAttribute('data-valor-repasse'));
+
+        let custo_comissao = parseFloat(input.value) * parseFloat(comissao) / 100;
+        let custo_brindes = parseFloat(input.value) * parseFloat(brindes) / 100;
+        let custo_impostos = parseFloat(input.value) * parseFloat(impostos) / 100; 
+        let custo_cartoes = parseFloat(input.value) * parseFloat(cartoes) / 100;
+
+        let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
+
+        if(custo_total > valor_particular){
+            alert('Custo total maior que o valor da particular!');
+        } else {
+            let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+    
+            if(margem_lucro_maxima < 0){
+                margem_lucro_maxima = 0;
+            }
+
+            if(margemLucro > margem_lucro_maxima){
+                input.value = (input.value - (input.value * margem_lucro_maxima / 100)).toFixed(2);
+                console.log("MAIOR", margemLucro, margem_lucro_maxima);
+            } else {
+                input.value = (input.value - (input.value * margemLucro / 100)).toFixed(2);
+                console.log("MENOR", margemLucro, margem_lucro_maxima);
+            }
+        }
     });
     
     fecharModal();
