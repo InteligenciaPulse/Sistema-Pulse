@@ -147,41 +147,41 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
 }
 
 // ---------------------------------------- BUSCAR STATUS --------------------------------------------------
-document.addEventListener("DOMContentLoaded", function () {
-    fetch("/buscar_status/")
-        .then(response => response.json())
-        .then(data => {
-            const statusSelect = document.getElementById("status");
-            statusSelect.innerHTML = "";
+// document.addEventListener("DOMContentLoaded", function () {
+//     fetch("/buscar_status/")
+//         .then(response => response.json())
+//         .then(data => {
+//             const statusSelect = document.getElementById("status");
+//             statusSelect.innerHTML = "";
             
-            data.status.forEach(status => {
-                let option = document.createElement("option");
-                option.value = status.id;
-                option.textContent = status.nome;
-                statusSelect.appendChild(option);
-            });
+//             data.status.forEach(status => {
+//                 let option = document.createElement("option");
+//                 option.value = status.id;
+//                 option.textContent = status.nome;
+//                 statusSelect.appendChild(option);
+//             });
 
-            if (statusSelect.hasAttribute("data-status-atual")) {
-                selecionarStatusAtual();
-            }
-        })
-        .catch(error => console.error("Erro ao carregar status:", error));
-});
+//             if (statusSelect.hasAttribute("data-status-atual")) {
+//                 selecionarStatusAtual();
+//             }
+//         })
+//         .catch(error => console.error("Erro ao carregar status:", error));
+// });
 
 // -------------------------------------- BUSCAR ESPECIALIDADES ---------------------------------------------
-function buscarEspecialidades(specialtySelect){
-    fetch("/buscar_especialidades/")
-    .then(response => response.json())
-    .then(especialidades => {
-      especialidades.forEach(especialidade => {
-          let option = document.createElement("option");
-          option.value = especialidade.id;
-          option.textContent = especialidade.nome;
-          specialtySelect.appendChild(option);
-      });
-    })
-    .catch(error => console.error("Erro ao buscar especialidades:", error));
-  }
+// function buscarEspecialidades(specialtySelect){
+//     fetch("/buscar_especialidades/")
+//     .then(response => response.json())
+//     .then(especialidades => {
+//       especialidades.forEach(especialidade => {
+//           let option = document.createElement("option");
+//           option.value = especialidade.id;
+//           option.textContent = especialidade.nome;
+//           specialtySelect.appendChild(option);
+//       });
+//     })
+//     .catch(error => console.error("Erro ao buscar especialidades:", error));
+//   }
 
   // -------------------------------------- BUSCAR PROCEDIMENTOS ---------------------------------------------
 function buscarProcedimentos(dropdown, inputProcedimentos, especialidadeSelecionada){

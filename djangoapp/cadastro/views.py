@@ -20,7 +20,15 @@ def home(request):
     return render(request, 'cadastro/home.html')
 
 def criar_orcamento(request):
-    return render(request, 'cadastro/criar_orcamento.html')
+    status_list = Status.objects.all()
+    especialidade_list = Especialidade.objects.all()
+
+    context = {
+        "status_list": status_list,
+        "especialidade_list": especialidade_list
+    }
+    
+    return render(request, 'cadastro/criar_orcamento.html', context)
 
 def historico(request):
     tipo = request.GET.get("tipo", "orcamento")

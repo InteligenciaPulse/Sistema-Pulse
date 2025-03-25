@@ -21,7 +21,11 @@
                 <div class="status-container">
                     <label for="status">Status do Orçamento:</label>
                     <select id="status" name="status">
-                        <option value="">Carregando status...</option>
+                        {% for status in status_list %}
+                            <option value="{{ status.id }}">
+                                {{ status.nome }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
 
@@ -29,6 +33,13 @@
                     <label for="procedimentos">Procedimentos</label>
                     <div id="procedimentos-specialty">
                         <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento...">
+                        <select id="specialty-select" name="specialty">
+                            {% for especialidade in especialidade_list %}
+                                <option value="{{ especialidade.id }}">
+                                    {{ especialidade.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div id="sugestoes-procedimentos" class="dropdown"></div>
                     <button id= "filter-procedimentos-add-button" onclick="adicionarProcedimentos()">Adicionar procedimento</button>
@@ -91,7 +102,7 @@
     </div>
 
     <!-- Modal para Cadastro de Paciente -->
-    <div id="modal-paciente" class="modal">
+    <div id="modal-paciente" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Adicionar Paciente</h2>
@@ -184,7 +195,7 @@
     </div>
 
     <!-- Modal de Configuração -->
-    <div id="modal-configuracao" class="modal">
+    <div id="modal-configuracao" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="fecharModal()">&times;</span>
             <h2>Configurações do Orçamento</h2>

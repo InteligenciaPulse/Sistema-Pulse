@@ -728,12 +728,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropdown = document.getElementById("sugestoes-procedimentos");
     const listaProcedimentos = document.getElementById("procedimentos-list");
 
-    const specialtySelect = document.createElement("select");
-    specialtySelect.id = "specialty-select";
-    specialtySelect.innerHTML = `<option value="">Especialidade</option>`;
-    procedimentosSpecialtyDiv.appendChild(specialtySelect);
+    const specialtySelect = document.getElementById("specialty-select");
+    // specialtySelect.id = "specialty-select";
+    // specialtySelect.innerHTML = `<option value="">Especialidade</option>`;
+    // procedimentosSpecialtyDiv.appendChild(specialtySelect);
 
-    buscarEspecialidades(specialtySelect);
+    // buscarEspecialidades(specialtySelect);
 
     inputProcedimentos.addEventListener("input", function () {
         buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
@@ -817,5 +817,5 @@ function aplicarValores() {
     fecharModal();
 }
 
-// document.querySelector("button-config").addEventListener("click", abrirModal);
+document.querySelector("button-config").addEventListener("click", abrirModal);
 // -------------------------------------------------------------------------------------------------------------
