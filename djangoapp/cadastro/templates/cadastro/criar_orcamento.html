@@ -65,7 +65,16 @@
                 <div id="filter-parceiro">
                     <label for="parceiro">Parceiro:</label>
                     <div id="parceiro-subtype">
-                        <input type="text" id="parceiro" placeholder="Digite o nome do parceiro...">
+                        <!-- <input type="text" id="parceiro" placeholder="Digite o nome do parceiro..."> -->
+                        <select id="parceiro" name="parceiro">
+                            <option value>Selecione o parceiro</option>
+                            {% for parceiro in parceiro_list %}
+                                <option value="{{ parceiro.id }}" data-subtipo="{{ parceiro.subtipo.id }}">
+                                    {{ parceiro.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
                         <select id="subtipo-select">
                             <option value>Selecione o subtipo</option>
                             {% for subtipo in subtipo_list %}
@@ -75,7 +84,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div id="sugestoes-parceiros" class="dropdown"></div>
+                    <!-- <div id="sugestoes-parceiros" class="dropdown"></div> -->
                     <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
                 
                     <div id="lista-parceiros">

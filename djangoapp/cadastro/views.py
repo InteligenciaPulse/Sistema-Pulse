@@ -20,11 +20,13 @@ def home(request):
     return render(request, 'cadastro/home.html')
 
 def criar_orcamento(request):
-    status_list = Status.objects.all()
-    especialidade_list = Especialidade.objects.all()
-    subtipo_list = Subtipo.objects.all()
+    parceiro_list = Parceiro.objects.all().order_by('nome')
+    status_list = Status.objects.all().order_by('nome')
+    especialidade_list = Especialidade.objects.all().order_by('nome')
+    subtipo_list = Subtipo.objects.all().order_by('nome')
 
     context = {
+        "parceiro_list": parceiro_list,
         "status_list": status_list,
         "especialidade_list": especialidade_list,
         "subtipo_list": subtipo_list
