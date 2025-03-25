@@ -145,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const listaParceiros = document.getElementById("parceiros-list");
 
     function atualizarParceiros(subtipoId) {
-        console.log(subtipoId);
         const options = selectParceiro.querySelectorAll('option');
         options.forEach(option => {
             if (option.value) {
@@ -154,6 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if(subtipoId) {
+            selectParceiro.value = "";
+
             const parceiroOptions = selectParceiro.querySelectorAll(`option[data-subtipo="${subtipoId}"]`);
             parceiroOptions.forEach(option => {
                 option.style.display = "block";
@@ -811,6 +812,13 @@ function aplicarValores() {
     console.log(`Cartões: ${cartoes}%`);
     console.log(`Margem de Lucro: ${margemLucro}%`);
 
+    const parceiroCards = document.querySelectorAll(".parceiro-card input");
+
+    parceiroCards.forEach(function(input) {
+        input.value = input.value - (input.value * margemLucro / 100);
+        console.log(input.value);
+    });
+    
     fecharModal();
 }
 

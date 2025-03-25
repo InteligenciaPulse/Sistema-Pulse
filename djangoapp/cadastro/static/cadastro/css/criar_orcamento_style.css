@@ -222,31 +222,6 @@ body {
   background-color: #e04576;
 }
 
-.dropdown-parceiros {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  display: block;
-  z-index: 1000;
-  width: 220px;
-}
-
-.dropdown-parceiros .dropdown-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dropdown-parceiros .dropdown-item:hover {
-  background-color: #F2568A;
-  color: white;
-}
-
 .produtos-container-header {
   display: flex;
   align-content: center;
@@ -264,7 +239,6 @@ body {
 }
 
 #parceiro-subtype select {
-  width: 45%;
   padding: 10px;
   border-radius: 5px;
   background-color: white;
@@ -281,6 +255,14 @@ body {
 #parceiro-subtype select option {
   background-color: white;
   font-weight: bold;
+}
+
+#subtipo-select {
+  width: 30%;
+}
+
+#parceiro {
+  width: 70%;
 }
 
 /*##########################################################################################*/
