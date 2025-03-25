@@ -791,3 +791,31 @@ document.addEventListener("click", function(event) {
         document.getElementById("sugestoes-procedimentos").style.display = "none";
     }
 });
+
+// ------------------------------------------ MODAL CONFIG -----------------------------------------------------
+function abrirModal() {
+    document.getElementById("modal-configuracao").style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById("modal-configuracao").style.display = "none";
+}
+
+function aplicarValores() {
+    const comissao = document.getElementById("comissao").value;
+    const brindes = document.getElementById("brindes").value;
+    const impostos = document.getElementById("impostos").value;
+    const cartoes = document.getElementById("cartoes").value;
+    const margemLucro = document.getElementById("margem_lucro").value;
+
+    console.log(`Comissão: ${comissao}%`);
+    console.log(`Brindes: ${brindes}%`);
+    console.log(`Impostos: ${impostos}%`);
+    console.log(`Cartões: ${cartoes}%`);
+    console.log(`Margem de Lucro: ${margemLucro}%`);
+
+    fecharModal();
+}
+
+// document.querySelector("button-config").addEventListener("click", abrirModal);
+// -------------------------------------------------------------------------------------------------------------

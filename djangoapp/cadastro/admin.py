@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Produto, Procedimento, Status, ParceiroProdutos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes, ProcedimentoProdutos
+from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Produto, Procedimento, Status, ParceiroProdutos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes, ProcedimentoProdutos, Custos
 
 # Register your models here.
 @admin.register(Endereco)
@@ -64,11 +64,11 @@ class ParceiroProdutosAdmin(admin.ModelAdmin):
 
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total')
+    list_display = ('id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total', 'data_cirurgia', 'custo_total', 'lucro_total')
 
 @admin.register(OrcamentoParceiros)
 class OrcamentoParceirosAdmin(admin.ModelAdmin):
-    list_display = ('orcamento', 'parceiro', 'produto', 'valor_venda', 'valor_repasse')
+    list_display = ('orcamento', 'parceiro', 'produto', 'valor_venda', 'valor_repasse', 'custos', 'margem_lucro')
     list_filter = ('orcamento', 'parceiro', 'produto')
     search_fields = ('orcamento__id', 'parceiro__nome', 'produto__nome')
 
@@ -95,3 +95,9 @@ class OrcamentoPacotesAdmin(admin.ModelAdmin):
     list_display = ('orcamento', 'pacote', 'parceiro', 'valor_total')
     list_filter = ('orcamento', 'pacote', 'parceiro')
     search_fields = ('orcamento__id', 'pacote__nome', 'parceiro__nome')
+
+@admin.register(Custos)
+class CustosAdmin(admin.ModelAdmin):
+    list_display = ('comissao', 'brindes', 'imposto', 'cartao')
+    list_filter = ('comissao', 'brindes', 'imposto', 'cartao')
+    search_fields = ('comissao', 'brindes', 'imposto', 'cartao')

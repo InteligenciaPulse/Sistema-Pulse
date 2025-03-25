@@ -161,6 +161,9 @@ class Orcamento(models.Model):
     data_criacao = models.DateField(null=True, blank=True, verbose_name="Data de Criação")
     data_aprovacao = models.DateField(null=True, blank=True, verbose_name="Data de Aprovação")
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
+    data_cirurgia = models.DateField(null=True, blank=True, verbose_name="Data da Cirurgia")
+    custo_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo Total")
+    lucro_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Lucro Total")
 
     class Meta:
         db_table = 'sistema_pulse"."orcamento'
@@ -176,6 +179,8 @@ class OrcamentoParceiros(models.Model):
     produto = models.ForeignKey('Produto', on_delete=models.CASCADE, verbose_name="Produto", default=2)
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da venda")
     valor_repasse = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor da repasse")
+    custos = models.ForeignKey('Custos', on_delete=models.CASCADE, verbose_name="Custos")
+    margem_lucro = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Margem de lucro")
 
     class Meta:
         db_table = 'sistema_pulse"."orcamento_parceiros'
@@ -239,3 +244,16 @@ class OrcamentoPacotes(models.Model):
 
     def __str__(self):
         return f"Orçamento {self.orcamento.id} - Pacote {self.pacote.nome}"
+    
+class Custos(models.Model):
+    comissao = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Comissão")
+    brindes = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Brindes")
+    imposto = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Imposto")
+    cartao = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Cartão")
+
+    class Meta:
+        db_table = 'sistema_pulse"."custos'
+        verbose_name = "Custos"
+    
+    def __str__(self):
+        return f"Comissão {self.comissao}"

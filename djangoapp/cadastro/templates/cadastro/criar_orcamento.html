@@ -14,6 +14,9 @@
 <body>
     <div class="container">
         <div class="sidebar">
+            <div>
+                <button onclick="abrirModal()">EXPANDIR</button>
+            </div>
             <div class="filter-section">
                 <div class="status-container">
                     <label for="status">Status do Orçamento:</label>
@@ -87,7 +90,7 @@
         </div>
     </div>
 
-    <!-- Modal para Cadastro de Paciente (FORA da .container) -->
+    <!-- Modal para Cadastro de Paciente -->
     <div id="modal-paciente" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -176,6 +179,37 @@
                 </div>
     
                 <button type="submit">Salvar Paciente</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração -->
+    <div id="modal-configuracao" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h2>Configurações do Orçamento</h2>
+            <form id="form-configuracao">
+                <div class="form-row">
+                    <label for="comissao">Comissão (%):</label>
+                    <input type="number" id="comissao" name="comissao" placeholder="Digite a comissão...">
+                </div>
+                <div class="form-row">
+                    <label for="brindes">Brindes (%):</label>
+                    <input type="number" id="brindes" name="brindes" placeholder="Digite os brindes...">
+                </div>
+                <div class="form-row">
+                    <label for="impostos">Impostos (%):</label>
+                    <input type="number" id="impostos" name="impostos" placeholder="Digite os impostos...">
+                </div>
+                <div class="form-row">
+                    <label for="cartoes">Cartões (%):</label>
+                    <input type="number" id="cartoes" name="cartoes" placeholder="Digite os cartões...">
+                </div>
+                <div class="form-row">
+                    <label for="margem_lucro">Margem de Lucro (%):</label>
+                    <input type="number" id="margem_lucro" name="margem_lucro" placeholder="Digite a margem de lucro...">
+                </div>
+                <button type="button" onclick="aplicarValores()">Aplicar Valores</button>
             </form>
         </div>
     </div>
