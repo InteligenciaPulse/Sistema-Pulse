@@ -145,12 +145,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropdown = document.getElementById("sugestoes-parceiros");
     const listaParceiros = document.getElementById("parceiros-list");
 
-    const subtipoSelect = document.createElement("select");
-    subtipoSelect.id = "subtipo-select";
-    subtipoSelect.innerHTML = `<option value="">Selecione um Subtipo</option>`;
-    parceiroSubtypeDiv.appendChild(subtipoSelect);
+    const subtipoSelect = document.getElementById("subtipo-select");
+    // subtipoSelect.id = "subtipo-select";
+    // subtipoSelect.innerHTML = `<option value="">Selecione um Subtipo</option>`;
+    // parceiroSubtypeDiv.appendChild(subtipoSelect);
 
-    buscarSubTipos(subtipoSelect);
+    // buscarSubTipos(subtipoSelect);
 
     inputParceiro.addEventListener("input", function () {
         buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);

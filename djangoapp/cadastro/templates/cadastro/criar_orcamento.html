@@ -34,6 +34,7 @@
                     <div id="procedimentos-specialty">
                         <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento...">
                         <select id="specialty-select" name="specialty">
+                            <option value>Selecione a especialidade</option>
                             {% for especialidade in especialidade_list %}
                                 <option value="{{ especialidade.id }}">
                                     {{ especialidade.nome }}
@@ -65,6 +66,14 @@
                     <label for="parceiro">Parceiro:</label>
                     <div id="parceiro-subtype">
                         <input type="text" id="parceiro" placeholder="Digite o nome do parceiro...">
+                        <select id="subtipo-select">
+                            <option value>Selecione o subtipo</option>
+                            {% for subtipo in subtipo_list %}
+                                <option value="{{ subtipo.id }}">
+                                    {{ subtipo.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div id="sugestoes-parceiros" class="dropdown"></div>
                     <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>

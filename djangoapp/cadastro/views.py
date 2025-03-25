@@ -22,12 +22,14 @@ def home(request):
 def criar_orcamento(request):
     status_list = Status.objects.all()
     especialidade_list = Especialidade.objects.all()
+    subtipo_list = Subtipo.objects.all()
 
     context = {
         "status_list": status_list,
-        "especialidade_list": especialidade_list
+        "especialidade_list": especialidade_list,
+        "subtipo_list": subtipo_list
     }
-    
+
     return render(request, 'cadastro/criar_orcamento.html', context)
 
 def historico(request):
