@@ -800,6 +800,9 @@ function fecharModal() {
 }
 
 function aplicarValores() {
+    const produtosContainer = document.querySelector('.produtos-container');
+    const subTotalElement = document.querySelector('.subtotal');
+
     const comissao = document.getElementById("comissao").value;
     const brindes = document.getElementById("brindes").value;
     const impostos = document.getElementById("impostos").value;
@@ -812,40 +815,53 @@ function aplicarValores() {
     console.log(`Cartões: ${cartoes}%`);
     console.log(`Margem de Lucro: ${margemLucro}%`);
 
-    const parceiroCards = document.querySelectorAll(".parceiro-card input");
+    const parceiroCards = document.querySelectorAll(".parceiro-card");
 
-    parceiroCards.forEach(function(input) {
-        let valor_particular = parseFloat(input.getAttribute('data-valor-particular'));
-        let valor_repasse = parseFloat(input.getAttribute('data-valor-repasse'));
+    parceiroCards.forEach(function(parceiroCard) {
+        const produtoItems = parceiroCard.querySelectorAll(".produto-item input");
+        const subTotalElement = parceiroCard.querySelector('.subtotal');
+        const produtosContainer = parceiroCard.querySelector('.produtos-container');
 
-        let custo_comissao = parseFloat(input.value) * parseFloat(comissao) / 100;
-        let custo_brindes = parseFloat(input.value) * parseFloat(brindes) / 100;
-        let custo_impostos = parseFloat(input.value) * parseFloat(impostos) / 100; 
-        let custo_cartoes = parseFloat(input.value) * parseFloat(cartoes) / 100;
+        produtoItems.forEach(function(input) {
+            console.log(input);
+            if (!input.hasAttribute('data-valor-original')) {
+                input.setAttribute('data-valor-original', input.value);
+            }
 
-        let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
+            let valor_original = parseFloat(input.getAttribute('data-valor-original'));
+            let valor_particular = parseFloat(input.getAttribute('data-valor-particular'));
+            let valor_repasse = parseFloat(input.getAttribute('data-valor-repasse'));
 
-        if(custo_total > valor_particular){
-            alert('Custo total maior que o valor da particular!');
-        } else {
-            let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+            let custo_comissao = valor_original * parseFloat(comissao) / 100;
+            let custo_brindes = valor_original * parseFloat(brindes) / 100;
+            let custo_impostos = valor_original * parseFloat(impostos) / 100; 
+            let custo_cartoes = valor_original * parseFloat(cartoes) / 100;
+
+            let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
     
-            if(margem_lucro_maxima < 0){
-                margem_lucro_maxima = 0;
+            if(custo_total > valor_particular){
+                alert('Custo total maior que o valor da particular!');
+            } else {
+                let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+        
+                if(margem_lucro_maxima < 0){
+                    margem_lucro_maxima = 0;
+                }
+    
+                if(margemLucro > margem_lucro_maxima){
+                    input.value = (custo_total - (valor_original * margem_lucro_maxima / 100)).toFixed(2);
+                    console.log("MAIOR", margemLucro, margem_lucro_maxima);
+                } else {
+                    input.value = (custo_total - (valor_original * margemLucro / 100)).toFixed(2);
+                    console.log("MENOR", margemLucro, margem_lucro_maxima);
+                }
             }
 
-            if(margemLucro > margem_lucro_maxima){
-                input.value = (input.value - (input.value * margem_lucro_maxima / 100)).toFixed(2);
-                console.log("MAIOR", margemLucro, margem_lucro_maxima);
-            } else {
-                input.value = (input.value - (input.value * margemLucro / 100)).toFixed(2);
-                console.log("MENOR", margemLucro, margem_lucro_maxima);
-            }
-        }
+        });
+        
+        atualizarSubtotal(produtosContainer, subTotalElement);
     });
     
     fecharModal();
 }
-
-document.querySelector("button-config").addEventListener("click", abrirModal);
 // -------------------------------------------------------------------------------------------------------------
