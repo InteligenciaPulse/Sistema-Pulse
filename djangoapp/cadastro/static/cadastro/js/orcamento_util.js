@@ -140,8 +140,8 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   produtoItem.appendChild(removerProdutoBtn);
                   produtoItem.setAttribute("data-id", produto.id);
                   produtoItem.setAttribute("data-parceiro-id", parceiroId);
-                  valorInput.setAttribute("data-valor-particular", produto.valor_particular);
-                  valorInput.setAttribute("data-valor-repasse", produto.valor_repasse);
+                  produtoItem.setAttribute("data-valor-particular", produto.valor_particular);
+                  produtoItem.setAttribute("data-valor-repasse", produto.valor_repasse);
 
                   produtosContainer.appendChild(produtoItem);
                   dropdownProdutos.remove();

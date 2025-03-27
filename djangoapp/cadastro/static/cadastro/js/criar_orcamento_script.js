@@ -818,18 +818,20 @@ function aplicarValores() {
     const parceiroCards = document.querySelectorAll(".parceiro-card");
 
     parceiroCards.forEach(function(parceiroCard) {
-        const produtoItems = parceiroCard.querySelectorAll(".produto-item input");
+        const produtoItems = parceiroCard.querySelectorAll(".produto-item");
         const subTotalElement = parceiroCard.querySelector('.subtotal');
         const produtosContainer = parceiroCard.querySelector('.produtos-container');
 
-        produtoItems.forEach(function(input) {
-            if (!input.hasAttribute('data-valor-original')) {
-                input.setAttribute('data-valor-original', input.value);
+        produtoItems.forEach(function(produto) {
+            const input = produto.querySelector('input');
+
+            if (!produto.hasAttribute('data-valor-original')) {
+                produto.setAttribute('data-valor-original', input.value);
             }
 
-            let valor_original = parseFloat(input.getAttribute('data-valor-original'));
-            let valor_particular = parseFloat(input.getAttribute('data-valor-particular'));
-            let valor_repasse = parseFloat(input.getAttribute('data-valor-repasse'));
+            let valor_original = parseFloat(produto.getAttribute('data-valor-original'));
+            let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
+            let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
 
             let custo_comissao = valor_original * parseFloat(comissao) / 100;
             let custo_brindes = valor_original * parseFloat(brindes) / 100;
@@ -848,6 +850,11 @@ function aplicarValores() {
                 }
     
                 if(margemLucro > margem_lucro_maxima){
+                    let alertElement = document.createElement('i');
+                    alertElement.textContent = '⚠️';
+                    alertElement.classList.add('alert-margem');
+                    produto.insertBefore(alertElement, produto.firstChild);
+
                     input.value = (custo_total + (valor_original * margem_lucro_maxima / 100)).toFixed(2);
                     console.log("MAIOR", margemLucro, margem_lucro_maxima);
                 } else {
