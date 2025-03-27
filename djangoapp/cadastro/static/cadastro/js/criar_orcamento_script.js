@@ -823,7 +823,6 @@ function aplicarValores() {
         const produtosContainer = parceiroCard.querySelector('.produtos-container');
 
         produtoItems.forEach(function(input) {
-            console.log(input);
             if (!input.hasAttribute('data-valor-original')) {
                 input.setAttribute('data-valor-original', input.value);
             }
@@ -838,7 +837,7 @@ function aplicarValores() {
             let custo_cartoes = valor_original * parseFloat(cartoes) / 100;
 
             let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
-    
+
             if(custo_total > valor_particular){
                 alert('Custo total maior que o valor da particular!');
             } else {
@@ -849,10 +848,10 @@ function aplicarValores() {
                 }
     
                 if(margemLucro > margem_lucro_maxima){
-                    input.value = (custo_total - (valor_original * margem_lucro_maxima / 100)).toFixed(2);
+                    input.value = (custo_total + (valor_original * margem_lucro_maxima / 100)).toFixed(2);
                     console.log("MAIOR", margemLucro, margem_lucro_maxima);
                 } else {
-                    input.value = (custo_total - (valor_original * margemLucro / 100)).toFixed(2);
+                    input.value = (custo_total + (valor_original * margemLucro / 100)).toFixed(2);
                     console.log("MENOR", margemLucro, margem_lucro_maxima);
                 }
             }

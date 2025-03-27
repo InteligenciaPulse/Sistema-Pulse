@@ -109,12 +109,12 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   let produtoNome = document.createElement("span");
                   produtoNome.textContent = produto.nome;
 
-                  let produtoConfig = document.createElement("button");
-                  produtoConfig.textContent = "%";
-                  produtoConfig.textContent = "⚙️";
-                  produtoConfig.onclick = function () {
-                    abrirModal();
-                  };
+                //   let produtoConfig = document.createElement("button");
+                //   produtoConfig.textContent = "%";
+                //   produtoConfig.textContent = "⚙️";
+                //   produtoConfig.onclick = function () {
+                //     abrirModal();
+                //   };
 
                   let valorInput = document.createElement("input");
                   valorInput.type = "number";
@@ -135,7 +135,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   };
                   
                   produtoItem.appendChild(produtoNome);
-                  produtoItem.appendChild(produtoConfig);
+                //   produtoItem.appendChild(produtoConfig);
                   produtoItem.appendChild(valorInput);
                   produtoItem.appendChild(removerProdutoBtn);
                   produtoItem.setAttribute("data-id", produto.id);
