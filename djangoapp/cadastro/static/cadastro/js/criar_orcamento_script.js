@@ -824,6 +824,8 @@ function aplicarValores() {
 
         produtoItems.forEach(function(produto) {
             const input = produto.querySelector('input');
+            const alertaElemento = produto.querySelector('.alert-margem');
+            const tooltip = produto.querySelector('.tooltip');
 
             if (!produto.hasAttribute('data-valor-original')) {
                 produto.setAttribute('data-valor-original', input.value);
@@ -850,14 +852,35 @@ function aplicarValores() {
                 }
     
                 if(margemLucro > margem_lucro_maxima){
-                    let alertElement = document.createElement('i');
-                    alertElement.textContent = '⚠️';
-                    alertElement.classList.add('alert-margem');
-                    produto.insertBefore(alertElement, produto.firstChild);
+                    if (!alertaElemento) {
+                        let alertElement = document.createElement('i');
+                        alertElement.textContent = '⚠️';
+                        alertElement.classList.add('alert-margem');
+                        produto.insertBefore(alertElement, produto.firstChild);
+
+                        if (!tooltip) {
+                            const alertaElemento = produto.querySelector('.alert-margem');
+                            const nextSibling = alertaElemento.nextElementSibling;
+
+                            let tooltipElement = document.createElement('div');
+                            tooltipElement.classList.add('tooltip');
+                            tooltipElement.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
+                            produto.insertBefore(tooltipElement, nextSibling);
+                        }
+                    }
+
 
                     input.value = (custo_total + (valor_original * margem_lucro_maxima / 100)).toFixed(2);
                     console.log("MAIOR", margemLucro, margem_lucro_maxima);
                 } else {
+                    if (alertaElemento) {
+                        alertaElemento.remove();
+                    }
+
+                    if (tooltip) {
+                        tooltip.remove();
+                    }
+
                     input.value = (custo_total + (valor_original * margemLucro / 100)).toFixed(2);
                     console.log("MENOR", margemLucro, margem_lucro_maxima);
                 }

@@ -743,10 +743,47 @@ body {
 
 .alert-margem {
   color: #d9534f;
-  font-size: 24px;
+  font-size: 14px;
   font-weight: bold;
-  margin-right: 8px;
+  font-style: normal;
   vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  background-color: #f0ad4e;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  max-width: 220px;
+  text-align: center;
+  white-space: normal;
+  z-index: 100;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.alert-margem:hover+.tooltip {
+  display: block;
+  opacity: 1;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #f0ad4e transparent;
 }
 
 /* ------------------------------------- MODAL ----------------------------------------- */
