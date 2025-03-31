@@ -786,6 +786,34 @@ body {
   border-color: transparent transparent #f0ad4e transparent;
 }
 
+.valores-globais-container {
+  position: sticky;
+  top: -20px;
+  background-color: #F2568A;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
+
+.valores-globais-container button {
+  background-color: white;
+  color: #F2568A;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease-in-out;
+}
+
+.valores-globais-container button:hover {
+  background-color: #ffffffcc;
+}
+
 /* ------------------------------------- MODAL ----------------------------------------- */
 /* Fundo escuro cobrindo toda a tela */
 .modal {
