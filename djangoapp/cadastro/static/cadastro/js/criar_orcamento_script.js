@@ -317,6 +317,11 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
             parceiro_id: item.getAttribute("data-parceiro-id"),
             produto_id: item.getAttribute("data-id"),
             valor_venda: parseFloat(item.querySelector("input").value || 0),
+            comissao: item.getAttribute("comissao"),
+            brindes: item.getAttribute("brindes"),
+            impostos: item.getAttribute("impostos"),
+            cartoes: item.getAttribute("cartoes"),
+            margem_lucro: item.getAttribute("margem_lucro"),
         });
     });
 
@@ -326,7 +331,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         paciente_id: pacienteId,
         status: statusSelecionado,
         valor_total: valorTotal.toFixed(2),
-        produtos: produtosSelecionados
+        produtos: produtosSelecionados,
     };
 
     fetch("/salvar_orcamento/", {
@@ -839,16 +844,17 @@ function aplicarValores() {
 
             if(custo_total >= valor_particular){
                 let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+                // let custo_maximo_por_valor = (valor_particular - valor_repasse) / 4 / valor_particular;
 
                 if (alertaElemento) {
                     alertaElemento.textContent = '🛑';
 
                     if (tooltip) {
-                        tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado margem de lucro de 0%.`;
+                        tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
                     }
                 } else {
                     let alertElement = document.createElement('i');
-                    alertaElemento.textContent = '🛑';
+                    alertElement.textContent = '🛑';
                     alertElement.classList.add('alert-margem');
                     produto.insertBefore(alertElement, produto.firstChild);
 
@@ -858,19 +864,27 @@ function aplicarValores() {
 
                         let tooltipElement = document.createElement('div');
                         tooltipElement.classList.add('tooltip');
-                        tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado margem de lucro de 0%.`;
+                        tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
                         produto.insertBefore(tooltipElement, nextSibling);
                     }
                 }
+
+                produto.setAttribute("comissao", 0);
+                produto.setAttribute("brindes", 0);
+                produto.setAttribute("impostos", 0);
+                produto.setAttribute("cartoes", 0);
+                produto.setAttribute("margem_lucro", 0);
             } else {
                 let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
-        
-                if(margem_lucro_maxima < 0){
-                    margem_lucro_maxima = 0;
-                }
     
                 if(margemLucro > margem_lucro_maxima){
-                    if (!alertaElemento) {
+                    if (alertaElemento) {
+                        alertaElemento.textContent = '⚠️';
+    
+                        if (tooltip) {
+                            tooltip.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
+                        }
+                    } else {
                         let alertElement = document.createElement('i');
                         alertElement.textContent = '⚠️';
                         alertElement.classList.add('alert-margem');
@@ -888,7 +902,8 @@ function aplicarValores() {
                     }
 
                     input.value = (custo_total + (valor_repasse * margem_lucro_maxima / 100)).toFixed(2);
-                    console.log("MAIOR", margemLucro, margem_lucro_maxima);
+
+                    produto.setAttribute("margem_lucro", margem_lucro_maxima);
                 } else {
                     if (alertaElemento) {
                         alertaElemento.remove();
@@ -899,10 +914,14 @@ function aplicarValores() {
                     }
 
                     input.value = (custo_total + (valor_repasse * margemLucro / 100)).toFixed(2);
-                    console.log("MENOR", margemLucro, margem_lucro_maxima);
+                    produto.setAttribute("margem_lucro", margemLucro);
                 }
-            }
 
+                produto.setAttribute("comissao", comissao);
+                produto.setAttribute("brindes", brindes);
+                produto.setAttribute("impostos", impostos);
+                produto.setAttribute("cartoes", cartoes);
+            }
         });
         
         atualizarSubtotal(produtosContainer, subTotalElement);

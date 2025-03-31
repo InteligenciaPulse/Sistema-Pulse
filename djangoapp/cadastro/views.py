@@ -14,7 +14,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade, Custos
 
 def home(request):
     return render(request, 'cadastro/home.html')
@@ -404,12 +404,21 @@ def salvar_orcamento(request):
                         produto_id=produto_id
                     )
 
+                    custos = Custos.objects.create(
+                        comissao = item['comissao'],
+                        brindes = item['brindes'],
+                        imposto = item['impostos'],
+                        cartao = item['cartoes']
+                    )
+
                     OrcamentoParceiros.objects.create(
                         orcamento=orcamento,
                         parceiro_id=parceiro_id,
                         produto_id=produto_id,
                         valor_venda=valor_venda,
-                        valor_repasse=parceiro_produto.valor_repasse
+                        valor_repasse=parceiro_produto.valor_repasse,
+                        custos=custos,
+                        margem_lucro = item['margem_lucro']
                     )
 
             return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
