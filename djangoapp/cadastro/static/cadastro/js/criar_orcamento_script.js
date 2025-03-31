@@ -838,11 +838,17 @@ function aplicarValores() {
             let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
 
             if(custo_total >= valor_particular){
-                console.log(custo_total);
                 let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
-                if (!alertaElemento) {
+
+                if (alertaElemento) {
+                    alertaElemento.textContent = '🛑';
+
+                    if (tooltip) {
+                        tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado margem de lucro de 0%.`;
+                    }
+                } else {
                     let alertElement = document.createElement('i');
-                    alertElement.textContent = '🛑';
+                    alertaElemento.textContent = '🛑';
                     alertElement.classList.add('alert-margem');
                     produto.insertBefore(alertElement, produto.firstChild);
 
