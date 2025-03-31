@@ -17,6 +17,7 @@
             <div class="filter-section">
                 <div class="valores-globais-container">
                     <button onclick="abrirModal()">Aplicar valores globais</button>
+                    <button id="abrir-modal-btn" onclick="abrirModalTabela()">Resumo</button>
                 </div>
 
                 <div class="status-container">
@@ -241,6 +242,32 @@
                 </div>
                 <button type="button" onclick="aplicarValores()">Aplicar Valores</button>
             </form>
+        </div>
+    </div>
+
+    <div id="modal-tabela" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalTabela()">×</span>
+
+            <table class="tabela-parceiros">
+                <thead>
+                    <tr>
+                        <th>Parceiro</th>
+                        <th>Produto</th>
+                        <th>Valor de Venda</th>
+                        <th>Valor de Repasse</th>
+                        <th>Valor de Particular</th>
+                        <th>Comissão</th>
+                        <th>Brindes</th>
+                        <th>Impostos</th>
+                        <th>Cartões</th>
+                        <th>Margem de Lucro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- dd -->
+                </tbody>
+            </table>
         </div>
     </div>
     

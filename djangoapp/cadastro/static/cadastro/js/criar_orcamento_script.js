@@ -932,3 +932,71 @@ function aplicarValores() {
     fecharModal();
 }
 // -------------------------------------------------------------------------------------------------------------
+
+function abrirModalTabela() {
+    document.getElementById("modal-tabela").style.display = "flex";
+    preencherTabela();
+}
+
+function fecharModalTabela() {
+    document.getElementById("modal-tabela").style.display = "none";
+}
+
+function preencherTabela() {
+    const tbody = document.querySelector(".tabela-parceiros tbody");
+    tbody.innerHTML = "";
+
+    const parceiroCards = document.querySelectorAll(".parceiro-card");
+
+    parceiroCards.forEach(function(parceiro) {
+        const parceiroNome = parceiro.querySelector(".produtos-container-header h5").textContent;
+
+        let produtos = [];
+        const produtoContainer = parceiro.querySelector(".produtos-container");
+        const produtoItems = produtoContainer.querySelectorAll(".produto-item");
+
+        produtoItems.forEach(function(produto) {
+            const produtoNome = produto.querySelector("span").textContent;
+            const valorVenda = produto.querySelector("input").value;
+            const valorRepasse = produto.getAttribute("data-valor-repasse");
+            const valorParticular = produto.getAttribute("data-valor-particular");
+            const comissao = produto.getAttribute("comissao");
+            const brindes = produto.getAttribute("brindes");
+            const impostos = produto.getAttribute("impostos");
+            const cartoes = produto.getAttribute("cartoes");
+            const margem_lucro = produto.getAttribute("margem_lucro");
+
+            let produtoData = {
+                nome: produtoNome,
+                valor_venda: valorVenda,
+                valor_repasse: valorRepasse,
+                valor_particular: valorParticular,
+                comissao: comissao,
+                brindes: brindes,
+                impostos: impostos,
+                cartoes: cartoes,
+                margem_lucro: margem_lucro
+            };
+    
+            produtos.push(produtoData);
+        });
+
+        produtos.forEach(function(produto) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${parceiroNome}</td>
+                <td>${produto.nome}</td>
+                <td>R$ ${produto.valor_venda}</td>
+                <td>R$ ${produto.valor_repasse}</td>
+                <td>R$ ${produto.valor_particular}</td>
+                <td>${produto.comissao}%</td>
+                <td>${produto.brindes}%</td>
+                <td>${produto.impostos}%</td>
+                <td>${produto.cartoes}%</td>
+                <td>${produto.margem_lucro}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+    });
+}

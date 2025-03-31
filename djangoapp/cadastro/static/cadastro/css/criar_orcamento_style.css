@@ -789,6 +789,8 @@ body {
 .valores-globais-container {
   position: sticky;
   top: -20px;
+  display: flex;
+  gap: 5px;
   background-color: #F2568A;
   color: white;
   padding: 15px;
@@ -813,6 +815,101 @@ body {
 .valores-globais-container button:hover {
   background-color: #ffffffcc;
 }
+
+/* ---------------------------------- MODAL TABELA ------------------------------------- */
+/* Estilos do Modal de Tabela de Parceiros */
+#modal-tabela {
+  display: none;
+  /* Inicialmente escondido */
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 900px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+#modal-tabela .modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#modal-tabela .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 36px;
+  color: #F2568A;
+  cursor: pointer;
+}
+
+#modal-tabela .close:hover {
+  color: red;
+  transform: scale(1.1);
+}
+
+#modal-tabela h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+/* Estilos para a Tabela dentro do Modal */
+#modal-tabela .tabela-parceiros {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#modal-tabela .tabela-parceiros th,
+#modal-tabela .tabela-parceiros td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+#modal-tabela .tabela-parceiros th {
+  background-color: #F2568A;
+  color: white;
+  font-weight: bold;
+}
+
+#modal-tabela .tabela-parceiros td {
+  color: #333;
+}
+
+#modal-tabela .tabela-parceiros tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#modal-tabela .tabela-parceiros tr:hover {
+  background-color: #e6e6e6;
+}
+
+/* #abrir-modal-btn {
+  background-color: #F2568A;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+#abrir-modal-btn:hover {
+  background-color: #e04576;
+} */
+
 
 /* ------------------------------------- MODAL ----------------------------------------- */
 /* Fundo escuro cobrindo toda a tela */
