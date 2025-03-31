@@ -763,8 +763,8 @@ body {
   text-align: center;
   white-space: normal;
   z-index: 100;
-  bottom: 30px;
-  left: 50%;
+  bottom: 26%;
+  left: 16%;
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s ease;

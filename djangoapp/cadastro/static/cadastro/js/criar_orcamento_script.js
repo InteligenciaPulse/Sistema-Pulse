@@ -826,7 +826,7 @@ function aplicarValores() {
             const input = produto.querySelector('input');
             const alertaElemento = produto.querySelector('.alert-margem');
             const tooltip = produto.querySelector('.tooltip');
-            
+
             let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
             let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
 
@@ -837,8 +837,25 @@ function aplicarValores() {
 
             let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
 
-            if(custo_total > valor_particular){
-                alert('Custo total maior que o valor da particular!');
+            if(custo_total >= valor_particular){
+                console.log(custo_total);
+                let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+                if (!alertaElemento) {
+                    let alertElement = document.createElement('i');
+                    alertElement.textContent = '🛑';
+                    alertElement.classList.add('alert-margem');
+                    produto.insertBefore(alertElement, produto.firstChild);
+
+                    if (!tooltip) {
+                        const alertaElemento = produto.querySelector('.alert-margem');
+                        const nextSibling = alertaElemento.nextElementSibling;
+
+                        let tooltipElement = document.createElement('div');
+                        tooltipElement.classList.add('tooltip');
+                        tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado margem de lucro de 0%.`;
+                        produto.insertBefore(tooltipElement, nextSibling);
+                    }
+                }
             } else {
                 let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
         
