@@ -748,7 +748,7 @@ body {
   font-style: normal;
   vertical-align: middle;
   cursor: pointer;
-  position: relative;
+  /* position: relative; */
 }
 
 .tooltip {

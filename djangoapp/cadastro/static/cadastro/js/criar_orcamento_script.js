@@ -826,19 +826,14 @@ function aplicarValores() {
             const input = produto.querySelector('input');
             const alertaElemento = produto.querySelector('.alert-margem');
             const tooltip = produto.querySelector('.tooltip');
-
-            if (!produto.hasAttribute('data-valor-original')) {
-                produto.setAttribute('data-valor-original', input.value);
-            }
-
-            let valor_original = parseFloat(produto.getAttribute('data-valor-original'));
+            
             let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
             let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
 
-            let custo_comissao = valor_original * parseFloat(comissao) / 100;
-            let custo_brindes = valor_original * parseFloat(brindes) / 100;
-            let custo_impostos = valor_original * parseFloat(impostos) / 100; 
-            let custo_cartoes = valor_original * parseFloat(cartoes) / 100;
+            let custo_comissao = valor_repasse * parseFloat(comissao) / 100;
+            let custo_brindes = valor_repasse * parseFloat(brindes) / 100;
+            let custo_impostos = valor_repasse * parseFloat(impostos) / 100; 
+            let custo_cartoes = valor_repasse * parseFloat(cartoes) / 100;
 
             let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
 
@@ -869,8 +864,7 @@ function aplicarValores() {
                         }
                     }
 
-
-                    input.value = (custo_total + (valor_original * margem_lucro_maxima / 100)).toFixed(2);
+                    input.value = (custo_total + (valor_repasse * margem_lucro_maxima / 100)).toFixed(2);
                     console.log("MAIOR", margemLucro, margem_lucro_maxima);
                 } else {
                     if (alertaElemento) {
@@ -881,7 +875,7 @@ function aplicarValores() {
                         tooltip.remove();
                     }
 
-                    input.value = (custo_total + (valor_original * margemLucro / 100)).toFixed(2);
+                    input.value = (custo_total + (valor_repasse * margemLucro / 100)).toFixed(2);
                     console.log("MENOR", margemLucro, margem_lucro_maxima);
                 }
             }
