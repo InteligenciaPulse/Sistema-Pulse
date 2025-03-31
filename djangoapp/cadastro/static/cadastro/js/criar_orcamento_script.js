@@ -814,11 +814,11 @@ function aplicarValores() {
     const cartoes = document.getElementById("cartoes").value;
     const margemLucro = document.getElementById("margem_lucro").value;
 
-    console.log(`Comissão: ${comissao}%`);
-    console.log(`Brindes: ${brindes}%`);
-    console.log(`Impostos: ${impostos}%`);
-    console.log(`Cartões: ${cartoes}%`);
-    console.log(`Margem de Lucro: ${margemLucro}%`);
+    // console.log(`Comissão: ${comissao}%`);
+    // console.log(`Brindes: ${brindes}%`);
+    // console.log(`Impostos: ${impostos}%`);
+    // console.log(`Cartões: ${cartoes}%`);
+    // console.log(`Margem de Lucro: ${margemLucro}%`);
 
     const parceiroCards = document.querySelectorAll(".parceiro-card");
 
@@ -874,6 +874,8 @@ function aplicarValores() {
                 produto.setAttribute("impostos", 0);
                 produto.setAttribute("cartoes", 0);
                 produto.setAttribute("margem_lucro", 0);
+
+                input.value = valor_repasse.toFixed(2);
             } else {
                 let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
     
