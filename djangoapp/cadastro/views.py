@@ -32,7 +32,7 @@ def criar_orcamento(request):
         "subtipo_list": subtipo_list
     }
 
-    return render(request, 'cadastro/criar_orcamento.html', context)
+    return render(request, 'cadastro/criar_orcamento copy.html', context)
 
 def historico(request):
     tipo = request.GET.get("tipo", "orcamento")
