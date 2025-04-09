@@ -483,7 +483,7 @@ def editar_orcamento(request, orcamento_id):
         "parceiros": list(parceiros_dict.values())
     }
     
-    return render(request, "cadastro/editar_orcamento.html", context)
+    return render(request, "cadastro/editar_orcamento copy.html", context)
 
 @csrf_protect
 def atualizar_orcamento(request, orcamento_id=None):
