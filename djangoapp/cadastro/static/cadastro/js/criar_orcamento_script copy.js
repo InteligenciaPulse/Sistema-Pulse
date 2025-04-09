@@ -707,7 +707,6 @@ function fecharModal() {
 
 function aplicarValores() {
     const parceiroCards = document.querySelectorAll(".parceiro-card");
-    const subTotalElement = document.querySelector('.subtotal');
 
     const comissao = document.getElementById("comissao").value;
     const brindes = document.getElementById("brindes").value;
@@ -715,23 +714,21 @@ function aplicarValores() {
     const cartoes = document.getElementById("cartoes").value;
     const margem = document.getElementById("margem_lucro").value;
 
-    // console.log(`Comissão: ${comissao}%`);
-    // console.log(`Brindes: ${brindes}%`);
-    // console.log(`Impostos: ${impostos}%`);
-    // console.log(`Cartões: ${cartoes}%`);
-    // console.log(`Margem de Lucro: ${margemLucro}%`);
-
     var total_repasse = 0;
     var total_particular = 0;
 
     parceiroCards.forEach(function(parceiroCard) {
-        const produtosContainer = parceiroCard.querySelector('.produtos-container');
         const produtoItems = parceiroCard.querySelectorAll(".produto-item");
-        const subTotalElement = parceiroCard.querySelector('.subtotal');
 
         produtoItems.forEach(function(produto) {
             total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
             total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
+
+            produto.setAttribute("comissao", comissao);
+            produto.setAttribute("brindes", brindes);
+            produto.setAttribute("impostos", impostos);
+            produto.setAttribute("cartoes", cartoes);
+            produto.setAttribute("margem_lucro", margem);
 
             // const input = produto.querySelector('input');
             // const alertaElemento = produto.querySelector('.alert-margem');
@@ -840,13 +837,37 @@ function aplicarValores() {
 
     let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
 
-    console.log(total_repasse);
-    console.log(total_particular);
-    console.log(valor_venda_total);
-
     document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    
+    verificarValores();
+
     fecharModal();
+}
+
+function verificarValores(){
+    let total_geral = document.getElementById("total-geral").textContent;
+    let total_particular = document.getElementById("total-particular").textContent;
+
+    const extrairValor = (texto) => {
+        const valorMatch = texto.match(/[\d.,]+/);
+        if (!valorMatch) return 0;
+        return parseFloat(valorMatch[0].replace(/\./g, '').replace(',', '.'));
+    };
+
+    total_geral = extrairValor(total_geral);
+    total_particular = extrairValor(total_particular);
+
+    if (total_geral > total_particular) {
+        console.log("O total geral é maior que o total particular.");
+        return "geral > particular";
+    } else if (total_geral < total_particular) {
+        console.log("O total particular é maior que o total geral.");
+        return "particular > geral";
+    } else {
+        console.log("Os totais são iguais.");
+        return "iguais";
+    }
 }
 // -------------------------------------------------------------------------------------------------------------
 

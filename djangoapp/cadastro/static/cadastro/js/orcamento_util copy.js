@@ -30,6 +30,18 @@ function atualizarTotalGeral() {
 //   document.getElementById("total-particular").textContent = `Total particular: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
 }
 
+function atualizarParticular(produtosContainer) {
+    let total = 0;
+
+    const produtoItems = produtosContainer.querySelectorAll(".produto-item");
+    
+    produtoItems.forEach(function(produto) {
+        total += parseFloat(produto.getAttribute('data-valor-particular')) || 0;
+    });
+
+    document.getElementById("total-particular").textContent = `Total particular: R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
+}
+
 // -------------------------------------- BUSCAR SUBTIPOS ---------------------------------------------
 function buscarSubTipos(subtipoSelect){
   fetch("/buscar_subtipos/")
@@ -140,6 +152,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   produtosContainer.appendChild(produtoItem);
                   dropdownProdutos.remove();
                   atualizarSubtotal(produtosContainer, subtotalElement);
+                  atualizarParticular(produtosContainer);
               });
 
               dropdownProdutos.appendChild(option);
