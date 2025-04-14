@@ -958,7 +958,13 @@ function preencherTabela() {
         });
     });
 
-    const tfoot = document.createElement("tfoot");
+    let tfoot = table.querySelector("tfoot");
+
+    if (!tfoot) {
+        tfoot = document.createElement("tfoot");
+        table.appendChild(tfoot);
+    }
+    
     tfoot.innerHTML = "";
     tfoot.innerHTML = `
     <td></td>
