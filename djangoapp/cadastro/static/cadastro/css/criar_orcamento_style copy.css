@@ -894,6 +894,11 @@ body {
   background-color: #e6e6e6;
 }
 
+#modal-tabela .tabela-parceiros tfoot {
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+
 /* #abrir-modal-btn {
   background-color: #F2568A;
   color: white;

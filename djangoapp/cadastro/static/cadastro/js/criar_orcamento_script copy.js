@@ -881,6 +881,15 @@ function fecharModalTabela() {
 }
 
 function preencherTabela() {
+    var vendaTotal = 0;
+    var repasseTotal = 0;
+    var particularTotal = 0;
+    var comissaoResumo = 0;
+    var brindesResumo = 0;
+    var impostosResumo = 0;
+    var cartoesResumo = 0;
+    var margemResumo = 0;
+    const table = document.querySelector('.tabela-parceiros')
     const tbody = document.querySelector(".tabela-parceiros tbody");
     tbody.innerHTML = "";
 
@@ -918,23 +927,50 @@ function preencherTabela() {
     
             produtos.push(produtoData);
         });
-
+        
+        
         produtos.forEach(function(produto) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${parceiroNome}</td>
-                <td>${produto.nome}</td>
-                <td>R$ ${produto.valor_venda}</td>
-                <td>R$ ${produto.valor_repasse}</td>
-                <td>R$ ${produto.valor_particular}</td>
-                <td>${produto.comissao}%</td>
-                <td>${produto.brindes}%</td>
-                <td>${produto.impostos}%</td>
-                <td>${produto.cartoes}%</td>
-                <td>${produto.margem_lucro}%</td>
+            <td>${parceiroNome}</td>
+            <td>${produto.nome}</td>
+            <td>R$ ${produto.valor_venda}</td>
+            <td>R$ ${produto.valor_repasse}</td>
+            <td>R$ ${produto.valor_particular}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             `;
             tbody.appendChild(tr);
         });
-
+        
+        produtos.forEach(function(produto){
+            comissaoResumo = produto.comissao;
+            brindesResumo = produto.brindes;
+            impostosResumo = produto.impostos;
+            cartoesResumo = produto.cartoes;
+            margemResumo = produto.margem_lucro;
+            vendaTotal += parseFloat(produto.valor_venda);
+            repasseTotal += parseFloat(produto.valor_repasse);
+            particularTotal += parseFloat(produto.valor_particular);
+        });
     });
+
+    const tfoot = document.createElement("tfoot");
+    tfoot.innerHTML = "";
+    tfoot.innerHTML = `
+    <td></td>
+    <td>Total</td>
+    <td>R$ ${vendaTotal}</td>
+    <td>R$ ${repasseTotal}</td>
+    <td>R$ ${particularTotal}</td>
+    <td>R$ ${comissaoResumo}</td>
+    <td>R$ ${brindesResumo}</td>
+    <td>${impostosResumo}%</td>
+    <td>${cartoesResumo}%</td>
+    <td>${margemResumo}%</td>
+    `;
+    table.appendChild(tfoot);
 }

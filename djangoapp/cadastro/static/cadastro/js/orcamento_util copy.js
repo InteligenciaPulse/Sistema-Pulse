@@ -33,7 +33,8 @@ function atualizarTotalGeral() {
 function atualizarParticular(produtosContainer) {
     let total = 0;
 
-    const produtoItems = produtosContainer.querySelectorAll(".produto-item");
+    const parceirosList = document.getElementById('parceiros-list');
+    const produtoItems = parceirosList.querySelectorAll(".produto-item");
     
     produtoItems.forEach(function(produto) {
         total += parseFloat(produto.getAttribute('data-valor-particular')) || 0;
@@ -152,7 +153,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   produtosContainer.appendChild(produtoItem);
                   dropdownProdutos.remove();
                   atualizarSubtotal(produtosContainer, subtotalElement);
-                  atualizarParticular(produtosContainer);
+                  atualizarParticular();
               });
 
               dropdownProdutos.appendChild(option);
