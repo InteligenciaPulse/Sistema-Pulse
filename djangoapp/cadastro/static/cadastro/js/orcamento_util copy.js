@@ -30,7 +30,7 @@ function atualizarTotalGeral() {
 //   document.getElementById("total-particular").textContent = `Total particular: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
 }
 
-function atualizarParticular(produtosContainer) {
+function atualizarParticular() {
     let total = 0;
 
     const parceirosList = document.getElementById('parceiros-list');
@@ -139,6 +139,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   removerProdutoBtn.onclick = function () {
                       produtoItem.remove();
                       atualizarSubtotal(produtosContainer, subtotalElement);
+                      atualizarParticular();
                   };
                   
                   produtoItem.appendChild(produtoNome);
