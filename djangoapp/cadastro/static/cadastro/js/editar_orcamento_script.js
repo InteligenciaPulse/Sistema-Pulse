@@ -69,12 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
       buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);
   });
 
-  document.addEventListener("click", function (event) {
-      if (!inputParceiro.contains(event.target) && !dropdown.contains(event.target)) {
-          dropdown.style.display = "none";
-      }
-  });
-
   window.adicionarParceiro = function () {
       const nome = inputParceiro.value.trim();
       const idParceiro = inputParceiro.getAttribute("data-id");
@@ -143,12 +137,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 });
 
-document.addEventListener("click", function(event) {
-  if (!event.target.closest(".filter-parceiro")) {
-      document.getElementById("sugestoes-parceiros").style.display = "none";
-  }
-});
-
 // -------------------------- REMOVER PARCEIROS QUE JA ESTAVAM NO ORCAMENTO -------------------------
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".remover-parceiro-btn").forEach(button => {
@@ -211,56 +199,42 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// ------------------------------------------- PREENCHER COM STATUS ---------------------------------------------
-function selecionarStatusAtual() {
-    const statusSelect = document.getElementById("status");
-    const statusAtual = statusSelect.getAttribute("data-status-atual");
-
-    if (statusAtual) {
-        for (let option of statusSelect.options) {
-            if (option.value === statusAtual) {
-                option.selected = true;
-                break;
-            }
-        }
-    }
-}
-
 // --------------------------------------------- PROCEDIMENTOS -------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
-    const inputProcedimentos = document.getElementById("procedimentos");
-    const procedimentosSpecialtyDiv = document.getElementById("procedimentos-specialty");
-    const dropdown = document.getElementById("sugestoes-procedimentos");
-    const listaProcedimentos = document.getElementById("procedimentos-list");
+    const specialtySelect = document.getElementById("specialty-select");
+    const selectProcedimento = document.getElementById("procedimentos-select");
 
-    const specialtySelect = document.createElement("select");
-    specialtySelect.id = "specialty-select";
-    specialtySelect.innerHTML = `<option value="">Especialidade</option>`;
-    procedimentosSpecialtyDiv.appendChild(specialtySelect);
+    function atualizarProcedimentos(specialtyId) {
+        const options = selectProcedimento.querySelectorAll('option');
+        options.forEach(option => {
+            if (option.value) {
+                option.style.display = "none";
+            }
+        });
 
-    buscarEspecialidades(specialtySelect);
+        if(specialtyId) {
+            selectProcedimento.value = "";
 
-    inputProcedimentos.addEventListener("input", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
-
-    inputProcedimentos.addEventListener("focus", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
+            const procedimentoOptions = selectProcedimento.querySelectorAll(`option[data-specialty="${specialtyId}"]`);
+            procedimentoOptions.forEach(option => {
+                option.style.display = "block";
+            });
+        } else {
+            options.forEach(option => {
+                if (option.value) {
+                    option.style.display = "block";
+                }
+            });
+        }
+    }
 
     specialtySelect.addEventListener("change", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
-
-    document.addEventListener("click", function (event) {
-        if (!inputProcedimentos.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.style.display = "none";
-        }
+        atualizarProcedimentos(specialtySelect.value);
     });
 
     window.adicionarProcedimentos = function () {
-        const nome = inputProcedimentos.value.trim();
-        const idProcedimento = inputProcedimentos.getAttribute("data-id");
+        const idProcedimento = selectProcedimento.value;
+        const nome = selectProcedimento.options[selectProcedimento.selectedIndex].text;
 
         if (!nome || !idProcedimento) {
             alert("Selecione um procedimento válido.");
@@ -274,6 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let titulo = document.createElement("span");
         titulo.textContent = nome;
+        procedimentoItem.setAttribute('data-id', idProcedimento);
 
         let removerBtn = document.createElement("button");
         removerBtn.textContent = "❌";
@@ -285,14 +260,16 @@ document.addEventListener("DOMContentLoaded", function () {
         procedimentoItem.appendChild(removerBtn);
 
         listaProcedimentos.appendChild(procedimentoItem);
-
-        inputProcedimentos.value = "";
-        inputProcedimentos.removeAttribute("data-id");
     };
 });
 
-document.addEventListener("click", function(event) {
-    if (!event.target.closest(".filter-procedimentos")) {
-        document.getElementById("sugestoes-procedimentos").style.display = "none";
+// ------------------------REMOVER PROCEDIMENTOS QUE JÁ ESTAVAM ADICIONADOS----------------------------------
+document.getElementById("procedimentos-list").addEventListener("click", function (event) {
+    if (event.target.tagName === "BUTTON") {
+        const li = event.target.closest(".procedimento-item");
+        if (li) {
+            li.remove();
+        }
     }
 });
+// ----------------------------------------------------------------------------------------------------------

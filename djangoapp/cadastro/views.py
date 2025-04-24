@@ -513,7 +513,8 @@ def editar_orcamento(request, orcamento_id):
         "status_list": status_list,
         "especialidade_list": especialidade_list,
         "subtipo_list": subtipo_list,
-        'procedimento_list': list(procedimento_dict.values())
+        'orc_procedimento': list(procedimento_dict.values()),
+        'procedimento_list': procedimento_list,
     }
     
     return render(request, "cadastro/editar_orcamento.html", context)
