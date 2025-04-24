@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Orçamento</title>
 
-    <link rel="stylesheet" href="{% static 'cadastro/css/criar_orcamento_style copy.css' %}">
+    <link rel="stylesheet" href="{% static 'cadastro/css/criar_orcamento_style.css' %}">
     <script src="{% static 'cadastro/js/orcamento_util.js' %}"></script>
     <script src="{% static 'cadastro/js/editar_orcamento_script.js' %}" defer></script>
 </head>
@@ -16,38 +16,67 @@
   <div class="container">
       <div class="sidebar">
           <div class="filter-section">
-            <h1>{{  solicitacao.status }}</h1>
+            <div class="valores-globais-container">
+              <button onclick="abrirModal()">Aplicar valores globais</button>
+              <button id="abrir-modal-btn" onclick="abrirModalTabela()">Resumo</button>
+            </div>
 
-              <div class="status-container">
-                <label for="status">Status do Orçamento:</label>
-                <select id="status" name="status" data-status-atual="{{ status.id }}">
-                    <option value="">Carregando status...</option>
+            <div class="status-container">
+              <label for="status">Status do Orçamento:</label>
+              <select id="status" name="status">
+                {% for status in status_list %}
+                  <option value="{{ status.id }}" {% if status.id == orc_status.id %} selected {% endif %}>
+                    {{ status.nome }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <!-- Paciente -->
+            <div class="filter-paciente">
+                <label for="paciente">Paciente</label>
+                <div class="paciente-container">
+                    <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
+                </div>
+            </div>
+
+            <!-- Procedimentos -->
+            <div class="filter-procedimentos">
+              <label for="procedimentos">Procedimentos</label>
+              <div id="procedimentos-specialty">
+                <select id="procedimentos-select" name="procedimento">
+                  <option value>Selecione o procedimento</option>
+                  {% for procedimento in procedimento_list %}
+                    <option value="{{ procedimento.id }}" data-specialty="{{ procedimento.especialidade.id }}">
+                      {{ procedimento.nome }}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                <select id="specialty-select" name="specialty">
+                  <option value>Todos</option>
+                  {% for especialidade in especialidade_list %}
+                    <option value="{{ especialidade.id }}">
+                      {{ especialidade.nome }}
+                    </option>
+                  {% endfor %}
                 </select>
               </div>
-              
-              <!-- Paciente -->
-              <div class="filter-paciente">
-                  <label for="paciente">Paciente</label>
-                  <div class="paciente-container">
-                      <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
+
+              <button id= "filter-procedimentos-add-button" onclick="adicionarProcedimentos()">Adicionar procedimento</button>
+
+              <div id="lista-procedimentos">
+                  <h4>Procedimentos Selecionados:</h4>
+                  <div id="procedimentos-list">
+                    {% for procedimento in procedimento_list %}
+                      <li class="procedimento-item" data-id="{{ procedimento.procedimento_id }}">
+                        <span>{{ procedimento.procedimento_nome }}</span>
+                        <button>❌</button>
+                      </li>
+                    {% endfor %}
                   </div>
               </div>
-
-              <div class="filter-procedimentos">
-                <label for="procedimentos">Procedimentos</label>
-                <div id="procedimentos-specialty">
-                    <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento...">
-                </div>
-                <div id="sugestoes-procedimentos" class="dropdown"></div>
-                <button id= "filter-procedimentos-add-button" onclick="adicionarProcedimentos()">Adicionar procedimento</button>
-
-                <div id="lista-procedimentos">
-                    <h4>Procedimentos Selecionados:</h4>
-                    <div id="procedimentos-list">
-                        <!-- Os procedimentos aparecerão aqui -->
-                    </div>
-                </div>
-              </div>
+            </div>
           </div>
       </div>
 
@@ -61,7 +90,6 @@
             <div id="filter-parceiro">
                 <label for="parceiro">Parceiro:</label>
                 <div id="parceiro-subtype">
-                    <!-- <input type="text" id="parceiro" placeholder="Digite o nome do parceiro..."> -->
                     <select id="parceiro" name="parceiro">
                         <option value>Selecione o parceiro</option>
                         {% for parceiro in parceiro_list %}

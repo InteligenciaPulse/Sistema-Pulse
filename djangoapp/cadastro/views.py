@@ -458,6 +458,12 @@ def atualizar_status(request, orcamento_id):
     return JsonResponse({"error": "Método não permitido"}, status=405)
 
 def editar_orcamento(request, orcamento_id):
+    parceiro_list = Parceiro.objects.all().order_by('nome')
+    status_list = Status.objects.all()
+    especialidade_list = Especialidade.objects.all().order_by('nome')
+    subtipo_list = Subtipo.objects.all().order_by('nome')
+    procedimento_list = Procedimento.objects.all().order_by('nome')
+
     orcamento = get_object_or_404(Orcamento, id=orcamento_id)
 
     try:
@@ -486,14 +492,31 @@ def editar_orcamento(request, orcamento_id):
             "valor_repasse": str(orc_parc.valor_repasse),
         })
 
+    procedimento_dict = {}
+    orc_procedimentos = OrcamentoProcedimentos.objects.filter(orcamento=orcamento)
+
+    for orc_proced in orc_procedimentos:
+        procedimento_id = orc_proced.procedimento.id
+
+        if procedimento_id not in procedimento_dict:
+            procedimento_dict[procedimento_id] = {
+                "procedimento_id": procedimento_id,
+                "procedimento_nome": orc_proced.procedimento.nome
+            }
+
     context = {
         "orcamento": orcamento,
-        "status": orcamento.status,
+        "orc_status": orcamento.status,
         "paciente": paciente,
-        "parceiros": list(parceiros_dict.values())
+        "parceiros": list(parceiros_dict.values()),
+        "parceiro_list": parceiro_list,
+        "status_list": status_list,
+        "especialidade_list": especialidade_list,
+        "subtipo_list": subtipo_list,
+        'procedimento_list': list(procedimento_dict.values())
     }
     
-    return render(request, "cadastro/editar_orcamento copy.html", context)
+    return render(request, "cadastro/editar_orcamento.html", context)
 
 @csrf_protect
 def atualizar_orcamento(request, orcamento_id=None):

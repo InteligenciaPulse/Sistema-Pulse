@@ -52,8 +52,6 @@
                             {% endfor %}
                         </select>
 
-                        <!-- <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento..."> -->
-                        
                         <select id="specialty-select" name="specialty">
                             <option value>Todos</option>
                             {% for especialidade in especialidade_list %}
@@ -63,7 +61,6 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div id="sugestoes-procedimentos" class="dropdown"></div>
                     <button id= "filter-procedimentos-add-button" onclick="adicionarProcedimentos()">Adicionar procedimento</button>
 
                     <div id="lista-procedimentos">
