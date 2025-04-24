@@ -42,7 +42,7 @@
 
             <!-- Procedimentos -->
             <div class="filter-procedimentos">
-              <label for="procedimentos">Procedimentos</label>
+              <label for="procedimentos-select">Procedimentos</label>
               <div id="procedimentos-specialty">
                 <select id="procedimentos-select" name="procedimento">
                   <option value>Selecione o procedimento</option>
@@ -127,7 +127,7 @@
                             </div>
                             
                             {% for produto in parceiro.produtos %}
-                              <div class="produto-item" data-id="{{ produto.produto_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}">
+                              <div class="produto-item" data-id="{{ produto.produto_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}" data-valor-particular="{{ produto.valor_particular }}" data-valor-repasse="{{ produto.valor_repasse }}">
                                   <span>{{ produto.produto_nome }}</span>
                                   <input type="number" value="{{ produto.valor_venda }}" step="0.01">
                                   <button class="remover-produto-btn">❌</button>
@@ -141,7 +141,7 @@
                 </div>
 
                 <div class="total-particular">
-                    <h3 id="total-particular">Total particular: R$ 0,00</h3>
+                    <h3 id="total-particular">Total particular: R$ {{ total_particular }}</h3>
                 </div>
             </div>
         </div>

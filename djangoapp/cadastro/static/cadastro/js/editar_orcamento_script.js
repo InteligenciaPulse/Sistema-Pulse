@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// -------------------- ADICIONAR PROduTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+// -------------------- ADICIONAR PRODUTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".adicionar-produto-btn").forEach(button => {
       button.addEventListener("click", function () {
@@ -178,11 +178,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
         atualizarSubtotal(produtosContainer, subtotalElement);
+        console.log('ADICIONOU');
+        atualizarParticular();
       });
   });
 });
 
-// -------------------- REMOVER PROduTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
+// -------------------- REMOVER PRODUTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".remover-produto-btn").forEach(button => {
       button.addEventListener("click", function () {
@@ -194,6 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (produtoItem) {
           produtoItem.remove();
           atualizarSubtotal(produtosContainer, subtotalElement);
+          console.log('REMOVEU');
+          atualizarParticular();
         }
       });
   });

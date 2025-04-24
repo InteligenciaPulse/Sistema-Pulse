@@ -474,9 +474,11 @@ def editar_orcamento(request, orcamento_id):
         
     parceiros_dict = {}
     orcamento_parceiros = OrcamentoParceiros.objects.filter(orcamento=orcamento)
+    total_particular = 0
 
     for orc_parc in orcamento_parceiros:
         parceiro_id = orc_parc.parceiro.id
+        parceiro_produto = ParceiroProdutos.objects.get(parceiro_id=parceiro_id, produto_id=orc_parc.produto.id)
 
         if parceiro_id not in parceiros_dict:
             parceiros_dict[parceiro_id] = {
@@ -490,7 +492,10 @@ def editar_orcamento(request, orcamento_id):
             "produto_nome": orc_parc.produto.nome,
             "valor_venda": str(orc_parc.valor_venda),
             "valor_repasse": str(orc_parc.valor_repasse),
+            "valor_particular": parceiro_produto.valor_particular
         })
+
+        total_particular += parceiro_produto.valor_particular
 
     procedimento_dict = {}
     orc_procedimentos = OrcamentoProcedimentos.objects.filter(orcamento=orcamento)
@@ -515,6 +520,7 @@ def editar_orcamento(request, orcamento_id):
         "subtipo_list": subtipo_list,
         'orc_procedimento': list(procedimento_dict.values()),
         'procedimento_list': procedimento_list,
+        'total_particular': f"{total_particular:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
     }
     
     return render(request, "cadastro/editar_orcamento.html", context)

@@ -33,7 +33,7 @@ function atualizarTotalGeral() {
 function atualizarParticular() {
     let total = 0;
 
-    const parceirosList = document.getElementById('parceiros-list');
+    const parceirosList = document.getElementById('parceiro-list');
     const produtoItems = parceirosList.querySelectorAll(".produto-item");
     
     produtoItems.forEach(function(produto) {
