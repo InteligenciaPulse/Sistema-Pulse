@@ -178,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
         atualizarSubtotal(produtosContainer, subtotalElement);
-        console.log('ADICIONOU');
         atualizarParticular();
       });
   });
@@ -196,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (produtoItem) {
           produtoItem.remove();
           atualizarSubtotal(produtosContainer, subtotalElement);
-          console.log('REMOVEU');
           atualizarParticular();
         }
       });

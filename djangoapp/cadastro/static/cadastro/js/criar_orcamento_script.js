@@ -121,6 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
             removerParceiroBtn.textContent = "❌";
             removerParceiroBtn.onclick = function () {
                 parceiroDiv.remove();
+                // atualizarSubtotal();
+                atualizarParticular()
             };
     
             let headerDiv = document.createElement("div");
