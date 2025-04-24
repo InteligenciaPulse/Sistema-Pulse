@@ -49,95 +49,6 @@ document.addEventListener("click", function(event) {
     }
 });
 
-// =================================================== PROCEDIMENTOS
-// document.addEventListener("DOMContentLoaded", function () {
-//     const inputProduto = document.getElementById("produto");
-//     const dropdown = document.getElementById("sugestoes-produtos");
-//     const listaProdutos = document.getElementById("produtos-list");
-
-//     inputProduto.addEventListener("input", function () {
-//         const query = inputProduto.value.trim();
-//         if (query.length < 1) {
-//             dropdown.innerHTML = "";
-//             dropdown.style.display = "none";
-//             return;
-//         }
-
-//         fetch(`/buscar_produtos/?q=${query}`)
-//             .then(response => response.json())
-//             .then(data => {
-//                 dropdown.innerHTML = "";
-//                 if (data.length === 0) {
-//                     dropdown.style.display = "none";
-//                     return;
-//                 }
-
-//                 data.forEach(produto => {
-//                     let option = document.createElement("div");
-//                     option.textContent = produto.nome;
-//                     option.classList.add("dropdown-item");
-
-//                     option.addEventListener("click", function () {
-//                         inputProduto.value = produto.nome;
-//                         dropdown.style.display = "none";
-//                     });
-
-//                     dropdown.appendChild(option);
-//                 });
-
-//                 dropdown.style.display = "block";
-//             })
-//             .catch(error => console.error("Erro ao buscar produtos:", error));
-//     });
-
-//     document.addEventListener("click", function (event) {
-//         if (!inputProduto.contains(event.target) && !dropdown.contains(event.target)) {
-//             dropdown.style.display = "none";
-//         }
-//     });
-
-//     window.adicionarProduto = function () {
-//         const nome = inputProduto.value.trim();
-
-//         if (!nome) {
-//             alert("Selecione um produto válido.");
-//             return;
-//         }
-
-//         let produtoDiv = document.createElement("div");
-//         produtoDiv.classList.add("produto-card");
-
-//         let titulo = document.createElement("h5");
-//         titulo.textContent = nome;
-
-//         let parceirosContainer = document.createElement("div");
-//         parceirosContainer.classList.add("parceiros-container");
-
-//         let adicionarParceiroBtn = document.createElement("button");
-//         adicionarParceiroBtn.textContent = "Adicionar Parceiro";
-
-//         adicionarParceiroBtn.onclick = function () {
-//             adicionarParceiro(parceirosContainer, titulo.textContent.trim());
-//         };
-
-//         let removerProdutoBtn = document.createElement("button");
-//         removerProdutoBtn.textContent = "❌ Remover Produto";
-//         removerProdutoBtn.onclick = function () {
-//             produtoDiv.remove();
-//         };
-
-//         produtoDiv.appendChild(titulo);
-//         produtoDiv.appendChild(parceirosContainer);
-//         produtoDiv.appendChild(adicionarParceiroBtn);
-//         produtoDiv.appendChild(removerProdutoBtn);
-
-//         listaProdutos.appendChild(produtoDiv);
-
-//         inputProduto.value = "";
-//     };
-// });
-
-
 // -------------------------------------PARCEIROS-------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
     const selectParceiro = document.getElementById("parceiro");
@@ -202,35 +113,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
             };
     
-            let adicionarPacoteBtn = document.createElement("button");
-            adicionarPacoteBtn.textContent = "Adicionar Pacote";
-    
-            adicionarPacoteBtn.onclick = function () {
-                adicionarPacote(pacoteDropdownDiv, produtosContainer, subtotal);
-            };
-    
-            let pacoteDropdownDiv = document.createElement("div");
-    
             let buttonsDiv = document.createElement("div");
             buttonsDiv.classList.add("produtos-container-buttons");
             buttonsDiv.appendChild(adicionarProdutoBtn);
-            buttonsDiv.appendChild(adicionarPacoteBtn);
     
             let removerParceiroBtn = document.createElement("button");
-            removerParceiroBtn.textContent = "❌ Remover Parceiro";
+            removerParceiroBtn.textContent = "❌";
             removerParceiroBtn.onclick = function () {
                 parceiroDiv.remove();
             };
     
             let headerDiv = document.createElement("div");
             headerDiv.classList.add("produtos-container-header");
-            headerDiv.appendChild(titulo)
             headerDiv.appendChild(removerParceiroBtn);
+            headerDiv.appendChild(titulo)
             
             parceiroDiv.appendChild(headerDiv);
+            produtosContainer.appendChild(buttonsDiv);
             parceiroDiv.appendChild(produtosContainer);
-            parceiroDiv.appendChild(buttonsDiv);
-            parceiroDiv.appendChild(pacoteDropdownDiv);
+            // parceiroDiv.appendChild(buttonsDiv);
             parceiroDiv.appendChild(subtotal);
     
             listaParceiros.appendChild(parceiroDiv);
@@ -317,11 +218,18 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
             parceiro_id: item.getAttribute("data-parceiro-id"),
             produto_id: item.getAttribute("data-id"),
             valor_venda: parseFloat(item.querySelector("input").value || 0),
-            comissao: item.getAttribute("comissao"),
-            brindes: item.getAttribute("brindes"),
-            impostos: item.getAttribute("impostos"),
-            cartoes: item.getAttribute("cartoes"),
-            margem_lucro: item.getAttribute("margem_lucro"),
+            comissao: parseFloat(item.getAttribute("comissao") || 0),
+            brindes: parseFloat(item.getAttribute("brindes") || 0),
+            impostos: parseFloat(item.getAttribute("impostos") || 0),
+            cartoes: parseFloat(item.getAttribute("cartoes") || 0),
+            margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
+        });
+    });
+
+    let procedimentosSelecionados = [];
+    document.querySelectorAll(".procedimento-item").forEach(item => {
+        procedimentosSelecionados.push({
+            procedimento_id: item.getAttribute("data-id")
         });
     });
 
@@ -332,6 +240,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         status: statusSelecionado,
         valor_total: valorTotal.toFixed(2),
         produtos: produtosSelecionados,
+        procedimentos: procedimentosSelecionados,
     };
 
     fetch("/salvar_orcamento/", {
@@ -353,80 +262,6 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
     })
     .catch(error => console.error("Erro ao salvar orçamento:", error));
 });
-
-// ----------------------------------------------------------------------------------------------------------
-
-// =================================================== PARCEIROS POR PROCEDIMENTO
-// function adicionarParceiro(parceirosContainer, nomeProduto) {
-//     fetch(`/buscar_parceiros_por_produto/?produto_nome=${encodeURIComponent(nomeProduto)}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             let dropdownParceiros = document.createElement("div");
-//             dropdownParceiros.classList.add("dropdown-parceiros");
-
-//             if (data.length === 0) {
-//                 alert("Nenhum parceiro disponível para este produto.");
-//                 return;
-//             }
-
-//             data.forEach(parceiro => {
-//                 let option = document.createElement("div");
-//                 option.textContent = parceiro.nome;
-//                 option.classList.add("dropdown-item");
-
-//                 option.addEventListener("click", function () {
-//                     let parceiroItem = document.createElement("div");
-//                     parceiroItem.classList.add("parceiro-item");
-
-//                     let parceiroNome = document.createElement("span");
-//                     parceiroNome.textContent = parceiro.nome;
-
-//                     // Criar select de subtipo do parceiro
-//                     // let subtipoSelect = document.createElement("select");
-//                     // subtipoSelect.classList.add("subtipo-select");
-
-//                     // parceiro.subtipos.forEach(subtipo => {
-//                     //     let option = document.createElement("option");
-//                     //     option.value = subtipo.id;
-//                     //     option.textContent = subtipo.nome;
-//                     //     subtipoSelect.appendChild(option);
-//                     // });
-
-//                     let valorInput = document.createElement("input");
-//                     valorInput.type = "number";
-//                     valorInput.placeholder = "Valor R$";
-//                     valorInput.step = 0.01;
-//                     valorInput.min = 0;
-//                     valorInput.value = parceiro.valor_venda;
-
-//                     let removerParceiroBtn = document.createElement("button");
-//                     removerParceiroBtn.textContent = "❌";
-//                     removerParceiroBtn.onclick = function () {
-//                         parceiroItem.remove();
-//                     };
-
-//                     parceiroItem.appendChild(parceiroNome);
-//                     // parceiroItem.appendChild(subtipoSelect);
-//                     parceiroItem.appendChild(valorInput);
-//                     parceiroItem.appendChild(removerParceiroBtn);
-
-//                     parceirosContainer.appendChild(parceiroItem);
-//                     dropdownParceiros.remove();
-//                 });
-
-//                 dropdownParceiros.appendChild(option);
-//             });
-
-//             parceirosContainer.appendChild(dropdownParceiros);
-//         })
-//         .catch(error => console.error("Erro ao buscar parceiros:", error));
-// }
-
-// document.addEventListener("click", function(event) {
-//     if (!event.target.closest(".dropdown-parceiros")) {
-//         document.getElementById("dropdown-item").style.display = "none";
-//     }
-// });
 
 // =================================================== PACOTES
 function adicionarPacote(container, produtosContainer, subtotalElement) {
@@ -537,228 +372,42 @@ function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) 
         atualizarSubtotal(produtosContainer, subtotalElement);
 }
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const inputPacote = document.getElementById("pacote");
-//     const dropdown = document.getElementById("sugestoes-pacotes");
-//     const listaPacotes = document.getElementById("pacotes-list");
-
-//     inputPacote.addEventListener("input", function () {
-//         const query = inputPacote.value.trim();
-//         if (query.length < 1) {
-//             dropdown.innerHTML = "";
-//             dropdown.style.display = "none";
-//             return;
-//         }
-
-//         fetch(`/buscar_pacotes/?q=${query}`)
-//             .then(response => response.json())
-//             .then(data => {
-//                 dropdown.innerHTML = "";
-//                 if (data.length === 0) {
-//                     dropdown.style.display = "none";
-//                     return;
-//                 }
-
-//                 data.forEach(pacote => {
-//                     let option = document.createElement("div");
-//                     option.textContent = pacote.nome;
-//                     option.classList.add("dropdown-item");
-
-//                     option.addEventListener("click", function () {
-//                         inputPacote.value = pacote.nome;
-//                         dropdown.style.display = "none";
-//                     });
-
-//                     dropdown.appendChild(option);
-//                 });
-
-//                 dropdown.style.display = "block";
-//             })
-//             .catch(error => console.error("Erro ao buscar pacotes:", error));
-//     });
-
-//     document.addEventListener("click", function (event) {
-//         if (!inputPacote.contains(event.target) && !dropdown.contains(event.target)) {
-//             dropdown.style.display = "none";
-//         }
-//     });
-
-//     window.adicionarPacote = function () {
-//         const nomePacote = inputPacote.value.trim();
-    
-//         if (!nomePacote) {
-//             alert("Selecione um pacote válido.");
-//             return;
-//         }
-    
-//         let pacoteDiv = document.createElement("div");
-//         pacoteDiv.classList.add("pacote-card");
-    
-//         let titulo = document.createElement("h5");
-//         titulo.textContent = nomePacote;
-    
-//         let produtosContainer = document.createElement("div");
-//         produtosContainer.classList.add("produtos-container");
-    
-//         // Buscar produtos associados ao pacote
-//         fetch(`/buscar_produtos_por_pacote/?pacote_nome=${encodeURIComponent(nomePacote)}`)
-//             .then(response => response.json())
-//             .then(produtos => {
-//                 if (produtos.length === 0) {
-//                     let emptyMessage = document.createElement("p");
-//                     emptyMessage.textContent = "Nenhum produto associado.";
-//                     produtosContainer.appendChild(emptyMessage);
-//                 } else {
-//                     produtos.forEach(proc => {
-//                         let produtoItem = document.createElement("div");
-//                         produtoItem.classList.add("produto-item");
-//                         produtoItem.textContent = proc.nome;
-//                         produtosContainer.appendChild(produtoItem);
-//                     });
-//                 }
-//             })
-//             .catch(error => console.error("Erro ao buscar produtos do pacote:", error));
-    
-//         let parceirosPacoteContainer = document.createElement("div");
-//         parceirosPacoteContainer.classList.add("parceirosPacote-container");
-    
-//         let adicionarParceiroPacoteBtn = document.createElement("button");
-//         adicionarParceiroPacoteBtn.textContent = "Adicionar Parceiro";
-//         adicionarParceiroPacoteBtn.onclick = function () {
-//             adicionarParceiroPacote(parceirosPacoteContainer);
-//         };
-    
-//         let removerPacoteBtn = document.createElement("button");
-//         removerPacoteBtn.textContent = "❌ Remover Pacote";
-//         removerPacoteBtn.onclick = function () {
-//             pacoteDiv.remove();
-//         };
-    
-//         pacoteDiv.appendChild(titulo);
-//         pacoteDiv.appendChild(produtosContainer);
-//         pacoteDiv.appendChild(parceirosPacoteContainer);
-//         pacoteDiv.appendChild(adicionarParceiroPacoteBtn);
-//         pacoteDiv.appendChild(removerPacoteBtn);
-    
-//         listaPacotes.appendChild(pacoteDiv);
-    
-//         inputPacote.value = "";
-//     };
-// });
-
-// document.addEventListener("click", function(event) {
-//     if (!event.target.closest(".filter-pacote")) {
-//         document.getElementById("sugestoes-pacotes").style.display = "none";
-//     }
-// });
-
-// // =================================================== PARCEIROS POR PACOTE
-// function adicionarParceiroPacote(parceirosPacoteContainer) {
-//     fetch(`/buscar_parceiros/`) // Remove o parâmetro de busca, retorna todos os parceiros
-//         .then(response => response.json())
-//         .then(data => {
-//             let dropdownParceiros = document.createElement("div");
-//             dropdownParceiros.classList.add("dropdown-parceiros");
-
-//             if (!data || data.length === 0) {
-//                 alert("Nenhum parceiro disponível.");
-//                 return;
-//             }
-
-//             // Criar opções de parceiros
-//             data.forEach(parceiro => {
-//                 let option = document.createElement("div");
-//                 option.textContent = parceiro.nome;
-//                 option.classList.add("dropdown-item");
-
-//                 option.addEventListener("click", function () {
-//                     let parceiroItem = document.createElement("div");
-//                     parceiroItem.classList.add("parceiro-item");
-
-//                     let parceiroNome = document.createElement("span");
-//                     parceiroNome.textContent = parceiro.nome;
-
-//                     // Input de valor
-//                     let valorInput = document.createElement("input");
-//                     valorInput.type = "number";
-//                     valorInput.placeholder = "Valor R$";
-//                     valorInput.step = 0.01;
-//                     valorInput.min = 0;
-//                     valorInput.value = parceiro.valor_venda || ""; // Evita undefined
-
-//                     let removerParceiroBtn = document.createElement("button");
-//                     removerParceiroBtn.textContent = "❌";
-//                     removerParceiroBtn.onclick = function () {
-//                         parceiroItem.remove();
-//                     };
-
-//                     parceiroItem.appendChild(parceiroNome);
-//                     parceiroItem.appendChild(valorInput);
-//                     parceiroItem.appendChild(removerParceiroBtn);
-
-//                     parceirosPacoteContainer.appendChild(parceiroItem);
-//                     dropdownParceiros.remove(); // Fecha dropdown ao selecionar
-//                 });
-
-//                 dropdownParceiros.appendChild(option);
-//             });
-
-//             // Remover dropdown existente antes de adicionar um novo
-//             let oldDropdown = document.querySelector(".dropdown-parceiros");
-//             if (oldDropdown) {
-//                 oldDropdown.remove();
-//             }
-
-//             parceirosPacoteContainer.appendChild(dropdownParceiros);
-//         })
-//         .catch(error => console.error("Erro ao buscar parceiros:", error));
-
-//     // Fechar dropdown ao clicar fora
-//     document.addEventListener("click", function (event) {
-//         if (!parceirosPacoteContainer.contains(event.target)) {
-//             let dropdown = document.querySelector(".dropdown-parceiros");
-//             if (dropdown) {
-//                 dropdown.remove();
-//             }
-//         }
-//     }, { once: true }); // Para remover o event listener após um clique
-// }
-
 // --------------------------------------------- PROCEDIMENTOS -------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
-    const inputProcedimentos = document.getElementById("procedimentos");
-    const procedimentosSpecialtyDiv = document.getElementById("procedimentos-specialty");
-    const dropdown = document.getElementById("sugestoes-procedimentos");
-    const listaProcedimentos = document.getElementById("procedimentos-list");
-
     const specialtySelect = document.getElementById("specialty-select");
-    // specialtySelect.id = "specialty-select";
-    // specialtySelect.innerHTML = `<option value="">Especialidade</option>`;
-    // procedimentosSpecialtyDiv.appendChild(specialtySelect);
+    const selectProcedimento = document.getElementById("procedimentos-select");
 
-    // buscarEspecialidades(specialtySelect);
+    function atualizarProcedimentos(specialtyId) {
+        const options = selectProcedimento.querySelectorAll('option');
+        options.forEach(option => {
+            if (option.value) {
+                option.style.display = "none";
+            }
+        });
 
-    inputProcedimentos.addEventListener("input", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
+        if(specialtyId) {
+            selectProcedimento.value = "";
 
-    inputProcedimentos.addEventListener("focus", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
+            const procedimentoOptions = selectProcedimento.querySelectorAll(`option[data-specialty="${specialtyId}"]`);
+            procedimentoOptions.forEach(option => {
+                option.style.display = "block";
+            });
+        } else {
+            options.forEach(option => {
+                if (option.value) {
+                    option.style.display = "block";
+                }
+            });
+        }
+    }
 
     specialtySelect.addEventListener("change", function () {
-        buscarProcedimentos(dropdown, inputProcedimentos, specialtySelect.value);
-    });
-
-    document.addEventListener("click", function (event) {
-        if (!inputProcedimentos.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.style.display = "none";
-        }
+        atualizarProcedimentos(specialtySelect.value);
     });
 
     window.adicionarProcedimentos = function () {
-        const nome = inputProcedimentos.value.trim();
-        const idProcedimento = inputProcedimentos.getAttribute("data-id");
+        const idProcedimento = selectProcedimento.value;
+        const nome = selectProcedimento.options[selectProcedimento.selectedIndex].text;
 
         if (!nome || !idProcedimento) {
             alert("Selecione um procedimento válido.");
@@ -772,6 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let titulo = document.createElement("span");
         titulo.textContent = nome;
+        procedimentoItem.setAttribute('data-id', idProcedimento);
 
         let removerBtn = document.createElement("button");
         removerBtn.textContent = "❌";
@@ -783,16 +433,7 @@ document.addEventListener("DOMContentLoaded", function () {
         procedimentoItem.appendChild(removerBtn);
 
         listaProcedimentos.appendChild(procedimentoItem);
-
-        inputProcedimentos.value = "";
-        inputProcedimentos.removeAttribute("data-id");
     };
-});
-
-document.addEventListener("click", function(event) {
-    if (!event.target.closest(".filter-procedimentos")) {
-        document.getElementById("sugestoes-procedimentos").style.display = "none";
-    }
 });
 
 // ------------------------------------------ MODAL CONFIG -----------------------------------------------------
@@ -805,131 +446,168 @@ function fecharModal() {
 }
 
 function aplicarValores() {
-    const produtosContainer = document.querySelector('.produtos-container');
-    const subTotalElement = document.querySelector('.subtotal');
+    const parceiroCards = document.querySelectorAll(".parceiro-card");
 
     const comissao = document.getElementById("comissao").value;
     const brindes = document.getElementById("brindes").value;
     const impostos = document.getElementById("impostos").value;
     const cartoes = document.getElementById("cartoes").value;
-    const margemLucro = document.getElementById("margem_lucro").value;
+    const margem = document.getElementById("margem_lucro").value;
 
-    // console.log(`Comissão: ${comissao}%`);
-    // console.log(`Brindes: ${brindes}%`);
-    // console.log(`Impostos: ${impostos}%`);
-    // console.log(`Cartões: ${cartoes}%`);
-    // console.log(`Margem de Lucro: ${margemLucro}%`);
-
-    const parceiroCards = document.querySelectorAll(".parceiro-card");
+    var total_repasse = 0;
+    var total_particular = 0;
 
     parceiroCards.forEach(function(parceiroCard) {
         const produtoItems = parceiroCard.querySelectorAll(".produto-item");
-        const subTotalElement = parceiroCard.querySelector('.subtotal');
-        const produtosContainer = parceiroCard.querySelector('.produtos-container');
 
         produtoItems.forEach(function(produto) {
-            const input = produto.querySelector('input');
-            const alertaElemento = produto.querySelector('.alert-margem');
-            const tooltip = produto.querySelector('.tooltip');
+            total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
+            total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
 
-            let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
-            let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
+            produto.setAttribute("comissao", comissao);
+            produto.setAttribute("brindes", brindes);
+            produto.setAttribute("impostos", impostos);
+            produto.setAttribute("cartoes", cartoes);
+            produto.setAttribute("margem_lucro", margem);
 
-            let custo_comissao = valor_repasse * parseFloat(comissao) / 100;
-            let custo_brindes = valor_repasse * parseFloat(brindes) / 100;
-            let custo_impostos = valor_repasse * parseFloat(impostos) / 100; 
-            let custo_cartoes = valor_repasse * parseFloat(cartoes) / 100;
+            // const input = produto.querySelector('input');
+            // const alertaElemento = produto.querySelector('.alert-margem');
+            // const tooltip = produto.querySelector('.tooltip');
 
-            let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
+            // let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
+            // let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
 
-            if(custo_total >= valor_particular){
-                let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
-                // let custo_maximo_por_valor = (valor_particular - valor_repasse) / 4 / valor_particular;
+            // let custo_comissao = valor_repasse * parseFloat(comissao) / 100;
+            // let custo_brindes = valor_repasse * parseFloat(brindes) / 100;
+            // let custo_impostos = valor_repasse * parseFloat(impostos) / 100; 
+            // let custo_cartoes = valor_repasse * parseFloat(cartoes) / 100;
 
-                if (alertaElemento) {
-                    alertaElemento.textContent = '🛑';
+            // let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
 
-                    if (tooltip) {
-                        tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
-                    }
-                } else {
-                    let alertElement = document.createElement('i');
-                    alertElement.textContent = '🛑';
-                    alertElement.classList.add('alert-margem');
-                    produto.insertBefore(alertElement, produto.firstChild);
+            // if(custo_total >= valor_particular){
+            //     let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+            //     // let custo_maximo_por_valor = (valor_particular - valor_repasse) / 4 / valor_particular;
 
-                    if (!tooltip) {
-                        const alertaElemento = produto.querySelector('.alert-margem');
-                        const nextSibling = alertaElemento.nextElementSibling;
+            //     if (alertaElemento) {
+            //         alertaElemento.textContent = '🛑';
 
-                        let tooltipElement = document.createElement('div');
-                        tooltipElement.classList.add('tooltip');
-                        tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
-                        produto.insertBefore(tooltipElement, nextSibling);
-                    }
-                }
+            //         if (tooltip) {
+            //             tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
+            //         }
+            //     } else {
+            //         let alertElement = document.createElement('i');
+            //         alertElement.textContent = '🛑';
+            //         alertElement.classList.add('alert-margem');
+            //         produto.insertBefore(alertElement, produto.firstChild);
 
-                produto.setAttribute("comissao", 0);
-                produto.setAttribute("brindes", 0);
-                produto.setAttribute("impostos", 0);
-                produto.setAttribute("cartoes", 0);
-                produto.setAttribute("margem_lucro", 0);
+            //         if (!tooltip) {
+            //             const alertaElemento = produto.querySelector('.alert-margem');
+            //             const nextSibling = alertaElemento.nextElementSibling;
 
-                input.value = valor_repasse.toFixed(2);
-            } else {
-                let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
+            //             let tooltipElement = document.createElement('div');
+            //             tooltipElement.classList.add('tooltip');
+            //             tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
+            //             produto.insertBefore(tooltipElement, nextSibling);
+            //         }
+            //     }
+
+            //     produto.setAttribute("comissao", 0);
+            //     produto.setAttribute("brindes", 0);
+            //     produto.setAttribute("impostos", 0);
+            //     produto.setAttribute("cartoes", 0);
+            //     produto.setAttribute("margem_lucro", 0);
+
+            //     input.value = valor_repasse.toFixed(2);
+            // } else {
+            //     let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
     
-                if(margemLucro > margem_lucro_maxima){
-                    if (alertaElemento) {
-                        alertaElemento.textContent = '⚠️';
+            //     if(margemLucro > margem_lucro_maxima){
+            //         if (alertaElemento) {
+            //             alertaElemento.textContent = '⚠️';
     
-                        if (tooltip) {
-                            tooltip.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
-                        }
-                    } else {
-                        let alertElement = document.createElement('i');
-                        alertElement.textContent = '⚠️';
-                        alertElement.classList.add('alert-margem');
-                        produto.insertBefore(alertElement, produto.firstChild);
+            //             if (tooltip) {
+            //                 tooltip.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
+            //             }
+            //         } else {
+            //             let alertElement = document.createElement('i');
+            //             alertElement.textContent = '⚠️';
+            //             alertElement.classList.add('alert-margem');
+            //             produto.insertBefore(alertElement, produto.firstChild);
 
-                        if (!tooltip) {
-                            const alertaElemento = produto.querySelector('.alert-margem');
-                            const nextSibling = alertaElemento.nextElementSibling;
+            //             if (!tooltip) {
+            //                 const alertaElemento = produto.querySelector('.alert-margem');
+            //                 const nextSibling = alertaElemento.nextElementSibling;
 
-                            let tooltipElement = document.createElement('div');
-                            tooltipElement.classList.add('tooltip');
-                            tooltipElement.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
-                            produto.insertBefore(tooltipElement, nextSibling);
-                        }
-                    }
+            //                 let tooltipElement = document.createElement('div');
+            //                 tooltipElement.classList.add('tooltip');
+            //                 tooltipElement.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
+            //                 produto.insertBefore(tooltipElement, nextSibling);
+            //             }
+            //         }
 
-                    input.value = (custo_total + (valor_repasse * margem_lucro_maxima / 100)).toFixed(2);
+            //         input.value = (custo_total + (valor_repasse * margem_lucro_maxima / 100)).toFixed(2);
 
-                    produto.setAttribute("margem_lucro", margem_lucro_maxima);
-                } else {
-                    if (alertaElemento) {
-                        alertaElemento.remove();
-                    }
+            //         produto.setAttribute("margem_lucro", margem_lucro_maxima);
+            //     } else {
+            //         if (alertaElemento) {
+            //             alertaElemento.remove();
+            //         }
 
-                    if (tooltip) {
-                        tooltip.remove();
-                    }
+            //         if (tooltip) {
+            //             tooltip.remove();
+            //         }
 
-                    input.value = (custo_total + (valor_repasse * margemLucro / 100)).toFixed(2);
-                    produto.setAttribute("margem_lucro", margemLucro);
-                }
+            //         input.value = (custo_total + (valor_repasse * margemLucro / 100)).toFixed(2);
+            //         produto.setAttribute("margem_lucro", margemLucro);
+            //     }
 
-                produto.setAttribute("comissao", comissao);
-                produto.setAttribute("brindes", brindes);
-                produto.setAttribute("impostos", impostos);
-                produto.setAttribute("cartoes", cartoes);
-            }
+            //     produto.setAttribute("comissao", comissao);
+            //     produto.setAttribute("brindes", brindes);
+            //     produto.setAttribute("impostos", impostos);
+            //     produto.setAttribute("cartoes", cartoes);
+            // }
         });
-        
-        atualizarSubtotal(produtosContainer, subTotalElement);
+        // atualizarSubtotal(produtosContainer, subTotalElement);
     });
+
+    let fixos = total_repasse + parseFloat(comissao) + parseFloat(brindes);
+    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100;
     
+    let valor_venda_total = fixos / (1 - variaveis);
+
+    let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
+
+    document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    
+    verificarValores();
+
     fecharModal();
+}
+
+function verificarValores(){
+    let total_geral = document.getElementById("total-geral").textContent;
+    let total_particular = document.getElementById("total-particular").textContent;
+
+    const extrairValor = (texto) => {
+        const valorMatch = texto.match(/[\d.,]+/);
+        if (!valorMatch) return 0;
+        return parseFloat(valorMatch[0].replace(/\./g, '').replace(',', '.'));
+    };
+
+    total_geral = extrairValor(total_geral);
+    total_particular = extrairValor(total_particular);
+
+    if (total_geral > total_particular) {
+        console.log("O total geral é maior que o total particular.");
+        return "geral > particular";
+    } else if (total_geral < total_particular) {
+        console.log("O total particular é maior que o total geral.");
+        return "particular > geral";
+    } else {
+        console.log("Os totais são iguais.");
+        return "iguais";
+    }
 }
 // -------------------------------------------------------------------------------------------------------------
 
@@ -943,6 +621,15 @@ function fecharModalTabela() {
 }
 
 function preencherTabela() {
+    var vendaTotal = 0;
+    var repasseTotal = 0;
+    var particularTotal = 0;
+    var comissaoResumo = 0;
+    var brindesResumo = 0;
+    var impostosResumo = 0;
+    var cartoesResumo = 0;
+    var margemResumo = 0;
+    const table = document.querySelector('.tabela-parceiros')
     const tbody = document.querySelector(".tabela-parceiros tbody");
     tbody.innerHTML = "";
 
@@ -980,23 +667,56 @@ function preencherTabela() {
     
             produtos.push(produtoData);
         });
-
+        
+        
         produtos.forEach(function(produto) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${parceiroNome}</td>
-                <td>${produto.nome}</td>
-                <td>R$ ${produto.valor_venda}</td>
-                <td>R$ ${produto.valor_repasse}</td>
-                <td>R$ ${produto.valor_particular}</td>
-                <td>${produto.comissao}%</td>
-                <td>${produto.brindes}%</td>
-                <td>${produto.impostos}%</td>
-                <td>${produto.cartoes}%</td>
-                <td>${produto.margem_lucro}%</td>
+            <td>${parceiroNome}</td>
+            <td>${produto.nome}</td>
+            <td>R$ ${produto.valor_venda}</td>
+            <td>R$ ${produto.valor_repasse}</td>
+            <td>R$ ${produto.valor_particular}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             `;
             tbody.appendChild(tr);
         });
-
+        
+        produtos.forEach(function(produto){
+            comissaoResumo = produto.comissao;
+            brindesResumo = produto.brindes;
+            impostosResumo = produto.impostos;
+            cartoesResumo = produto.cartoes;
+            margemResumo = produto.margem_lucro;
+            vendaTotal += parseFloat(produto.valor_venda);
+            repasseTotal += parseFloat(produto.valor_repasse);
+            particularTotal += parseFloat(produto.valor_particular);
+        });
     });
+
+    let tfoot = table.querySelector("tfoot");
+
+    if (!tfoot) {
+        tfoot = document.createElement("tfoot");
+        table.appendChild(tfoot);
+    }
+    
+    tfoot.innerHTML = "";
+    tfoot.innerHTML = `
+    <td></td>
+    <td>Total</td>
+    <td>R$ ${vendaTotal}</td>
+    <td>R$ ${repasseTotal}</td>
+    <td>R$ ${particularTotal}</td>
+    <td>R$ ${comissaoResumo}</td>
+    <td>R$ ${brindesResumo}</td>
+    <td>${impostosResumo}%</td>
+    <td>${cartoesResumo}%</td>
+    <td>${margemResumo}%</td>
+    `;
+    table.appendChild(tfoot);
 }

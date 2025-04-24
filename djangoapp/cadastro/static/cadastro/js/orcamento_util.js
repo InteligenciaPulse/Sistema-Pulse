@@ -27,6 +27,20 @@ function atualizarTotalGeral() {
   });
 
   document.getElementById("total-geral").textContent = `Total: R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+//   document.getElementById("total-particular").textContent = `Total particular: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
+}
+
+function atualizarParticular() {
+    let total = 0;
+
+    const parceirosList = document.getElementById('parceiros-list');
+    const produtoItems = parceirosList.querySelectorAll(".produto-item");
+    
+    produtoItems.forEach(function(produto) {
+        total += parseFloat(produto.getAttribute('data-valor-particular')) || 0;
+    });
+
+    document.getElementById("total-particular").textContent = `Total particular: R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
 }
 
 // -------------------------------------- BUSCAR SUBTIPOS ---------------------------------------------
@@ -109,13 +123,6 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   let produtoNome = document.createElement("span");
                   produtoNome.textContent = produto.nome;
 
-                //   let produtoConfig = document.createElement("button");
-                //   produtoConfig.textContent = "%";
-                //   produtoConfig.textContent = "⚙️";
-                //   produtoConfig.onclick = function () {
-                //     abrirModal();
-                //   };
-
                   let valorInput = document.createElement("input");
                   valorInput.type = "number";
                   valorInput.placeholder = "Valor R$";
@@ -132,6 +139,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   removerProdutoBtn.onclick = function () {
                       produtoItem.remove();
                       atualizarSubtotal(produtosContainer, subtotalElement);
+                      atualizarParticular();
                   };
                   
                   produtoItem.appendChild(produtoNome);
@@ -146,6 +154,7 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                   produtosContainer.appendChild(produtoItem);
                   dropdownProdutos.remove();
                   atualizarSubtotal(produtosContainer, subtotalElement);
+                  atualizarParticular();
               });
 
               dropdownProdutos.appendChild(option);

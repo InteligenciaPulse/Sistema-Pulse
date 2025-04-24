@@ -15,7 +15,7 @@ body {
 }
 
 .sidebar {
-  width: 50%;
+  width: 30%;
   height: 100vh;
   background-color: #F2568A;
   color: white;
@@ -224,9 +224,13 @@ body {
 
 .produtos-container-header {
   display: flex;
-  align-content: center;
-  justify-content: space-between;
+  gap: 5px;
+  justify-content: flex-start;
   align-items: center;
+}
+
+.produtos-container-header button {
+  background-color: none;
 }
 
 #parceiro-subtype {
@@ -275,26 +279,24 @@ body {
 }
 
 .parceiro-card {
-  border: 2px solid #F2568A;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 10px;
-  background-color: white;
-  color: black;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 2fr 2fr auto;
+  align-items: center;
   gap: 10px;
+  border: 1px solid #ddd;
+  padding-left: 10px;
+  background-color: transparent;
+  border-radius: 0;
 }
 
 .parceiro-card h5 {
   margin: 0;
-  font-size: 18px;
-  color: #F2568A;
+  font-size: 14px;
+  color: #000;
   font-weight: bold;
 }
 
 .produtos-container {
-  background: #fce4ec;
   margin-top: 0;
   display: flex;
   padding: 5px;
@@ -318,6 +320,7 @@ body {
 }
 
 .produto-item input {
+  display: none;
   flex: 1;
   min-width: 80px;
   max-width: 100px;
@@ -377,6 +380,7 @@ body {
 }
 
 .subtotal {
+  display: none;
   font-weight: bold;
   color: #F2568A;
   font-size: 16px;
@@ -384,9 +388,8 @@ body {
   margin-top: 5px;
 }
 
-.produtos-container-buttons {
-  display: flex;
-  gap: 5px;
+.produtos-container-buttons button {
+  width: 100%;
 }
 
 /**=============================== PACOTE ================================ **/
@@ -511,6 +514,12 @@ body {
   font-size: 22px;
 }
 
+.total-particular h3 {
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .total-container button {
   background-color: white;
   color: #F2568A;
@@ -573,7 +582,6 @@ body {
 }
 
 .produtos-container {
-  background: #fce4ec;
   padding: 5px;
   border-radius: 5px;
   margin-top: 0px;
@@ -625,31 +633,6 @@ body {
 }
 
 /* --------------------------------------------------------------------------------------------- */
-.dropdown-procedimentos {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  display: block;
-  z-index: 1000;
-  width: 220px;
-}
-
-.dropdown-procedimentos .dropdown-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dropdown-procedimentos .dropdown-item:hover {
-  background-color: #F2568A;
-  color: white;
-}
-
 #procedimentos-specialty {
   display: flex;
   gap: 5px;
@@ -660,7 +643,6 @@ body {
 }
 
 #procedimentos-specialty select {
-  width: 45%;
   padding: 10px;
   border-radius: 5px;
   background-color: white;
@@ -672,6 +654,14 @@ body {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+#procedimentos-select {
+  width: 65%;
+}
+
+#specialty-select {
+  width: 35%;
 }
 
 #procedimentos-specialty select option {
@@ -886,6 +876,11 @@ body {
   background-color: #e6e6e6;
 }
 
+#modal-tabela .tabela-parceiros tfoot {
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+
 /* #abrir-modal-btn {
   background-color: #F2568A;
   color: white;
@@ -993,16 +988,14 @@ button[type="submit"]:hover {
 
 /* ------------------------------------------------------------------------------------- */
 
-/* ============================ CHAT ============================ */
-
-.chat-container {
+.main-container {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   padding: 20px;
 }
 
-.chat-header {
+.main-header {
   font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 10px;
@@ -1021,7 +1014,7 @@ button[type="submit"]:hover {
   margin-bottom: 10px;
 }
 
-.chat-box {
+.main-box {
   flex-grow: 1;
   background-color: white;
   border-radius: 10px;
@@ -1030,19 +1023,19 @@ button[type="submit"]:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.chat-input {
+.main-input {
   display: flex;
   margin-top: 10px;
 }
 
-.chat-input input {
+.main-input input {
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-.chat-input button {
+.main-input button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -1052,6 +1045,6 @@ button[type="submit"]:hover {
   cursor: pointer;
 }
 
-.chat-input button:hover {
+.main-input button:hover {
   background-color: #e04576;
 }

@@ -34,7 +34,7 @@ def criar_orcamento(request):
         'procedimento_list': procedimento_list
     }
 
-    return render(request, 'cadastro/criar_orcamento copy.html', context)
+    return render(request, 'cadastro/criar_orcamento.html', context)
 
 def historico(request):
     tipo = request.GET.get("tipo", "orcamento")
