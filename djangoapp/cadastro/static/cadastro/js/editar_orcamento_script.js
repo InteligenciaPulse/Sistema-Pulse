@@ -45,96 +45,96 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // -------------------------------------PARCEIROS-------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
-  const inputParceiro = document.getElementById("parceiro");
-  const parceiroSubtypeDiv = document.getElementById("parceiro-subtype");
-  const dropdown = document.getElementById("sugestoes-parceiros");
-  const listaParceiros = document.getElementById("parceiro-list");
+    const selectParceiro = document.getElementById("parceiro");
+    const subtipoSelect = document.getElementById("subtipo-select");
+    const listaParceiros = document.getElementById("parceiro-list");
 
-  const subtipoSelect = document.createElement("select");
-  subtipoSelect.id = "subtipo-select";
-  subtipoSelect.innerHTML = `<option value="">Selecione um Subtipo</option>`;
-  parceiroSubtypeDiv.appendChild(subtipoSelect);
+    function atualizarParceiros(subtipoId) {
+        const options = selectParceiro.querySelectorAll('option');
+        options.forEach(option => {
+            if (option.value) {
+                option.style.display = "none";
+            }
+        });
 
-  buscarSubTipos(subtipoSelect);
+        if(subtipoId) {
+            selectParceiro.value = "";
 
-  inputParceiro.addEventListener("input", function () {
-      buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);
-  });
+            const parceiroOptions = selectParceiro.querySelectorAll(`option[data-subtipo="${subtipoId}"]`);
+            parceiroOptions.forEach(option => {
+                option.style.display = "block";
+            });
+        } else {
+            options.forEach(option => {
+                if (option.value) {
+                    option.style.display = "block";
+                }
+            });
+        }
+    }
 
-  inputParceiro.addEventListener("focus", function () {
-      buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);
-  });
+    subtipoSelect.addEventListener("change", function () {
+        atualizarParceiros(subtipoSelect.value);
+    });
 
-  subtipoSelect.addEventListener("change", function () {
-      buscarParceiros(dropdown, inputParceiro, subtipoSelect.value);
-  });
+    window.adicionarParceiro = function () {
+        const idParceiro = selectParceiro.value;
 
-  window.adicionarParceiro = function () {
-      const nome = inputParceiro.value.trim();
-      const idParceiro = inputParceiro.getAttribute("data-id");
+        if (!idParceiro) {
+            alert("Selecione um parceiro válido.");
+            return;
+        } else {
+            const parceiroNome = selectParceiro.options[selectParceiro.selectedIndex].text;
 
-      if (!nome || !idParceiro) {
-          alert("Selecione um parceiro válido.");
-          return;
-      }
+            let parceiroDiv = document.createElement("div");
+            parceiroDiv.classList.add("parceiro-card");
+            parceiroDiv.setAttribute("data-id", idParceiro);
 
-      let parceiroDiv = document.createElement("div");
-      parceiroDiv.classList.add("parceiro-card");
-      parceiroDiv.setAttribute("data-id", idParceiro);
+            let titulo = document.createElement("h5");
+            titulo.textContent = parceiroNome;
 
-      let titulo = document.createElement("h5");
-      titulo.textContent = nome;
+            let subtotal = document.createElement("p");
+            subtotal.classList.add("subtotal");
+            subtotal.textContent = "Subtotal: R$ 0.00";
+            
+            let produtosContainer = document.createElement("div");
+            produtosContainer.classList.add("produtos-container");
+    
+            let adicionarProdutoBtn = document.createElement("button");
+            adicionarProdutoBtn.textContent = "Adicionar Produto";
+    
+            adicionarProdutoBtn.onclick = function () {
+                adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+            };
+    
+            let buttonsDiv = document.createElement("div");
+            buttonsDiv.classList.add("produtos-container-buttons");
+            buttonsDiv.appendChild(adicionarProdutoBtn);
+    
+            let removerParceiroBtn = document.createElement("button");
+            removerParceiroBtn.textContent = "❌";
+            removerParceiroBtn.onclick = function () {
+                parceiroDiv.remove();
+            };
+    
+            let headerDiv = document.createElement("div");
+            headerDiv.classList.add("produtos-container-header");
+            headerDiv.appendChild(removerParceiroBtn);
+            headerDiv.appendChild(titulo)
+            
+            parceiroDiv.appendChild(headerDiv);
+            produtosContainer.appendChild(buttonsDiv);
+            parceiroDiv.appendChild(produtosContainer);
+            // parceiroDiv.appendChild(buttonsDiv);
+            parceiroDiv.appendChild(subtotal);
+    
+            listaParceiros.appendChild(parceiroDiv);
+        }
+    };
 
-      let subtotal = document.createElement("p");
-      subtotal.classList.add("subtotal");
-      subtotal.textContent = "Subtotal: R$ 0.00";
-      
-      let produtosContainer = document.createElement("div");
-      produtosContainer.classList.add("produtos-container");
-
-      let adicionarProdutoBtn = document.createElement("button");
-      adicionarProdutoBtn.textContent = "Adicionar Produto";
-
-      adicionarProdutoBtn.onclick = function () {
-          adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
-      };
-
-      let adicionarPacoteBtn = document.createElement("button");
-      adicionarPacoteBtn.textContent = "Adicionar Pacote";
-
-      adicionarPacoteBtn.onclick = function () {
-          adicionarPacote(pacoteDropdownDiv, produtosContainer, subtotal);
-      };
-
-      let pacoteDropdownDiv = document.createElement("div");
-
-      let buttonsDiv = document.createElement("div");
-      buttonsDiv.classList.add("produtos-container-buttons");
-      buttonsDiv.appendChild(adicionarProdutoBtn);
-      buttonsDiv.appendChild(adicionarPacoteBtn);
-
-      let removerParceiroBtn = document.createElement("button");
-      removerParceiroBtn.textContent = "❌ Remover Parceiro";
-      removerParceiroBtn.onclick = function () {
-          parceiroDiv.remove();
-      };
-
-      let headerDiv = document.createElement("div");
-      headerDiv.classList.add("produtos-container-header");
-      headerDiv.appendChild(titulo)
-      headerDiv.appendChild(removerParceiroBtn);
-      
-      parceiroDiv.appendChild(headerDiv);
-      parceiroDiv.appendChild(produtosContainer);
-      parceiroDiv.appendChild(buttonsDiv);
-      parceiroDiv.appendChild(pacoteDropdownDiv);
-      parceiroDiv.appendChild(subtotal);
-
-      listaParceiros.appendChild(parceiroDiv);
-
-      inputParceiro.value = "";
-      inputParceiro.removeAttribute("data-id");
-  };
+    if (subtipoSelect.value) {
+        atualizarParceiros(subtipoSelect.value);
+    }
 });
 
 // -------------------------- REMOVER PARCEIROS QUE JA ESTAVAM NO ORCAMENTO -------------------------

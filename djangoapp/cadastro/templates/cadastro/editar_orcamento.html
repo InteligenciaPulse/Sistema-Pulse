@@ -108,7 +108,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <!-- <div id="sugestoes-parceiros" class="dropdown"></div> -->
+                
                 <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
             
                 <div id="lista-parceiros">
@@ -123,7 +123,7 @@
 
                           <div class="produtos-container">
                             <div class="produtos-container-buttons">
-                              <button>Adicionar Produto</button>
+                              <button class="adicionar-produto-btn">Adicionar Produto</button>
                             </div>
                             
                             {% for produto in parceiro.produtos %}

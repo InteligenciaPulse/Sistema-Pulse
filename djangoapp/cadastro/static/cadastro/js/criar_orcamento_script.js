@@ -53,7 +53,7 @@ document.addEventListener("click", function(event) {
 document.addEventListener("DOMContentLoaded", function () {
     const selectParceiro = document.getElementById("parceiro");
     const subtipoSelect = document.getElementById("subtipo-select");
-    const listaParceiros = document.getElementById("parceiros-list");
+    const listaParceiros = document.getElementById("parceiro-list");
 
     function atualizarParceiros(subtipoId) {
         const options = selectParceiro.querySelectorAll('option');
