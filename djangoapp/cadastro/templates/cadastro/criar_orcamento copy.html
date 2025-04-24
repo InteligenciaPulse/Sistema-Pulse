@@ -41,9 +41,19 @@
                 </div>
 
                 <div class="filter-procedimentos">
-                    <label for="procedimentos">Procedimentos</label>
+                    <label for="procedimentos-select">Procedimentos</label>
                     <div id="procedimentos-specialty">
-                        <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento...">
+                        <select id="procedimentos-select" name="procedimento">
+                            <option value>Selecione o procedimento</option>
+                            {% for procedimento in procedimento_list %}
+                                <option value="{{ procedimento.id }}" data-specialty="{{ procedimento.especialidade.id }}">
+                                    {{ procedimento.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <!-- <input type="text" id="procedimentos" placeholder="Digite o nome do procedimento..."> -->
+                        
                         <select id="specialty-select" name="specialty">
                             <option value>Todos</option>
                             {% for especialidade in especialidade_list %}

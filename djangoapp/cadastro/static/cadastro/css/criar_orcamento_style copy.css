@@ -633,31 +633,6 @@ body {
 }
 
 /* --------------------------------------------------------------------------------------------- */
-.dropdown-procedimentos {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  display: block;
-  z-index: 1000;
-  width: 220px;
-}
-
-.dropdown-procedimentos .dropdown-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dropdown-procedimentos .dropdown-item:hover {
-  background-color: #F2568A;
-  color: white;
-}
-
 #procedimentos-specialty {
   display: flex;
   gap: 5px;
@@ -668,7 +643,6 @@ body {
 }
 
 #procedimentos-specialty select {
-  width: 45%;
   padding: 10px;
   border-radius: 5px;
   background-color: white;
@@ -680,6 +654,14 @@ body {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+#procedimentos-select {
+  width: 65%;
+}
+
+#specialty-select {
+  width: 35%;
 }
 
 #procedimentos-specialty select option {

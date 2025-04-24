@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Produto, Procedimento, Status, ParceiroProdutos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes, ProcedimentoProdutos, Custos
+from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Produto, Procedimento, Status, ParceiroProdutos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes, ProcedimentoProdutos, Custos, OrcamentoProcedimentos
 
 # Register your models here.
 @admin.register(Endereco)
@@ -50,6 +50,12 @@ class ProcedimentoProdutosAdmin(admin.ModelAdmin):
     list_display = ('id', 'procedimento', 'produto')
     search_fields = ('procedimento', 'produto',)
     list_filter = ('procedimento', 'produto',)
+
+@admin.register(OrcamentoProcedimentos)
+class OrcamentoProcedimentosAdmin(admin.ModelAdmin):
+    list_display = ('id', 'procedimento', 'orcamento')
+    search_fields = ('procedimento', 'orcamento',)
+    list_filter = ('procedimento', 'orcamento',)
 
 @admin.register(Status)
 class StatusAdmin(admin.ModelAdmin):

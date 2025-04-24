@@ -128,6 +128,17 @@ class ProcedimentoProdutos(models.Model):
     def __str__(self):
         return self.procedimento.nome
 
+class OrcamentoProcedimentos(models.Model):
+    orcamento = models.ForeignKey('Orcamento', on_delete=models.SET_NULL, null=True, verbose_name="Orçamento")
+    procedimento = models.ForeignKey('Procedimento', on_delete=models.SET_NULL, null=True, verbose_name="Procedimento")
+
+    class Meta:
+        db_table = 'sistema_pulse"."orcamento_procedimentos'
+        verbose_name = "Orçamento - Procedimentos"
+
+    def __str__(self):
+        return self.procedimento.nome
+
 class Status(models.Model):
     nome = models.CharField(max_length=50, unique=True, verbose_name="Nome")
     descricao = models.TextField(null=True, blank=True, verbose_name="Descrição")

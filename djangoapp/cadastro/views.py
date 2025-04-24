@@ -14,22 +14,24 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade, Custos
+from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade, Custos, OrcamentoProcedimentos
 
 def home(request):
     return render(request, 'cadastro/home.html')
 
 def criar_orcamento(request):
     parceiro_list = Parceiro.objects.all().order_by('nome')
-    status_list = Status.objects.all().order_by('nome')
+    status_list = Status.objects.all()
     especialidade_list = Especialidade.objects.all().order_by('nome')
     subtipo_list = Subtipo.objects.all().order_by('nome')
+    procedimento_list = Procedimento.objects.all().order_by('nome')
 
     context = {
         "parceiro_list": parceiro_list,
         "status_list": status_list,
         "especialidade_list": especialidade_list,
-        "subtipo_list": subtipo_list
+        "subtipo_list": subtipo_list,
+        'procedimento_list': procedimento_list
     }
 
     return render(request, 'cadastro/criar_orcamento copy.html', context)
@@ -393,6 +395,14 @@ def salvar_orcamento(request):
                     status=status,
                     data_solicitacao=now()
                 )
+
+                for item in data.get('procedimentos', []):
+                    procedimento_id = item['procedimento_id']
+
+                    OrcamentoProcedimentos.objects.create(
+                        orcamento=orcamento,
+                        procedimento_id=procedimento_id
+                    )
 
                 for item in data.get("produtos", []):
                     parceiro_id = item["parceiro_id"]
