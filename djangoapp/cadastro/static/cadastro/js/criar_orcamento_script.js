@@ -471,112 +471,15 @@ function aplicarValores() {
             produto.setAttribute("impostos", impostos);
             produto.setAttribute("cartoes", cartoes);
             produto.setAttribute("margem_lucro", margem);
-
-            // const input = produto.querySelector('input');
-            // const alertaElemento = produto.querySelector('.alert-margem');
-            // const tooltip = produto.querySelector('.tooltip');
-
-            // let valor_particular = parseFloat(produto.getAttribute('data-valor-particular'));
-            // let valor_repasse = parseFloat(produto.getAttribute('data-valor-repasse'));
-
-            // let custo_comissao = valor_repasse * parseFloat(comissao) / 100;
-            // let custo_brindes = valor_repasse * parseFloat(brindes) / 100;
-            // let custo_impostos = valor_repasse * parseFloat(impostos) / 100; 
-            // let custo_cartoes = valor_repasse * parseFloat(cartoes) / 100;
-
-            // let custo_total = valor_repasse + custo_comissao + custo_brindes + custo_impostos + custo_cartoes;
-
-            // if(custo_total >= valor_particular){
-            //     let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
-            //     // let custo_maximo_por_valor = (valor_particular - valor_repasse) / 4 / valor_particular;
-
-            //     if (alertaElemento) {
-            //         alertaElemento.textContent = '🛑';
-
-            //         if (tooltip) {
-            //             tooltip.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
-            //         }
-            //     } else {
-            //         let alertElement = document.createElement('i');
-            //         alertElement.textContent = '🛑';
-            //         alertElement.classList.add('alert-margem');
-            //         produto.insertBefore(alertElement, produto.firstChild);
-
-            //         if (!tooltip) {
-            //             const alertaElemento = produto.querySelector('.alert-margem');
-            //             const nextSibling = alertaElemento.nextElementSibling;
-
-            //             let tooltipElement = document.createElement('div');
-            //             tooltipElement.classList.add('tooltip');
-            //             tooltipElement.textContent = `Custos excedem o valor máximo!\nMargem de lucro disponível de ${margem_lucro_maxima.toFixed(2)}%\nFoi aplicado custos de 0%.`;
-            //             produto.insertBefore(tooltipElement, nextSibling);
-            //         }
-            //     }
-
-            //     produto.setAttribute("comissao", 0);
-            //     produto.setAttribute("brindes", 0);
-            //     produto.setAttribute("impostos", 0);
-            //     produto.setAttribute("cartoes", 0);
-            //     produto.setAttribute("margem_lucro", 0);
-
-            //     input.value = valor_repasse.toFixed(2);
-            // } else {
-            //     let margem_lucro_maxima = (valor_particular - custo_total) * 100 / valor_particular;
-    
-            //     if(margemLucro > margem_lucro_maxima){
-            //         if (alertaElemento) {
-            //             alertaElemento.textContent = '⚠️';
-    
-            //             if (tooltip) {
-            //                 tooltip.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
-            //             }
-            //         } else {
-            //             let alertElement = document.createElement('i');
-            //             alertElement.textContent = '⚠️';
-            //             alertElement.classList.add('alert-margem');
-            //             produto.insertBefore(alertElement, produto.firstChild);
-
-            //             if (!tooltip) {
-            //                 const alertaElemento = produto.querySelector('.alert-margem');
-            //                 const nextSibling = alertaElemento.nextElementSibling;
-
-            //                 let tooltipElement = document.createElement('div');
-            //                 tooltipElement.classList.add('tooltip');
-            //                 tooltipElement.textContent = `A margem de lucro definida (${margemLucro}%) é maior do que a margem máxima permitida (${margem_lucro_maxima.toFixed(2)}%).\nFoi utilizada a margem máxima disponível.`;
-            //                 produto.insertBefore(tooltipElement, nextSibling);
-            //             }
-            //         }
-
-            //         input.value = (custo_total + (valor_repasse * margem_lucro_maxima / 100)).toFixed(2);
-
-            //         produto.setAttribute("margem_lucro", margem_lucro_maxima);
-            //     } else {
-            //         if (alertaElemento) {
-            //             alertaElemento.remove();
-            //         }
-
-            //         if (tooltip) {
-            //             tooltip.remove();
-            //         }
-
-            //         input.value = (custo_total + (valor_repasse * margemLucro / 100)).toFixed(2);
-            //         produto.setAttribute("margem_lucro", margemLucro);
-            //     }
-
-            //     produto.setAttribute("comissao", comissao);
-            //     produto.setAttribute("brindes", brindes);
-            //     produto.setAttribute("impostos", impostos);
-            //     produto.setAttribute("cartoes", cartoes);
-            // }
+            // produto.setAttribute("valor_venda", margem);
         });
-        // atualizarSubtotal(produtosContainer, subTotalElement);
     });
 
     let fixos = total_repasse + parseFloat(comissao) + parseFloat(brindes);
     let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100;
     
     let valor_venda_total = fixos / (1 - variaveis);
-
+    
     let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
 
     document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

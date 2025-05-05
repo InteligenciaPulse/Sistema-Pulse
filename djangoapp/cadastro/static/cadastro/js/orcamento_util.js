@@ -101,66 +101,77 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
   fetch(`/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
       .then(response => response.json())
       .then(data => {
-          let dropdownProdutos = document.createElement("div");
-          dropdownProdutos.classList.add("dropdown-produtos");
+        let dropdownProdutos = document.createElement("div");
+        dropdownProdutos.classList.add("dropdown-produtos");
 
-          if (data.length === 0) {
-              alert("Nenhum produto disponível para este parceiro.");
-              return;
-          }
+        if (data.length === 0) {
+            alert("Nenhum produto disponível para este parceiro.");
+            return;
+        }
 
-          data.forEach(produto => {
-              let option = document.createElement("div");
-              option.textContent = produto.nome;
-              option.classList.add("dropdown-item");
-              option.setAttribute("data-id", produto.id);
-              option.setAttribute("data-parceiro-id", parceiroId);
+        data.forEach(produto => {
+            let option = document.createElement("div");
+            option.textContent = produto.nome;
+            option.classList.add("dropdown-item");
+            option.setAttribute("data-id", produto.id);
+            option.setAttribute("data-parceiro-id", parceiroId);
 
-              option.addEventListener("click", function () {
-                  let produtoItem = document.createElement("div");
-                  produtoItem.classList.add("produto-item");
+            option.addEventListener("click", function () {
+                let produtoItem = document.createElement("div");
+                produtoItem.classList.add("produto-item");
 
-                  let produtoNome = document.createElement("span");
-                  produtoNome.textContent = produto.nome;
+                let produtoNome = document.createElement("span");
+                produtoNome.textContent = produto.nome;
 
-                  let valorInput = document.createElement("input");
-                  valorInput.type = "number";
-                  valorInput.placeholder = "Valor R$";
-                  valorInput.step = 0.01;
-                  valorInput.min = 0;
-                  valorInput.value = produto.valor_venda;
+                let valorInput = document.createElement("input");
+                valorInput.type = "number";
+                valorInput.placeholder = "Valor R$";
+                valorInput.step = 0.01;
+                valorInput.min = 0;
+                valorInput.value = produto.valor_venda;
 
-                  valorInput.addEventListener("input", function () {
-                      atualizarSubtotal(produtosContainer, subtotalElement);
-                  });
+                valorInput.addEventListener("input", function () {
+                    atualizarSubtotal(produtosContainer, subtotalElement);
+                });
 
-                  let removerProdutoBtn = document.createElement("button");
-                  removerProdutoBtn.textContent = "❌";
-                  removerProdutoBtn.onclick = function () {
-                      produtoItem.remove();
-                      atualizarSubtotal(produtosContainer, subtotalElement);
-                      atualizarParticular();
-                  };
-                  
-                  produtoItem.appendChild(produtoNome);
+                let removerProdutoBtn = document.createElement("button");
+                removerProdutoBtn.textContent = "❌";
+                removerProdutoBtn.onclick = function () {
+                    produtoItem.remove();
+                    atualizarSubtotal(produtosContainer, subtotalElement);
+                    atualizarParticular();
+                };
+                
+                produtoItem.appendChild(produtoNome);
                 //   produtoItem.appendChild(produtoConfig);
-                  produtoItem.appendChild(valorInput);
-                  produtoItem.appendChild(removerProdutoBtn);
-                  produtoItem.setAttribute("data-id", produto.id);
-                  produtoItem.setAttribute("data-parceiro-id", parceiroId);
-                  produtoItem.setAttribute("data-valor-particular", produto.valor_particular);
-                  produtoItem.setAttribute("data-valor-repasse", produto.valor_repasse);
+                produtoItem.appendChild(valorInput);
+                produtoItem.appendChild(removerProdutoBtn);
+                produtoItem.setAttribute("data-id", produto.id);
+                produtoItem.setAttribute("data-parceiro-id", parceiroId);
+                produtoItem.setAttribute("data-valor-particular", produto.valor_particular);
+                produtoItem.setAttribute("data-valor-repasse", produto.valor_repasse);
 
-                  produtosContainer.appendChild(produtoItem);
-                  dropdownProdutos.remove();
-                  atualizarSubtotal(produtosContainer, subtotalElement);
-                  atualizarParticular();
-              });
+                produtosContainer.appendChild(produtoItem);
+                dropdownProdutos.remove();
+                atualizarSubtotal(produtosContainer, subtotalElement);
+                atualizarParticular();
+            });
 
-              dropdownProdutos.appendChild(option);
-          });
+            dropdownProdutos.appendChild(option);
+        });
 
-          produtosContainer.appendChild(dropdownProdutos);
+        produtosContainer.appendChild(dropdownProdutos);
+
+        function handleClickOutside(event) {
+            if (!dropdownProdutos.contains(event.target)) {
+                dropdownProdutos.remove();
+                document.removeEventListener("click", handleClickOutside);
+            }
+        }
+            
+        setTimeout(() => {
+            document.addEventListener("click", handleClickOutside);
+        }, 0);
       })
       .catch(error => console.error("Erro ao buscar parceiros:", error));
 }

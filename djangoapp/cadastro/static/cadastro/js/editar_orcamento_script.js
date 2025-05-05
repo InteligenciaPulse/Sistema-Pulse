@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let titulo = document.createElement("span");
         titulo.textContent = nome;
         procedimentoItem.setAttribute('data-id', idProcedimento);
-
+        
         let removerBtn = document.createElement("button");
         removerBtn.textContent = "❌";
         removerBtn.onclick = function () {
