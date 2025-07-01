@@ -1,0 +1,30 @@
+/* src/components/KanbanBoard.css */
+/* html,
+body {
+  height: 100%;
+  overflow: hidden;
+} */
+
+.kanban-board {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  /* padding-bottom: 20px; */
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.kanban-column-add {
+  min-width: 280px;
+  max-width: 300px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -107,3 +107,11 @@ class CustosAdmin(admin.ModelAdmin):
     list_display = ('comissao', 'brindes', 'imposto', 'cartao')
     list_filter = ('comissao', 'brindes', 'imposto', 'cartao')
     search_fields = ('comissao', 'brindes', 'imposto', 'cartao')
+
+
+# ==============================================================================
+from django.contrib import admin
+from .models import Coluna, Card
+
+admin.site.register(Coluna)
+admin.site.register(Card)

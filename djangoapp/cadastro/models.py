@@ -175,7 +175,8 @@ class Orcamento(models.Model):
     data_cirurgia = models.DateField(null=True, blank=True, verbose_name="Data da Cirurgia")
     custo_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo Total")
     lucro_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Lucro Total")
-
+    # coluna = models.ForeignKey('Coluna', null=True, blank=True, on_delete=models.SET_NULL, related_name='orcamentos')
+    
     class Meta:
         db_table = 'sistema_pulse"."orcamento'
         verbose_name = "Orçamento"
@@ -268,3 +269,28 @@ class Custos(models.Model):
     
     def __str__(self):
         return f"Comissão {self.comissao}"
+    
+# ===========================================================================================
+class Coluna(models.Model):
+    titulo = models.CharField(max_length=100)
+    ordem = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        db_table = 'sistema_pulse"."coluna'
+
+    def __str__(self):
+        return self.titulo
+
+class Card(models.Model):
+    orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, null=True, blank=True)
+    coluna = models.ForeignKey(Coluna, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
+    cor = models.CharField(max_length=20, blank=True, null=True)
+    prioridade = models.CharField(max_length=50, blank=True, null=True)
+    anotacao = models.TextField(blank=True, null=True)
+    data_movimentacao = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'sistema_pulse"."card'
+
+    def __str__(self):
+        return f'Card - {self.orcamento}'

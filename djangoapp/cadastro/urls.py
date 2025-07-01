@@ -2,6 +2,7 @@ from django.urls import path
 from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_procedimentos, buscar_parceiros, buscar_procedimentos_por_pacote, buscar_pacotes, buscar_parceiros_by, buscar_produtos_por_parceiro, buscar_parceiros_por_subtipo, buscar_subtipos
 from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente, buscar_especialidades, buscar_procedimentos_by
 from .views import salvar_orcamento, editar_orcamento, atualizar_orcamento, atualizar_status, buscar_status, exportar_historico_excel
+from .views import historico_api, kanban_board, atualizar_orcamento_status
 
 urlpatterns = [
     path('', home, name='home'),
@@ -29,4 +30,20 @@ urlpatterns = [
     path("exportar-historico/", exportar_historico_excel, name="exportar_historico_excel"),
     path('buscar_especialidades/', buscar_especialidades, name='buscar_especialidades'),
     path('buscar_procedimentos_by/', buscar_procedimentos_by, name='buscar_procedimentos_by'),
+    path('api/historico/', historico_api, name='historico_api'),
+    path('api/kanban_board/', kanban_board, name='kanban_board'),
+    path('orcamentos/<int:pk>/', atualizar_orcamento_status),
 ]
+
+# ============================================
+from rest_framework.routers import DefaultRouter
+from .views import ColumnViewSet, CardViewSet
+
+router = DefaultRouter()
+router.register(r'columns', ColumnViewSet)
+router.register(r'cards', CardViewSet)
+
+
+from django.urls import include
+
+urlpatterns += router.urls

@@ -257,7 +257,8 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
     .then(data => {
         if (data.success) {
             alert("Orçamento criado com sucesso!");
-            window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
+            // window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
+            window.location.href = 'http://localhost:3000/';
         } else {
             alert("Erro ao criar orçamento: " + data.error);
         }

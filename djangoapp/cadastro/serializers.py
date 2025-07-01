@@ -1,0 +1,59 @@
+from rest_framework import serializers
+from .models import Coluna, Card, Orcamento
+
+class OrcamentoKanbanSerializer(serializers.ModelSerializer):
+    paciente = serializers.StringRelatedField()
+    data_criacao = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    valor_total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Orcamento
+        fields = ['id', 'title', 'description', 'paciente', 'data_criacao', 'valor_total', 'status']
+
+    def get_title(self, obj):
+        return f"Orçamento #{obj.id}"
+
+    def get_description(self, obj):
+        return f"R$ {obj.valor_total:.2f}"
+
+    def get_data_criacao(self, obj):
+        return obj.data_criacao.strftime('%d/%m/%Y') if obj.data_criacao else ''
+    
+    def get_valor_total(self, obj):
+        return obj.valor_total
+
+class OrcamentoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Orcamento
+        fields = '__all__'
+
+class CardSerializer(serializers.ModelSerializer):
+    orcamento = OrcamentoKanbanSerializer(read_only=True)
+
+    coluna = serializers.PrimaryKeyRelatedField(
+        read_only=True
+    )
+
+    coluna_id = serializers.PrimaryKeyRelatedField(
+        queryset=Coluna.objects.all(),
+        source='coluna',
+        write_only=True,
+        required=False
+    )
+
+    def update(self, instance, validated_data):
+        print(f'Atualizando card {instance.id} com dados: {validated_data}')
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = Card
+        fields = ['id', 'prioridade', 'coluna', 'coluna_id', 'orcamento']
+
+class ColunaSerializer(serializers.ModelSerializer):
+    cards = CardSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Coluna
+        fields = ['id', 'titulo', 'ordem', 'cards']

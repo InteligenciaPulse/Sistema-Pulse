@@ -1,0 +1,86 @@
+/* src/components/KanbanColumn.css */
+
+.kanban-column {
+  background: #e6e4f0;
+  padding: 12px;
+  min-width: 280px;
+  max-width: 300px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* height: calc(100vh - 130px); */
+  max-height: 80vh;
+}
+
+.kanban-column-cards {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.kanban-column-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.kanban-column-count {
+  font-size: 0.85rem;
+  color: #555;
+  background-color: #fff;
+  padding: 2px 6px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.kanban-column-title {
+  font-weight: bold;
+  flex: 1;
+  font-size: 1.1rem;
+  word-break: break-word;
+}
+
+.kanban-column-edit {
+  font-size: 14px;
+  margin-left: auto;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.kanban-column-edit:hover {
+  opacity: 0.8;
+}
+
+.kanban-column-input {
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  flex: 1;
+  width: 100%;
+}
+
+.kanban-column-add-card {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.kanban-column-total {
+  font-size: 0.9rem;
+  color: #333;
+  margin-right: 4px;
+  font-weight: 500;
+}

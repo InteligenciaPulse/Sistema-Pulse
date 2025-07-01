@@ -16,6 +16,26 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from .models import SolicitacaoOrcamento, Orcamento, Paciente, Procedimento, Produto, Parceiro, ParceiroProdutos, Subtipo, Pacote, PacoteProcedimentos, Endereco, Status, OrcamentoParceiros, Especialidade, Custos, OrcamentoProcedimentos
 
+from .models import Coluna
+
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+
+@api_view(['POST'])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return JsonResponse({"success": True})
+    else:
+        return JsonResponse({"error": "Invalid credentials"}, status=400)
+    
+
+    
+
 def home(request):
     return render(request, 'cadastro/home.html')
 
@@ -635,3 +655,66 @@ def exportar_historico_excel(request):
 
     wb.save(response)
     return response
+
+# ======================================================================
+from rest_framework import viewsets
+from .models import Coluna, Card, Orcamento
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import ColunaSerializer, CardSerializer, OrcamentoSerializer
+
+class ColumnViewSet(viewsets.ModelViewSet):
+    queryset = Coluna.objects.all().order_by('ordem')
+    serializer_class = ColunaSerializer
+
+class CardViewSet(viewsets.ModelViewSet):
+    queryset = Card.objects.all().order_by('prioridade')
+    serializer_class = CardSerializer
+
+# @api_view(['GET'])
+# def kanban_board(request):
+#     statuses = Status.objects.all().order_by('id')
+#     board = []
+
+#     for status in statuses:
+#         orcamentos = Orcamento.objects.select_related('solicitacao_orcamento__paciente').filter(status=status).order_by('-data_criacao')
+#         board.append({
+#             "id": status.id,
+#             "title": status.nome,
+#             "cards": [
+#                 {
+#                     "id": orc.id,
+#                     "title": f"Orçamento #{orc.id}",
+#                     "description": f"R$ {orc.valor_total:.2f}",
+#                     "paciente": orc.solicitacao_orcamento.paciente.nome if orc.solicitacao_orcamento else "",
+#                     "data_criacao": orc.data_criacao.strftime('%d/%m/%Y') if orc.data_criacao else "",
+#                 }
+#                 for orc in orcamentos
+#             ]
+#         })
+
+#     return Response(board)
+
+@api_view(['GET'])
+def kanban_board(request):
+    colunas = Coluna.objects.order_by('ordem').prefetch_related('cards__orcamento__solicitacao_orcamento__paciente')
+    serializer = ColunaSerializer(colunas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def historico_api(request):
+    atividades = Orcamento.objects.all().order_by('-data_criacao')
+    serializer = OrcamentoSerializer(atividades, many=True)
+    return Response(serializer.data)
+
+@api_view(['PATCH'])
+def atualizar_orcamento_status(request, pk):
+    orcamento = get_object_or_404(Orcamento, id=pk)
+    status_id = request.data.get("status")
+
+    if not status_id:
+        return Response({"error": "status obrigatório"}, status=400)
+
+    orcamento.status_id = status_id
+    orcamento.save()
+    return Response({"success": True})
