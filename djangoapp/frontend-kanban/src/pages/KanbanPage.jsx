@@ -1,21 +1,40 @@
 // src/pages/KanbanPage.jsx
 
-import React from 'react';
+// import React, { useState } from 'react';
 import KanbanBoard from '../components/KanbanBoard';
-import CardSettings from '../components/CardSettings';
+// import CardSettingsModal from '../components/CardSettingsModal';
+import './KanbanPage.css';
 
 const KanbanPage = ({ visibleFields, setVisibleFields }) => {
-  return (
-    <div>
-      <CardSettings
-        visibleFields={visibleFields}
-        setVisibleFields={setVisibleFields}
-      />
+  // const [settingsOpen, setSettingsOpen] = useState(false);
 
-      <div style={{ padding: '20px' }}>
-        <h2 style={{ marginBottom: '10px' }}>Kanban de Orçamentos</h2>
+  return (
+    <div className="kanban-page-container">
+      <header className="navbar">
+        <h1>Sistema Pulse</h1>
+      </header>
+
+      <main className="content">
+        <div className="kanban-header">
+          {/* <button className="settings-btn" onClick={() => setSettingsOpen(true)}>
+            ⚙️ Exibir Campos
+          </button> */}
+        </div>
+
         <KanbanBoard visibleFields={visibleFields} />
-      </div>
+
+        {/* {settingsOpen && (
+          <CardSettingsModal
+            visibleFields={visibleFields}
+            setVisibleFields={setVisibleFields}
+            onClose={() => setSettingsOpen(false)}
+          />
+        )} */}
+      </main>
+
+      <footer>
+        &copy; 2025 Sistema Pulse - Todos os direitos reservados.
+      </footer>
     </div>
   );
 };

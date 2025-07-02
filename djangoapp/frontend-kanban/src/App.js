@@ -13,8 +13,8 @@ function App() {
     valor_total: true,
     paciente: true,
     data_criacao: true,
-    anotacao: false,
-    status: false,
+    // anotacao: false,
+    status: true,
   });
 
   return (
