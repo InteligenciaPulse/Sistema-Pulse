@@ -120,7 +120,7 @@ const KanbanColumn = ({
           {provided.placeholder}
 
           <a
-            href="http://localhost:8000/orcamentos/criar/"
+            href="http://localhost:8000/api/orcamentos/criar/"
             className="kanban-column-add-card"
           >
             ➕ Novo Orçamento

@@ -1,12 +1,27 @@
 // src/services/api.js
 
 import axios from 'axios';
+import { getCookie } from './csrf';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'http://localhost:8000/api';
+// const API_BASE = process.env.REACT_APP_API_BASE || '';
+
+// Define o CSRF token
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+// Envia o token manualmente
+axios.interceptors.request.use((config) => {
+  const csrfToken = getCookie('csrftoken');
+  if (!config.headers['X-CSRFToken'] && csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
+  }
+  return config;
+});
 
 // Busca todo o board (colunas com cards)
 export const getBoard = () => {
-  return axios.get(`${API_BASE}/api/kanban_board/`);
+  return axios.get(`${API_BASE}/kanban_board/`);
 };
 
 // Move um card para outra coluna

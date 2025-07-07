@@ -2,7 +2,7 @@
 
 // import React, { useState } from 'react';
 import KanbanBoard from '../components/KanbanBoard';
-// import CardSettingsModal from '../components/CardSettingsModal';
+import CardSettingsModal from '../components/CardSettings';
 import './KanbanPage.css';
 
 const KanbanPage = ({ visibleFields, setVisibleFields }) => {
@@ -16,6 +16,7 @@ const KanbanPage = ({ visibleFields, setVisibleFields }) => {
 
       <main className="content">
         <div className="kanban-header">
+          {/* <CardSettingsModal visibleFields={visibleFields} setVisibleFields={setVisibleFields} /> */}
           {/* <button className="settings-btn" onClick={() => setSettingsOpen(true)}>
             ⚙️ Exibir Campos
           </button> */}

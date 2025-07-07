@@ -23,6 +23,7 @@ const KanbanBoard = ({ visibleFields }) => {
   const fetchColumns = async () => {
     try {
       const res = await getBoard();
+      console.log('Resposta da API (getBoard):', res.data);
       setColumns(res.data);
     } catch (err) {
       console.error('Erro ao buscar colunas:', err);
@@ -87,7 +88,7 @@ const KanbanBoard = ({ visibleFields }) => {
   return (
     <div className="kanban-board">
       <DragDropContext onDragEnd={onDragEnd}>
-        {columns.map((column) => (
+        {(columns || []).map((column) => (
           <KanbanColumn
             key={column.id}
             column={column}
