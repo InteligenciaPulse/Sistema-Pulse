@@ -1,13 +1,14 @@
 // src/components/KanbanCard.jsx
 
 import React from 'react';
+import { API_BASE } from '../services/api';
 import './KanbanCard.css';
 
 const KanbanCard = ({ card, visibleFields }) => {
   const { orcamento } = card;
 
   return (
-    <a href={`http://localhost:8000/api/editar_orcamento/${orcamento?.id ?? card.id}/`} className="kanban-card">
+    <a href={`${API_BASE}/editar_orcamento/${orcamento?.id ?? card.id}/`} className="kanban-card">
       <strong>{orcamento?.id ? `Orçamento #${orcamento.id}` : 'Orçamento'}</strong>
 
       {visibleFields?.valor_total && orcamento?.valor_total && (

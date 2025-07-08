@@ -1,6 +1,7 @@
 // src/components/KanbanColumn.jsx
 
 import React from 'react';
+import { API_BASE } from '../services/api';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import KanbanCard from './KanbanCard';
 import './KanbanColumn.css';
@@ -120,7 +121,7 @@ const KanbanColumn = ({
           {provided.placeholder}
 
           <a
-            href="http://localhost:8000/api/orcamentos/criar/"
+            href={`${API_BASE}/orcamentos/criar/`}
             className="kanban-column-add-card"
           >
             ➕ Novo Orçamento

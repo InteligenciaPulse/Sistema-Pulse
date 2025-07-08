@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { getCookie } from './csrf';
 
-const API_BASE = process.env.REACT_APP_API_BASE;
+export const API_BASE = process.env.REACT_APP_API_BASE;
 
 // Define o CSRF token
 axios.defaults.xsrfCookieName = 'csrftoken';
