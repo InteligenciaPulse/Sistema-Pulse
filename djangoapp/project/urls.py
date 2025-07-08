@@ -20,10 +20,18 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView
+from django.views.generic import TemplateView
+from django.views.decorators.cache import never_cache
+
+index_view = never_cache(TemplateView.as_view(template_name="index.html"))
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('cadastro.urls')),
+    path('api/', include('cadastro.urls')),
+
+    # path('', include('cadastro.urls')),
+    path('', index_view, name='home'),
+    path('<path:path>', index_view),
 ]
 
 if settings.DEBUG:

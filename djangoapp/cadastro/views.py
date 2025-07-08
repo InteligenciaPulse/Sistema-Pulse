@@ -718,3 +718,10 @@ def atualizar_orcamento_status(request, pk):
     orcamento.status_id = status_id
     orcamento.save()
     return Response({"success": True})
+
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    return JsonResponse({"message": "Token set"})
