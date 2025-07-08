@@ -44,3 +44,8 @@ export const renameColumn = (columnId, novoTitulo) => {
     titulo: novoTitulo,
   });
 };
+
+// Exclui uma coluna
+export const deleteColumn = (columnId) => {
+  return axios.delete(`${API_BASE}/columns/${columnId}/`);
+};

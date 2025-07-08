@@ -45,7 +45,7 @@ function atualizarParticular() {
 
 // -------------------------------------- BUSCAR SUBTIPOS ---------------------------------------------
 function buscarSubTipos(subtipoSelect){
-  fetch("/buscar_subtipos/")
+  fetch("/api/buscar_subtipos/")
   .then(response => response.json())
   .then(subtipos => {
     subtipos.forEach(subtipo => {
@@ -67,7 +67,7 @@ function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
       return;
   }
 
-  fetch(`/buscar_parceiros_by/?q=${encodeURIComponent(query)}&subtipo=${subtipoSelecionado}`)
+  fetch(`/api/buscar_parceiros_by/?q=${encodeURIComponent(query)}&subtipo=${subtipoSelecionado}`)
       .then(response => response.json())
       .then(data => {
           dropdown.innerHTML = "";
@@ -98,7 +98,7 @@ function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
 
 // --------------------------------------- ADICIONAR PRODUTOS ------------------------------------
 function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
-  fetch(`/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
+  fetch(`/api/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
       .then(response => response.json())
       .then(data => {
         let dropdownProdutos = document.createElement("div");
@@ -222,7 +222,7 @@ function buscarProcedimentos(dropdown, inputProcedimentos, especialidadeSelecion
         return;
     }
   
-    fetch(`/buscar_procedimentos_by/?q=${encodeURIComponent(query)}&especialidade=${especialidadeSelecionada}`)
+    fetch(`/api/buscar_procedimentos_by/?q=${encodeURIComponent(query)}&especialidade=${especialidadeSelecionada}`)
         .then(response => response.json())
         .then(data => {
             dropdown.innerHTML = "";

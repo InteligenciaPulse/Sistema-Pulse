@@ -1,12 +1,12 @@
 // src/components/KanbanColumn.jsx
 
 import React from 'react';
-import { API_BASE } from '../services/api';
+import { API_BASE, deleteColumn } from '../services/api';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import KanbanCard from './KanbanCard';
 import './KanbanColumn.css';
 
-import { Pencil, NotebookPen } from 'lucide-react';
+import { Pencil, NotebookPen, Trash2 } from 'lucide-react';
 
 const KanbanColumn = ({
   column,
@@ -18,7 +18,23 @@ const KanbanColumn = ({
   setColumnTitleDraft,
   handleColumnRename,
   visibleFields,
+  onDeleteColumn,
 }) => {
+  const handleDelete = async () => {
+    const confirmar = window.confirm(
+      `Tem certeza que deseja excluir a coluna "${column.titulo}"?\nTodos os cards dentro dela também serão removidos.`
+    );
+    if (!confirmar) return;
+
+    try {
+      await deleteColumn(column.id);
+      onDeleteColumn(column.id);
+    } catch (error) {
+      console.error('Erro ao excluir coluna:', error);
+      alert('Erro ao excluir a coluna.');
+    }
+  };
+
   return (
     <Droppable droppableId={column.id.toString()}>
       {(provided) => (
@@ -73,6 +89,14 @@ const KanbanColumn = ({
                   }}
                 >
                   <Pencil size={16} />
+                </span>
+
+                <span
+                  className="kanban-column-delete"
+                  title="Excluir coluna"
+                  onClick={handleDelete}
+                >
+                  <Trash2 size={16} />
                 </span>
               </>
             )}

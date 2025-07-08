@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
       }
 
-      fetch(`/buscar_pacientes/?q=${query}`)
+      fetch(`/api/buscar_pacientes/?q=${query}`)
       .then(response => response.json())
       .then(data => {
           dropdown.innerHTML = "";
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
       }
 
-      fetch(`/buscar_parceiros/?q=${query}`)
+      fetch(`/api/buscar_parceiros/?q=${query}`)
       .then(response => response.json())
       .then(data => {
           dropdown.innerHTML = "";
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
       }
 
-      fetch(`/buscar_procedimentos/?q=${query}`)
+      fetch(`/api/buscar_procedimentos/?q=${query}`)
       .then(response => response.json())
       .then(data => {
           dropdown.innerHTML = "";

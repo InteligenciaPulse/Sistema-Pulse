@@ -2,7 +2,7 @@
 
 // import React, { useState } from 'react';
 import KanbanBoard from '../components/KanbanBoard';
-import CardSettingsModal from '../components/CardSettings';
+// import CardSettingsModal from '../components/CardSettings';
 import './KanbanPage.css';
 
 const KanbanPage = ({ visibleFields, setVisibleFields }) => {

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch(`/buscar_pacientes/?q=${query}`)
+        fetch(`/api/buscar_pacientes/?q=${query}`)
         .then(response => response.json())
         .then(data => {
             dropdown.innerHTML = "";
@@ -183,7 +183,7 @@ document.getElementById('form-adicionar-paciente').addEventListener('submit', fu
 
     const formData = new FormData(this);
 
-    fetch('/salvar_paciente/', {
+    fetch('/api/salvar_paciente/', {
         method: 'POST',
         headers: {
             "X-CSRFToken": getCSRFToken()
@@ -245,7 +245,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         procedimentos: procedimentosSelecionados,
     };
 
-    fetch("/salvar_orcamento/", {
+    fetch("/api/salvar_orcamento/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -258,7 +258,8 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         if (data.success) {
             alert("Orçamento criado com sucesso!");
             // window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
-            window.location.href = 'http://localhost:3000/';
+            // window.location.href = 'http://localhost:3000/';
+            window.location.href = 'https://sistema-pulse-production.up.railway.app/';
         } else {
             alert("Erro ao criar orçamento: " + data.error);
         }
@@ -286,7 +287,7 @@ function adicionarPacote(container, produtosContainer, subtotalElement) {
             return;
         }
 
-        fetch(`/buscar_pacotes/?q=${query}`)
+        fetch(`/api/buscar_pacotes/?q=${query}`)
             .then(response => response.json())
             .then(data => {
                 sugestoesPacotes.innerHTML = "";
@@ -332,7 +333,7 @@ function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) 
     let listaProdutos = document.createElement("ul");
     listaProdutos.classList.add("lista-produtos");
 
-    fetch(`/buscar_produtos_por_pacote/?pacote_nome=${encodeURIComponent(pacote.nome)}`)
+    fetch(`/api/buscar_produtos_por_pacote/?pacote_nome=${encodeURIComponent(pacote.nome)}`)
         .then(response => response.json())
         .then(produtos => {
             if (produtos.length === 0) {

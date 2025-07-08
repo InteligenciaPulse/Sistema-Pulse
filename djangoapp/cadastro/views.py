@@ -719,6 +719,15 @@ def atualizar_orcamento_status(request, pk):
     orcamento.save()
     return Response({"success": True})
 
+@api_view(['DELETE'])
+def deletar_coluna(request, coluna_id):
+    try:
+        coluna = Coluna.objects.get(id=coluna_id)
+        coluna.delete()
+        return Response({'mensagem': 'Coluna excluída com sucesso'}, status=204)
+    except Coluna.DoesNotExist:
+        return Response({'erro': 'Coluna não encontrada'}, status=404)
+    
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 

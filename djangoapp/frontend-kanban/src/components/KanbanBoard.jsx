@@ -30,6 +30,10 @@ const KanbanBoard = ({ visibleFields }) => {
     }
   };
 
+  const handleDeleteColumn = (columnId) => {
+    setColumns((prevColunas) => prevColunas.filter(c => c.id !== columnId));
+  };
+
   const onDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
@@ -99,6 +103,7 @@ const KanbanBoard = ({ visibleFields }) => {
             setColumnTitleDraft={setColumnTitleDraft}
             handleColumnRename={handleColumnRename}
             visibleFields={visibleFields}
+            onDeleteColumn={handleDeleteColumn}
           />
         ))}
 

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
           produtos: produtosSelecionados
       };
 
-      fetch(`/atualizar_orcamento/${orcamentoId}/`, {
+      fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
