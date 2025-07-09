@@ -58,46 +58,51 @@ const KanbanColumn = ({
               />
             ) : (
               <>
-                <span className="kanban-column-count" title="Quantidade de cards">
-                  <NotebookPen size={16} /> {cards.length}
-                </span>
-                <h3 className="kanban-column-title">{column.titulo}</h3>
+                <div className='title-div'>
+                  <h3 className="kanban-column-title">{column.titulo}</h3>
 
-                <h4 className="kanban-column-total">
-                  Total: {
-                    new Intl.NumberFormat('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    }).format(
-                      cards.reduce((acc, c) => {
-                        const raw = c.orcamento?.valor_total ?? '0';
-                        const num = parseFloat(
-                          typeof raw === 'string' ? raw.replace(',', '.') : raw
-                        );
-                        return acc + (isNaN(num) ? 0 : num);
-                      }, 0)
-                    )
-                  }
-                </h4>
+                  <span
+                    className="kanban-column-edit"
+                    title="Editar título"
+                    onClick={() => {
+                      setEditingColumnId(column.id);
+                      setColumnTitleDraft(column.titulo);
+                    }}
+                  >
+                    <Pencil size={16} />
+                  </span>
 
-                <span
-                  className="kanban-column-edit"
-                  title="Editar título"
-                  onClick={() => {
-                    setEditingColumnId(column.id);
-                    setColumnTitleDraft(column.titulo);
-                  }}
-                >
-                  <Pencil size={16} />
-                </span>
+                  <span
+                    className="kanban-column-delete"
+                    title="Excluir coluna"
+                    onClick={handleDelete}
+                  >
+                    <Trash2 size={16} />
+                  </span>
+                </div>
 
-                <span
-                  className="kanban-column-delete"
-                  title="Excluir coluna"
-                  onClick={handleDelete}
-                >
-                  <Trash2 size={16} />
-                </span>
+                <div className='title-div-total'>
+                  <span className="kanban-column-count" title="Quantidade de cards">
+                    <NotebookPen size={16} /> {cards.length}
+                  </span>
+
+                  <h4 className="kanban-column-total">
+                    Total: {
+                      new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }).format(
+                        cards.reduce((acc, c) => {
+                          const raw = c.orcamento?.valor_total ?? '0';
+                          const num = parseFloat(
+                            typeof raw === 'string' ? raw.replace(',', '.') : raw
+                          );
+                          return acc + (isNaN(num) ? 0 : num);
+                        }, 0)
+                      )
+                    }
+                  </h4>
+                </div>
               </>
             )}
           </div>
@@ -145,7 +150,7 @@ const KanbanColumn = ({
           {provided.placeholder}
 
           <a
-            href={`${API_BASE}/orcamentos/criar/`}
+            href={`${API_BASE}/orcamentos/criar/?coluna_id=${column.id}`}
             className="kanban-column-add-card"
           >
             ➕ Novo Orçamento

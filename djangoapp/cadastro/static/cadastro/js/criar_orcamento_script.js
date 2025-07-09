@@ -205,9 +205,15 @@ document.getElementById('form-adicionar-paciente').addEventListener('submit', fu
 // ---------------------------------------------------------------------------------------------------------------------------
 
 // ----------------------------------------- ORCAMENTO ------------------------------------------------------
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
 document.getElementById("proximo-passo").addEventListener("click", function () {
     const pacienteId = document.getElementById("paciente").dataset.id;
     const statusSelecionado = document.getElementById("status").value;
+    const colunaId = getQueryParam("coluna_id");
 
     if (!pacienteId) {
         alert("Selecione um paciente antes de finalizar o orçamento.");
@@ -234,7 +240,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
             procedimento_id: item.getAttribute("data-id")
         });
     });
-
+    
     const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
 
     const payload = {
@@ -243,6 +249,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         valor_total: valorTotal.toFixed(2),
         produtos: produtosSelecionados,
         procedimentos: procedimentosSelecionados,
+        coluna_id: colunaId
     };
 
     fetch("/api/salvar_orcamento/", {

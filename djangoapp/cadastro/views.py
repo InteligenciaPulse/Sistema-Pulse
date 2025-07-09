@@ -402,6 +402,7 @@ def salvar_orcamento(request):
                 paciente_id = data.get("paciente_id")
                 paciente = Paciente.objects.get(id=paciente_id)
                 status = Status.objects.get(id=data.get('status'))
+                coluna_id = data.get("coluna_id")
 
                 orcamento = Orcamento.objects.create(
                     status=status,
@@ -451,7 +452,21 @@ def salvar_orcamento(request):
                         margem_lucro = item['margem_lucro']
                     )
 
-            return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
+                if coluna_id:
+                    try:
+                        coluna = Coluna.objects.get(id=coluna_id)
+                        Card.objects.create(
+                            orcamento=orcamento,
+                            coluna=coluna,
+                            cor = '',
+                            prioridade = '',
+                            anotacao = '',
+                            data_movimentacao=now()
+                        )
+
+                    except Coluna.DoesNotExist:
+                        return JsonResponse({"error": "Coluna não encontrada."}, status=404)
+                    return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
 
         except Paciente.DoesNotExist:
             return JsonResponse({"error": "Paciente não encontrado."}, status=404)

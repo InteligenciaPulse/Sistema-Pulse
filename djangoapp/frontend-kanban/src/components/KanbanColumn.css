@@ -22,10 +22,25 @@
 }
 
 .kanban-column-header {
+  /* display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px; */
+}
+
+.title-div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.title-div-total {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
   gap: 8px;
+  justify-content: space-between;
 }
 
 .kanban-column-count {
@@ -44,6 +59,7 @@
   flex: 1;
   font-size: 1.1rem;
   word-break: break-word;
+  margin: 0px;
 }
 
 .kanban-column-edit {
@@ -58,13 +74,24 @@
   opacity: 0.8;
 }
 
-.kanban-column-input {
+/* .kanban-column-input {
   font-size: 1.1rem;
-  padding: 4px 8px;
+  padding: 4px;
   border-radius: 4px;
   border: 1px solid #ccc;
   flex: 1;
   width: 100%;
+} */
+
+.kanban-column-header .kanban-column-input {
+  width: 100%;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  padding: 4px;
+  flex: 1;
+  margin-bottom: 10px;
 }
 
 .kanban-column-add-card {
@@ -81,12 +108,18 @@
 .kanban-column-total {
   font-size: 0.9rem;
   color: #333;
-  margin-right: 4px;
+  margin: 0px 4px 0px 0px;
   font-weight: 500;
 }
 
 .kanban-column-delete {
+  font-size: 14px;
+  margin-left: auto;
   cursor: pointer;
-  color: red;
-  margin-left: 6px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.kanban-column-delete:hover {
+  opacity: 0.8;
 }
