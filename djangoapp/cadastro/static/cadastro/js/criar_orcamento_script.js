@@ -271,7 +271,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         if (data.success) {
             alert("Orçamento criado com sucesso!");
             // window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
-            // window.location.href = 'https://sistema-pulse-production.up.railway.app/';
+            window.location.href = 'https://sistema-pulse-production.up.railway.app/';
         } else {
             alert("Erro ao criar orçamento: " + data.error);
         }
