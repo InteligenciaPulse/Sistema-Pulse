@@ -466,8 +466,9 @@ def salvar_orcamento(request):
 
                     except Coluna.DoesNotExist:
                         return JsonResponse({"error": "Coluna não encontrada."}, status=404)
-                    return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
-
+                    
+                return JsonResponse({"success": True, "message": "Orçamento salvo com sucesso!", "orcamento_id": orcamento.id}, status=201)
+            
         except Paciente.DoesNotExist:
             return JsonResponse({"error": "Paciente não encontrado."}, status=404)
         except ParceiroProdutos.DoesNotExist:

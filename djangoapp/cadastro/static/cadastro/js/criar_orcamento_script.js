@@ -241,7 +241,11 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         });
     });
     
-    const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+    // const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+    const valorElemento = document.getElementById("total-geral").textContent;
+    let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
+    valorStr = valorStr.replace(/\./g, "").replace(",", ".");
+    const valorTotal = parseFloat(valorStr);
 
     const payload = {
         paciente_id: pacienteId,
@@ -251,6 +255,8 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         procedimentos: procedimentosSelecionados,
         coluna_id: colunaId
     };
+
+    console.log(payload);
 
     fetch("/api/salvar_orcamento/", {
         method: "POST",
@@ -265,8 +271,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         if (data.success) {
             alert("Orçamento criado com sucesso!");
             // window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
-            // window.location.href = 'http://localhost:3000/';
-            window.location.href = 'https://sistema-pulse-production.up.railway.app/';
+            // window.location.href = 'https://sistema-pulse-production.up.railway.app/';
         } else {
             alert("Erro ao criar orçamento: " + data.error);
         }
