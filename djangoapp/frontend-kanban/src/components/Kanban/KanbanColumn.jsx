@@ -1,10 +1,10 @@
 // src/components/KanbanColumn.jsx
 
 import React from 'react';
-import { API_BASE, deleteColumn } from '../services/api';
+import { API_BASE, deleteColumn } from '../../services/api';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import KanbanCard from './KanbanCard';
-import './KanbanColumn.css';
+import '../../styles/Kanban/KanbanColumn.css';
 
 import { Pencil, NotebookPen, Trash2 } from 'lucide-react';
 

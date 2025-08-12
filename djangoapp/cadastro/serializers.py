@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Coluna, Card, Orcamento
+from .models import Coluna, Card, Orcamento, Status, Procedimento, Especialidade, Parceiro, Subtipo
 
 class OrcamentoKanbanSerializer(serializers.ModelSerializer):
     paciente_nome = serializers.SerializerMethodField()
@@ -63,3 +63,32 @@ class ColunaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coluna
         fields = ['id', 'titulo', 'ordem', 'cards']
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = ['id', 'nome']
+
+class EspecialidadeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Especialidade
+        fields = ['id', 'nome']
+
+class ProcedimentoSerializer(serializers.ModelSerializer):
+    especialidade = EspecialidadeSerializer()
+
+    class Meta:
+        model = Procedimento
+        fields = ['id', 'nome', 'especialidade']
+
+class SubtipoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subtipo
+        fields = ['id', 'nome']
+
+class ParceiroSerializer(serializers.ModelSerializer):
+    subtipo = SubtipoSerializer()
+
+    class Meta:
+        model = Parceiro
+        fields = ['id', 'nome', 'subtipo']

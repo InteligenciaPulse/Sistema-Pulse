@@ -32,7 +32,8 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://sistema-pulse-production.up.railway.app"
+    "https://sistema-pulse-production.up.railway.app",
+    "http://localhost:3000"
 ]
 
 

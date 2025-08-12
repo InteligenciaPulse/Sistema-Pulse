@@ -1,8 +1,8 @@
 // src/components/KanbanCard.jsx
 
 import React from 'react';
-import { API_BASE } from '../services/api';
-import './KanbanCard.css';
+import { API_BASE } from '../../services/api';
+import '../../styles/Kanban/KanbanCard.css';
 
 const KanbanCard = ({ card, visibleFields }) => {
   const { orcamento } = card;

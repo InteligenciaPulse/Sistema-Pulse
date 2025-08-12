@@ -677,7 +677,8 @@ from rest_framework import viewsets
 from .models import Coluna, Card, Orcamento
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ColunaSerializer, CardSerializer, OrcamentoSerializer
+from .serializers import ColunaSerializer, CardSerializer, OrcamentoSerializer, StatusSerializer
+from .serializers import ProcedimentoSerializer, EspecialidadeSerializer, SubtipoSerializer, ParceiroSerializer
 
 class ColumnViewSet(viewsets.ModelViewSet):
     queryset = Coluna.objects.all().order_by('ordem')
@@ -687,29 +688,27 @@ class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all().order_by('prioridade')
     serializer_class = CardSerializer
 
-# @api_view(['GET'])
-# def kanban_board(request):
-#     statuses = Status.objects.all().order_by('id')
-#     board = []
+class StatusViewSet(viewsets.ModelViewSet):
+    queryset = Status.objects.all().order_by('nome')
+    serializer_class = StatusSerializer
 
-#     for status in statuses:
-#         orcamentos = Orcamento.objects.select_related('solicitacao_orcamento__paciente').filter(status=status).order_by('-data_criacao')
-#         board.append({
-#             "id": status.id,
-#             "title": status.nome,
-#             "cards": [
-#                 {
-#                     "id": orc.id,
-#                     "title": f"Orçamento #{orc.id}",
-#                     "description": f"R$ {orc.valor_total:.2f}",
-#                     "paciente": orc.solicitacao_orcamento.paciente.nome if orc.solicitacao_orcamento else "",
-#                     "data_criacao": orc.data_criacao.strftime('%d/%m/%Y') if orc.data_criacao else "",
-#                 }
-#                 for orc in orcamentos
-#             ]
-#         })
+class EspecialidadeViewSet(viewsets.ModelViewSet):
+    queryset = Especialidade.objects.all().order_by('nome')
+    serializer_class = EspecialidadeSerializer
 
-#     return Response(board)
+class ProcedimentoViewSet(viewsets.ModelViewSet):
+    queryset = Procedimento.objects.all().order_by('nome')
+    serializer_class = ProcedimentoSerializer
+
+class SubtipoViewSet(viewsets.ModelViewSet):
+    queryset = Subtipo.objects.all().order_by('nome')
+    serializer_class = SubtipoSerializer
+
+class ParceiroViewSet(viewsets.ModelViewSet):
+    queryset = Parceiro.objects.all().order_by('nome')
+    serializer_class = ParceiroSerializer
+
+# ---------------------------------------------------------------------------------------------------------
 
 @api_view(['GET'])
 def kanban_board(request):

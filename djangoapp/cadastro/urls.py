@@ -41,11 +41,17 @@ urlpatterns = [
 
 # ============================================
 from rest_framework.routers import DefaultRouter
-from .views import ColumnViewSet, CardViewSet
+from .views import ColumnViewSet, CardViewSet, StatusViewSet, EspecialidadeViewSet, ProcedimentoViewSet
+from .views import ParceiroViewSet, SubtipoViewSet
 
 router = DefaultRouter()
 router.register(r'columns', ColumnViewSet)
 router.register(r'cards', CardViewSet)
+router.register(r'status', StatusViewSet)
+router.register(r'especialidades', EspecialidadeViewSet)
+router.register(r'procedimentos', ProcedimentoViewSet)
+router.register(r'parceiros', ParceiroViewSet)
+router.register(r'subtipos', SubtipoViewSet)
 
 
 urlpatterns += router.urls

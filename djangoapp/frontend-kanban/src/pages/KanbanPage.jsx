@@ -1,9 +1,9 @@
 // src/pages/KanbanPage.jsx
 
 // import React, { useState } from 'react';
-import KanbanBoard from '../components/KanbanBoard';
+import KanbanBoard from '../components/Kanban/KanbanBoard';
 // import CardSettingsModal from '../components/CardSettings';
-import './KanbanPage.css';
+import '../styles/Kanban/KanbanPage.css';
 
 const KanbanPage = ({ visibleFields, setVisibleFields }) => {
   // const [settingsOpen, setSettingsOpen] = useState(false);

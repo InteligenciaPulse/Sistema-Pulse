@@ -1087,8 +1087,4 @@ button[type="submit"]:hover {
   background-color: var(--cor-hover);
 }
 
-.filter-paciente {
-  position: relative;
-}
-
 /* -------------------------- */

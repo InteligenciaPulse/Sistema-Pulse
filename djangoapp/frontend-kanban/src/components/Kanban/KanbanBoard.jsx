@@ -8,8 +8,8 @@ import {
   moveCard,
   createColumn,
   renameColumn,
-} from '../services/api';
-import './KanbanBoard.css';
+} from '../../services/api';
+import '../../styles/Kanban/KanbanBoard.css';
 
 const KanbanBoard = ({ visibleFields }) => {
   const [columns, setColumns] = useState([]);

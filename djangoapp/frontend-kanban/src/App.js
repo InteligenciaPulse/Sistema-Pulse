@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import KanbanPage from './pages/KanbanPage';
+import CriarOrcamento from "./pages/CriarOrcamento";
 // import CriarOrcamento from './pages/CriarOrcamento';
 // import EditarOrcamento from './pages/EditarOrcamento';
 // import Historico from './pages/Historico';
@@ -26,6 +27,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<KanbanPage visibleFields={visibleFields} setVisibleFields={setVisibleFields}/>} />
+        <Route path='/create' element={<CriarOrcamento />}/>
         {/* <Route path="/orcamentos/criar" element={<CriarOrcamento />} />
         <Route path="/editar_orcamento/:id" element={<EditarOrcamento />} />
         <Route path="/historico" element={<Historico />} />
