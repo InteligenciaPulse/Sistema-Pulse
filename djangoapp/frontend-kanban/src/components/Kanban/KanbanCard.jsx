@@ -1,14 +1,60 @@
 // src/components/KanbanCard.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { API_BASE } from '../../services/api';
 import '../../styles/Kanban/KanbanCard.css';
 
-const KanbanCard = ({ card, visibleFields }) => {
+import { Trash2 } from 'lucide-react';
+
+const KanbanCard = ({ card, visibleFields, onDelete }) => {
   const { orcamento } = card;
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!window.confirm('Deseja remover este card?')) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+
+      if (typeof onDelete === 'function') {
+        await onDelete(card);
+      } else {
+        const resp = await fetch(`${API_BASE}/cards/${card.id}/`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(`Falha ao remover card: ${resp.status} ${txt}`);
+        }
+
+        document.dispatchEvent(new CustomEvent('kanban:cardDeleted', { detail: { id: card.id } }));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Não foi possível remover este card!');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <a href={`${API_BASE}/editar_orcamento/${orcamento?.id ?? card.id}/`} className="kanban-card">
+      <button
+        className="kanban-card__trash"
+        aria-label="Remover card"
+        title="Remover card"
+        onClick={handleDelete}
+        disabled={deleting}
+      >
+        <Trash2 size={16} />
+      </button>
+
       <strong>{orcamento?.id ? `Orçamento #${orcamento.id}` : 'Orçamento'}</strong>
 
       {visibleFields?.valor_total && orcamento?.valor_total && (

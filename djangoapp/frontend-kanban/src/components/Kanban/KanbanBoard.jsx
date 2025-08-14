@@ -89,6 +89,16 @@ const KanbanBoard = ({ visibleFields }) => {
     setColumnTitleDraft('');
   };
 
+  const onDeleteCard = (columnId, cardId) => {
+    setColumns(cols =>
+      cols.map(col =>
+        col.id === columnId
+          ? { ...col, cards: col.cards.filter(c => c.id !== cardId) }
+          : col
+      )
+    );
+  };
+
   return (
     <div className="kanban-board">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -104,6 +114,7 @@ const KanbanBoard = ({ visibleFields }) => {
             handleColumnRename={handleColumnRename}
             visibleFields={visibleFields}
             onDeleteColumn={handleDeleteColumn}
+            onDeleteCard={onDeleteCard}
           />
         ))}
 

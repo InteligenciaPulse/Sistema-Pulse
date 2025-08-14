@@ -19,6 +19,7 @@ const KanbanColumn = ({
   handleColumnRename,
   visibleFields,
   onDeleteColumn,
+  onDeleteCard
 }) => {
   const handleDelete = async () => {
     const confirmar = window.confirm(
@@ -120,7 +121,15 @@ const KanbanColumn = ({
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    <KanbanCard card={card} visibleFields={visibleFields} />
+                    <KanbanCard card={card} visibleFields={visibleFields}
+                      onDelete={async (cardToDelete) => {
+                        await fetch(`${API_BASE}/cards/${cardToDelete.id}/`, {
+                          method: 'DELETE',
+                        });
+
+                        onDeleteCard(column.id, cardToDelete.id);
+                      }}
+                    />
                   </div>
                 )}
               </Draggable>
