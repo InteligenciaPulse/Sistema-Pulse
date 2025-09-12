@@ -9,34 +9,26 @@ from django.db import transaction
 from django.db.models import Q
 
 from cadastro.models import Parceiro, Especialidade, Produto, ParceiroProdutos
-
+# docker exec -it djangoapp python manage.py import_parceiro_produtos /djangoapp/cadastro/management/commands/neuroc.csv
 # ---------- helpers ----------
 def norm_key(s: str) -> str:
     return unidecode((s or "").strip()).lower()
 
 def cap_first_lower_rest(s: str) -> str:
-    """Deixa só a primeira letra maiúscula e o restante minúsculo.
-       Também normaliza espaços e barras."""
     s = (s or "").strip().lower()
-    # normaliza espaços ao redor de "/"
     s = re.sub(r"\s*/\s*", "/", s)
-    # comprime múltiplos espaços
     s = re.sub(r"\s+", " ", s)
     if not s:
         return s
     return s[0].upper() + s[1:]
 
 def br_money_to_decimal(s: str):
-    """Converte 'R$ 1.234,56' -> Decimal('1234.56').
-       Aceita vazio -> None."""
     if not s or not str(s).strip():
         return None
     s = str(s)
     s = s.replace("R$", "").replace("r$", "")
     s = s.replace(" ", "")
-    # remove separador de milhar (.)
     s = s.replace(".", "")
-    # troca decimal , por .
     s = s.replace(",", ".")
     try:
         return Decimal(s)
@@ -87,7 +79,7 @@ class Command(BaseCommand):
 
                 ctx = nullcontext() if dry_run else transaction.atomic()
                 with ctx:
-                    for idx, row in enumerate(reader, start=2):  # 2 = considerando header na 1ª
+                    for idx, row in enumerate(reader, start=2):
                         try:
                             parceiro_raw = (row["PARCEIRO"] or "").strip()
                             esp_raw = (row["ESPECIALIDADE"] or "").strip()
@@ -97,13 +89,11 @@ class Command(BaseCommand):
                             v_rep_raw  = row["VALOR REPASSE"]
                             v_vend_raw = row["VALOR VENDA"]
 
-                            # 1) Resolver parceiro (precisa existir)
                             parceiro = parceiro_map.get(norm_key(parceiro_raw))
                             if not parceiro:
                                 skipped.append((idx, parceiro_raw, "Parceiro não encontrado"))
                                 continue
 
-                            # 2) Especialidade -> cria se faltar (só 1ª maiúscula)
                             esp_name = cap_first_lower_rest(esp_raw)
                             if esp_name:
                                 esp_key = norm_key(esp_name)
@@ -117,7 +107,6 @@ class Command(BaseCommand):
                                         created_esps += 1
                             # Observação: Especialidade não é FK de ParceiroProdutos; só garantimos cadastro.
 
-                            # 3) Produto -> cria se faltar (só 1ª maiúscula)
                             prod_name = cap_first_lower_rest(prod_raw)
                             if not prod_name:
                                 skipped.append((idx, parceiro_raw, "Produto em branco"))
@@ -128,7 +117,6 @@ class Command(BaseCommand):
                             if not prod:
                                 if dry_run:
                                     created_prods += 1
-                                    # simulamos objeto leve
                                     class _Tmp: 
                                         def __init__(self, nome): self.nome, self.id = nome, None
                                     prod = _Tmp(prod_name)
@@ -137,12 +125,10 @@ class Command(BaseCommand):
                                     prod_map[prod_key] = prod
                                     created_prods += 1
 
-                            # 4) Valores (R$ e vírgula -> Decimal com ponto)
                             v_part = br_money_to_decimal(v_part_raw)
                             v_rep  = br_money_to_decimal(v_rep_raw)
                             v_vend = br_money_to_decimal(v_vend_raw)
 
-                            # 5) Upsert em ParceiroProdutos por (parceiro, produto)
                             if dry_run:
                                 upserts += 1
                             else:

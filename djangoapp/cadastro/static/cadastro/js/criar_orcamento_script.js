@@ -464,7 +464,8 @@ function fecharModal() {
 function aplicarValores() {
     const parceiroCards = document.querySelectorAll(".parceiro-card");
 
-    const comissao = document.getElementById("comissao").value;
+    const comissao_venda = document.getElementById("comissao-venda").value;
+    const comissao_indicacao = document.getElementById("comissao-indicacao").value;
     const brindes = document.getElementById("brindes").value;
     const impostos = document.getElementById("impostos").value;
     const cartoes = document.getElementById("cartoes").value;
@@ -480,7 +481,8 @@ function aplicarValores() {
             total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
             total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
 
-            produto.setAttribute("comissao", comissao);
+            produto.setAttribute("comissao-venda", comissao_venda);
+            produto.setAttribute("comissao_indicacao", comissao_indicacao);
             produto.setAttribute("brindes", brindes);
             produto.setAttribute("impostos", impostos);
             produto.setAttribute("cartoes", cartoes);
@@ -489,12 +491,13 @@ function aplicarValores() {
         });
     });
 
-    let fixos = total_repasse + parseFloat(comissao) + parseFloat(brindes);
-    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100;
+    let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
+    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
     
-    let valor_venda_total = fixos / (1 - variaveis);
+    // let valor_venda_total = fixos / (1 - variaveis);
+    let valor_venda_total = (parseFloat(comissao_indicacao) + total_repasse * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
     
-    let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
+    // let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
 
     document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
