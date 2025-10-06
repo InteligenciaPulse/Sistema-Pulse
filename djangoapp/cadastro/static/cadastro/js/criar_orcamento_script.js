@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
             removerParceiroBtn.onclick = function () {
                 parceiroDiv.remove();
                 // atualizarSubtotal();
+                aplicarValores();
                 atualizarParticular()
             };
     
@@ -226,7 +227,8 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
             parceiro_id: item.getAttribute("data-parceiro-id"),
             produto_id: item.getAttribute("data-id"),
             valor_venda: parseFloat(item.querySelector("input").value || 0),
-            comissao: parseFloat(item.getAttribute("comissao") || 0),
+            comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
+            comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
             brindes: parseFloat(item.getAttribute("brindes") || 0),
             impostos: parseFloat(item.getAttribute("impostos") || 0),
             cartoes: parseFloat(item.getAttribute("cartoes") || 0),
@@ -255,8 +257,6 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         procedimentos: procedimentosSelecionados,
         coluna_id: colunaId
     };
-
-    console.log(payload);
 
     fetch("/api/salvar_orcamento/", {
         method: "POST",
@@ -313,7 +313,8 @@ function adicionarPacote(container, produtosContainer, subtotalElement) {
                     option.addEventListener("click", function () {
                         adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement);
                         dropdownPacotes.remove();
-                        atualizarSubtotal(produtosContainer, subtotalElement);
+                        // atualizarSubtotal(produtosContainer, subtotalElement);
+                        aplicarValores();
                     });
 
                     sugestoesPacotes.appendChild(option);
@@ -367,7 +368,8 @@ function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) 
         removerPacoteBtn.classList.add("remover-pacote");
         removerPacoteBtn.onclick = function () {
             pacoteItem.remove();
-            atualizarSubtotal(produtosContainer, subtotalElement);
+            // atualizarSubtotal(produtosContainer, subtotalElement);
+            aplicarValores();
         };
     
         let infoContainer = document.createElement("div");
@@ -382,10 +384,12 @@ function adicionarPacoteAoContainer(produtosContainer, pacote, subtotalElement) 
         produtosContainer.appendChild(pacoteItem);
 
         valorInput.addEventListener("input", function () {
-            atualizarSubtotal(produtosContainer, subtotalElement);
+            // atualizarSubtotal(produtosContainer, subtotalElement);
+            aplicarValores();
         });
 
-        atualizarSubtotal(produtosContainer, subtotalElement);
+        // atualizarSubtotal(produtosContainer, subtotalElement);
+        aplicarValores();
 }
 
 // --------------------------------------------- PROCEDIMENTOS -------------------------------------------------
@@ -495,14 +499,14 @@ function aplicarValores() {
     let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
     
     // let valor_venda_total = fixos / (1 - variaveis);
-    let valor_venda_total = (parseFloat(comissao_indicacao) + total_repasse * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
+    let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
     
     // let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
 
     document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    
-    verificarValores();
+
+    // verificarValores();
 
     fecharModal();
 }
@@ -520,16 +524,16 @@ function verificarValores(){
     total_geral = extrairValor(total_geral);
     total_particular = extrairValor(total_particular);
 
-    if (total_geral > total_particular) {
-        console.log("O total geral é maior que o total particular.");
-        return "geral > particular";
-    } else if (total_geral < total_particular) {
-        console.log("O total particular é maior que o total geral.");
-        return "particular > geral";
-    } else {
-        console.log("Os totais são iguais.");
-        return "iguais";
-    }
+    // if (total_geral > total_particular) {
+    //     console.log("O total geral é maior que o total particular.");
+    //     return "geral > particular";
+    // } else if (total_geral < total_particular) {
+    //     console.log("O total particular é maior que o total geral.");
+    //     return "particular > geral";
+    // } else {
+    //     console.log("Os totais são iguais.");
+    //     return "iguais";
+    // }
 }
 // -------------------------------------------------------------------------------------------------------------
 

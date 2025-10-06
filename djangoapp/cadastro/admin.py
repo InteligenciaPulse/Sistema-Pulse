@@ -104,8 +104,8 @@ class OrcamentoPacotesAdmin(admin.ModelAdmin):
 
 @admin.register(Custos)
 class CustosAdmin(admin.ModelAdmin):
-    list_display = ('comissao', 'brindes', 'imposto', 'cartao')
-    list_filter = ('comissao', 'brindes', 'imposto', 'cartao')
+    list_display = ('comissao_venda', 'comissao_indicacao', 'brindes', 'imposto', 'cartao')
+    list_filter = ('comissao_venda', 'comissao_indicacao', 'brindes', 'imposto', 'cartao')
     search_fields = ('comissao', 'brindes', 'imposto', 'cartao')
 
 

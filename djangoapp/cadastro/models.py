@@ -258,7 +258,8 @@ class OrcamentoPacotes(models.Model):
         return f"Orçamento {self.orcamento.id} - Pacote {self.pacote.nome}"
     
 class Custos(models.Model):
-    comissao = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Comissão")
+    comissao_indicacao = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Comissão Indicação", default = 0)
+    comissao_venda = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Comissão Venda", default = 0)
     brindes = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Brindes")
     imposto = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Imposto")
     cartao = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Cartão")

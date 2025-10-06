@@ -220,7 +220,12 @@ def buscar_produtos_por_parceiro(request):
         parceiro = Parceiro.objects.get(nome=parceiro_nome)
         parceiro_id = parceiro.id
 
-        produtos_parceiro = ParceiroProdutos.objects.filter(parceiro_id=parceiro_id)
+        produtos_parceiro = (
+            ParceiroProdutos.objects
+            .filter(parceiro_id=parceiro_id)
+            .select_related("produto")
+            .order_by("produto__nome")
+        )
 
         resposta = [
             {
@@ -436,7 +441,8 @@ def salvar_orcamento(request):
                     )
 
                     custos = Custos.objects.create(
-                        comissao = item['comissao'],
+                        comissao_indicacao = item['comissao_indicacao'],
+                        comissao_venda = item['comissao_venda'],
                         brindes = item['brindes'],
                         imposto = item['impostos'],
                         cartao = item['cartoes']
@@ -509,7 +515,9 @@ def editar_orcamento(request, orcamento_id):
         paciente = None
         
     parceiros_dict = {}
-    orcamento_parceiros = OrcamentoParceiros.objects.filter(orcamento=orcamento)
+    orcamento_parceiros = OrcamentoParceiros.objects.filter(orcamento=orcamento).select_related(
+        'parceiro', 'produto', 'custos'
+    )
     total_particular = 0
 
     for orc_parc in orcamento_parceiros:
@@ -522,14 +530,28 @@ def editar_orcamento(request, orcamento_id):
                 "parceiro_nome": orc_parc.parceiro.nome,
                 "produtos": []
             }
-        
-        parceiros_dict[parceiro_id]["produtos"].append({
+
+        produto_data = {
             "produto_id": orc_parc.produto.id,
             "produto_nome": orc_parc.produto.nome,
-            "valor_venda": str(orc_parc.valor_venda),
-            "valor_repasse": str(orc_parc.valor_repasse),
-            "valor_particular": parceiro_produto.valor_particular
-        })
+            "valor_venda": orc_parc.valor_venda,
+            "valor_repasse": orc_parc.valor_repasse,
+            "valor_particular": parceiro_produto.valor_particular,
+            "margem_lucro": orc_parc.margem_lucro
+        }
+
+        if orc_parc.custos:
+            produto_data["custos"] = {
+                "comissao_venda": orc_parc.custos.comissao_venda,
+                "comissao_indicacao": orc_parc.custos.comissao_indicacao,
+                "brindes": orc_parc.custos.brindes,
+                "imposto": orc_parc.custos.imposto,
+                "cartao": orc_parc.custos.cartao,
+            }
+        else:
+            produto_data["custos"] = None
+        
+        parceiros_dict[parceiro_id]["produtos"].append(produto_data)
 
         total_particular += parceiro_produto.valor_particular
 
@@ -585,15 +607,39 @@ def atualizar_orcamento(request, orcamento_id=None):
                     parceiro = Parceiro.objects.get(id=prod_data["parceiro_id"])
                     produto = Produto.objects.get(id=prod_data["produto_id"])
 
-                    orc = OrcamentoParceiros.objects.create(
+                    custos = Custos.objects.create(
+                        comissao_indicacao = prod_data['comissao_indicacao'],
+                        comissao_venda = prod_data['comissao_venda'],
+                        brindes = prod_data['brindes'],
+                        imposto = prod_data['impostos'],
+                        cartao = prod_data['cartoes']
+                    )
+
+                    OrcamentoParceiros.objects.create(
                         orcamento=orcamento,
                         parceiro=parceiro,
                         produto=produto,
                         valor_venda=prod_data["valor_venda"],
-                        valor_repasse=ParceiroProdutos.objects.get(parceiro=parceiro, produto=produto).valor_repasse
+                        valor_repasse=ParceiroProdutos.objects.get(parceiro=parceiro, produto=produto).valor_repasse,
+                        custos=custos,
+                        margem_lucro = prod_data['margem_lucro']
                     )
+
+                if data.get("procedimentos"):
+                    OrcamentoProcedimentos.objects.filter(orcamento=orcamento).delete()
+                    
+                    for proc_data in data["procedimentos"]:
+                        procedimento = Procedimento.objects.get(id=proc_data["procedimento_id"])
+                        OrcamentoProcedimentos.objects.create(
+                            orcamento=orcamento,
+                            procedimento=procedimento,
+                        )
             return JsonResponse({"message": "Orçamento atualizado com sucesso!"})
 
+        except Orcamento.DoesNotExist:
+            return JsonResponse({"error": "Orçamento não encontrado"}, status=404)
+        except Status.DoesNotExist:
+            return JsonResponse({"error": "Status não encontrado"}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 

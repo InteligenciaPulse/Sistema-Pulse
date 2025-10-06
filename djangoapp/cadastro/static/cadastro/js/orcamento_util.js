@@ -131,14 +131,16 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                 valorInput.value = produto.valor_venda;
 
                 valorInput.addEventListener("input", function () {
-                    atualizarSubtotal(produtosContainer, subtotalElement);
+                    // atualizarSubtotal(produtosContainer, subtotalElement);
+                    aplicarValores()
                 });
 
                 let removerProdutoBtn = document.createElement("button");
                 removerProdutoBtn.textContent = "❌";
                 removerProdutoBtn.onclick = function () {
                     produtoItem.remove();
-                    atualizarSubtotal(produtosContainer, subtotalElement);
+                    // atualizarSubtotal(produtosContainer, subtotalElement);
+                    aplicarValores()
                     atualizarParticular();
                 };
                 
@@ -153,7 +155,8 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
 
                 produtosContainer.appendChild(produtoItem);
                 dropdownProdutos.remove();
-                atualizarSubtotal(produtosContainer, subtotalElement);
+                // atualizarSubtotal(produtosContainer, subtotalElement);
+                aplicarValores();
                 atualizarParticular();
             });
 

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'cadastro',
     'rest_framework',
     'corsheaders',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -127,9 +128,20 @@
                             </div>
                             
                             {% for produto in parceiro.produtos %}
-                              <div class="produto-item" data-id="{{ produto.produto_id }}" data-parceiro-id="{{ parceiro.parceiro_id }}" data-valor-particular="{{ produto.valor_particular }}" data-valor-repasse="{{ produto.valor_repasse }}">
+                              <div class="produto-item"
+                                data-id="{{ produto.produto_id }}"
+                                data-parceiro-id="{{ parceiro.parceiro_id }}"
+                                data-valor-particular="{{ produto.valor_particular }}"
+                                data-valor-repasse="{{ produto.valor_repasse }}"
+                                comissao-venda="{{ produto.custos.comissao_venda }}"
+                                comissao-indicacao="{{ produto.custos.comissao_indicacao }}"
+                                brindes="{{ produto.custos.brindes }}"
+                                impostos="{{ produto.custos.imposto }}"
+                                cartoes="{{ produto.custos.cartao }}"
+                                margem_lucro="{{ produto.margem_lucro }}">
+
                                   <span>{{ produto.produto_nome }}</span>
-                                  <input type="number" value="{{ produto.valor_venda }}" step="0.01">
+                                  <input type="number" value="{{ produto.valor_venda|stringformat:'.2f' }}" step="0.01">
                                   <button class="remover-produto-btn">❌</button>
                               </div>
                               {% endfor %}
@@ -147,10 +159,72 @@
         </div>
 
         <div class="total-container">
-          <h3 id="total-geral">Total: R$ {{ orcamento.valor_total }}</h3>
+          <h3 id="total-geral">Total: R$ {{ orcamento.valor_total|intcomma }}</h3>
           <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
         </div>
     </div>
   </div>
+
+  <!-- Modal de Configuração -->
+    <div id="modal-configuracao" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h2>Configurações do Orçamento</h2>
+            <form id="form-configuracao">
+                <div class="form-row">
+                    <label for="comissao">Comissão de indicação (R$):</label>
+                    <input type="number" id="comissao-indicacao" name="comissao-indicacao" value="{{ parceiros.0.produtos.0.custos.comissao_indicacao|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão...">
+                </div>
+                <div class="form-row">
+                    <label for="comissao">Comissão de venda (%):</label>
+                    <input type="number" id="comissao-venda" name="comissao-venda" value="{{ parceiros.0.produtos.0.custos.comissao_venda|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão...">
+                </div>
+                <div class="form-row">
+                    <label for="brindes">Brindes (R$):</label>
+                    <input type="number" id="brindes" name="brindes" value="{{ parceiros.0.produtos.0.custos.brindes|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite os brindes...">
+                </div>
+                <div class="form-row">
+                    <label for="impostos">Impostos (%):</label>
+                    <input type="number" id="impostos" name="impostos" value="{{ parceiros.0.produtos.0.custos.imposto|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os impostos...">
+                </div>
+                <div class="form-row">
+                    <label for="cartoes">Cartões (%):</label>
+                    <input type="number" id="cartoes" name="cartoes" value="{{ parceiros.0.produtos.0.custos.cartao|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os cartões...">
+                </div>
+                <div class="form-row">
+                    <label for="margem_lucro">Margem de Lucro (%):</label>
+                    <input type="number" id="margem_lucro" name="margem_lucro" value="{{ parceiros.0.produtos.0.margem_lucro|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite a margem de lucro...">
+                </div>
+                <button type="button" onclick="aplicarValores()">Aplicar Valores</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-tabela" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalTabela()">×</span>
+
+            <table class="tabela-parceiros">
+                <thead>
+                    <tr>
+                        <th>Parceiro</th>
+                        <th>Produto</th>
+                        <th>Valor de Venda</th>
+                        <th>Valor de Repasse</th>
+                        <th>Valor de Particular</th>
+                        <th>Comissão de Indicação</th>
+                        <th>Comissão de Venda</th>
+                        <th>Brindes</th>
+                        <th>Impostos</th>
+                        <th>Cartões</th>
+                        <th>Margem de Lucro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- dd -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

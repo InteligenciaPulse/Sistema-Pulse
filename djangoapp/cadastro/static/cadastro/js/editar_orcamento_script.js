@@ -1,45 +1,64 @@
 // ------------------------------------ SALVAR MODIFICACOES DO ORCAMENTO ----------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("salvar-orcamento").addEventListener("click", function () {
-      const orcamentoId = this.getAttribute("data-id");
-      const statusSelecionado = document.getElementById("status").value;
+    const urlPath = window.location.pathname;
+    const orcamentoId = urlPath.split('/').filter(Boolean).pop();
+    const statusSelecionado = document.getElementById("status").value;
 
-      let produtosSelecionados = [];
-      document.querySelectorAll(".produto-item").forEach(item => {
-          produtosSelecionados.push({
-              parceiro_id: item.getAttribute("data-parceiro-id"),
-              produto_id: item.getAttribute("data-id"),
-              valor_venda: parseFloat(item.querySelector("input").value || 0),
-          });
-      });
+    let produtosSelecionados = [];
+    document.querySelectorAll(".produto-item").forEach(item => {
+        produtosSelecionados.push({
+            parceiro_id: item.getAttribute("data-parceiro-id"),
+            produto_id: item.getAttribute("data-id"),
+            valor_venda: parseFloat(item.querySelector("input").value || 0),
+            comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
+            comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
+            brindes: parseFloat(item.getAttribute("brindes") || 0),
+            impostos: parseFloat(item.getAttribute("impostos") || 0),
+            cartoes: parseFloat(item.getAttribute("cartoes") || 0),
+            margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
+        });
+    });
 
-      const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+    let procedimentosSelecionados = [];
+    document.querySelectorAll(".procedimento-item").forEach(item => {
+        procedimentosSelecionados.push({
+            procedimento_id: item.getAttribute("data-id")
+        });
+    });
 
-      const payload = {
-          orcamento_id: orcamentoId,
-          status: statusSelecionado,
-          valor_total: valorTotal.toFixed(2),
-          produtos: produtosSelecionados
-      };
+    //   const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+    const valorElemento = document.getElementById("total-geral").textContent;
+    let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
+    valorStr = valorStr.replace(/\./g, "").replace(",", ".");
+    const valorTotal = parseFloat(valorStr);
 
-      fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": getCSRFToken()
-          },
-          body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.message) {
-              alert("Orçamento atualizado com sucesso!");
-              window.location.href = "/historico/";
-          } else {
-              alert("Erro ao atualizar orçamento: " + data.error);
-          }
-      })
-      .catch(error => console.error("Erro ao atualizar orçamento:", error));
+    const payload = {
+        orcamento_id: orcamentoId,
+        status: statusSelecionado,
+        valor_total: valorTotal.toFixed(2),
+        produtos: produtosSelecionados,
+        procedimentos: procedimentosSelecionados
+    };
+
+    fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert("Orçamento atualizado com sucesso!");
+            window.location.href = "https://sistema-pulse-production.up.railway.app/";
+        } else {
+            alert("Erro ao atualizar orçamento: " + data.error);
+        }
+    })
+    .catch(error => console.error("Erro ao atualizar orçamento:", error));
   });
 });
 
@@ -144,27 +163,92 @@ document.addEventListener("DOMContentLoaded", function () {
           let parceiroCard = this.closest(".parceiro-card");
           if (parceiroCard) {
               parceiroCard.remove();
-              atualizarTotalGeral();
+            //   atualizarTotalGeral();
+              aplicarValores();
           }
       });
   });
 });
 
+// =========================================== MODAIS ==========================================================
+function abrirModal() {
+    document.getElementById("modal-configuracao").style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById("modal-configuracao").style.display = "none";
+}
+
+function abrirModalTabela() {
+    document.getElementById("modal-tabela").style.display = "flex";
+    // preencherTabela();
+}
+
+function fecharModalTabela() {
+    document.getElementById("modal-tabela").style.display = "none";
+}
+// ================================= ATUALIZAR VALOR GERAL DE FORMA DIFERENTE ==================================
+function aplicarValores() {
+    const parceiroCards = document.querySelectorAll(".parceiro-card");
+
+    const comissao_venda = document.getElementById("comissao-venda").value;
+    const comissao_indicacao = document.getElementById("comissao-indicacao").value;
+    const brindes = document.getElementById("brindes").value;
+    const impostos = document.getElementById("impostos").value;
+    const cartoes = document.getElementById("cartoes").value;
+    const margem = document.getElementById("margem_lucro").value;
+
+    var total_repasse = 0;
+    var total_particular = 0;
+
+    parceiroCards.forEach(function(parceiroCard) {
+        const produtoItems = parceiroCard.querySelectorAll(".produto-item");
+
+        produtoItems.forEach(function(produto) {
+            total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
+            total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
+
+            produto.setAttribute("comissao-venda", comissao_venda);
+            produto.setAttribute("comissao_indicacao", comissao_indicacao);
+            produto.setAttribute("brindes", brindes);
+            produto.setAttribute("impostos", impostos);
+            produto.setAttribute("cartoes", cartoes);
+            produto.setAttribute("margem_lucro", margem);
+            // produto.setAttribute("valor_venda", margem);
+        });
+    });
+
+    let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
+    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
+    
+    // let valor_venda_total = fixos / (1 - variaveis);
+    let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
+    
+    // let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
+
+    document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // verificarValores();
+
+    fecharModal();
+}
+
 // -------------------------- ATUALIZAR SUBTOTAL DOS DADOS ANTIGOS -------------------------
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".parceiro-card").forEach(parceiroCard => {
-      let subtotalElement = parceiroCard.querySelector(".subtotal");
-      let produtosContainer = parceiroCard.querySelector(".produtos-container");
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.querySelectorAll(".parceiro-card").forEach(parceiroCard => {
+//       let subtotalElement = parceiroCard.querySelector(".subtotal");
+//       let produtosContainer = parceiroCard.querySelector(".produtos-container");
 
-      atualizarSubtotal(produtosContainer, subtotalElement);
+//       atualizarSubtotal(produtosContainer, subtotalElement);
 
-      produtosContainer.querySelectorAll("input[type='number']").forEach(input => {
-          input.addEventListener("input", function () {
-              atualizarSubtotal(produtosContainer, subtotalElement);
-          });
-      });
-  });
-});
+//       produtosContainer.querySelectorAll("input[type='number']").forEach(input => {
+//           input.addEventListener("input", function () {
+//               atualizarSubtotal(produtosContainer, subtotalElement);
+//           });
+//       });
+//   });
+// });
 
 // -------------------- ADICIONAR PRODUTOS AOS PARCEIROS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
@@ -177,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let idParceiro = parceiroCard.getAttribute("data-parceiro-id");
 
         adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotalElement);
-        atualizarSubtotal(produtosContainer, subtotalElement);
+        // atualizarSubtotal(produtosContainer, subtotalElement);
         atualizarParticular();
       });
   });
@@ -194,8 +278,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (produtoItem) {
           produtoItem.remove();
-          atualizarSubtotal(produtosContainer, subtotalElement);
+        //   atualizarSubtotal(produtosContainer, subtotalElement);
           atualizarParticular();
+          aplicarValores();
         }
       });
   });
