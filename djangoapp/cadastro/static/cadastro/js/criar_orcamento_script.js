@@ -511,6 +511,90 @@ function aplicarValores() {
     fecharModal();
 }
 
+function recalcularMargem(novoValorVenda) {
+    const parceiroCards = document.querySelectorAll(".parceiro-card");
+
+    const comissao_venda = document.getElementById("comissao-venda").value;
+    const comissao_indicacao = document.getElementById("comissao-indicacao").value;
+    const brindes = document.getElementById("brindes").value;
+    const impostos = document.getElementById("impostos").value;
+    const cartoes = document.getElementById("cartoes").value;
+    let margem = document.getElementById("margem_lucro").value;
+
+    var total_repasse = 0;
+    var total_particular = 0;
+
+    parceiroCards.forEach(function(parceiroCard) {
+        const produtoItems = parceiroCard.querySelectorAll(".produto-item");
+
+        produtoItems.forEach(function(produto) {
+            total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
+            total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
+
+            produto.setAttribute("comissao-venda", comissao_venda);
+            produto.setAttribute("comissao_indicacao", comissao_indicacao);
+            produto.setAttribute("brindes", brindes);
+            produto.setAttribute("impostos", impostos);
+            produto.setAttribute("cartoes", cartoes);
+            produto.setAttribute("margem_lucro", margem);
+            // produto.setAttribute("valor_venda", margem);
+        });
+    });
+
+    let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
+    let impostosPerc = parseFloat(impostos) / 100;
+    let cartoesPerc = parseFloat(cartoes) / 100;
+    let comissaoPerc = parseFloat(comissao_venda) / 100;
+
+    let novaMargem = (1 - (fixos * (1 - impostosPerc)) / novoValorVenda) - (impostosPerc + cartoesPerc + comissaoPerc);
+    margem = (novaMargem * 100).toFixed(2);
+    
+    document.getElementById("margem_lucro").value = margem;
+}
+
+// valorVendaSpan.textContent = valorVenda.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+const editarTotalBtn = document.getElementById("editar-total");
+
+editarTotalBtn.addEventListener("click", () => {
+    const valorVendaElement = document.getElementById("total-geral");
+
+    let valorVenda = verificarValores();
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.value = valorVenda.toFixed(2);
+    input.style.width = "80px";
+
+    valorVendaElement.replaceWith(input);
+    input.focus();
+
+    let editando = false;
+
+    function confirmarEdicao() {
+        if (editando) return;
+        editando = true;
+
+        const novoValor = parseFloat(input.value);
+        if (!isNaN(novoValor) && novoValor > 0) {
+            valorVenda = novoValor;
+            const novoH3 = document.createElement("h3");
+            novoH3.id = "total-geral";
+            
+            novoH3.textContent = `Total: R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            input.replaceWith(novoH3);
+            recalcularMargem(novoValor);
+        } else {
+            alert("Valor inválido!");
+            input.focus();
+        }
+    }
+
+    input.addEventListener("blur", confirmarEdicao);
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") confirmarEdicao();
+    });
+});
+
 function verificarValores(){
     let total_geral = document.getElementById("total-geral").textContent;
     let total_particular = document.getElementById("total-particular").textContent;
@@ -523,6 +607,8 @@ function verificarValores(){
 
     total_geral = extrairValor(total_geral);
     total_particular = extrairValor(total_particular);
+
+    return total_geral;
 
     // if (total_geral > total_particular) {
     //     console.log("O total geral é maior que o total particular.");

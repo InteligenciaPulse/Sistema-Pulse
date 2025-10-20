@@ -575,6 +575,11 @@ body {
   background-color: #ffffffcc;
 }
 
+.total-edit {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 
 /*##########################################################################################*/
 
