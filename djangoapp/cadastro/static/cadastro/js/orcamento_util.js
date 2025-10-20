@@ -98,9 +98,15 @@ function buscarParceiros(dropdown, inputParceiro, subtipoSelecionado){
 
 // --------------------------------------- ADICIONAR PRODUTOS ------------------------------------
 function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
+  const loadingMsg = document.createElement("div");
+  loadingMsg.textContent = "Carregando produtos...";
+  loadingMsg.classList.add("loading-indicator");
+  produtosContainer.appendChild(loadingMsg);
+
   fetch(`/api/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
       .then(response => response.json())
       .then(data => {
+        loadingMsg.remove();
         let dropdownProdutos = document.createElement("div");
         dropdownProdutos.classList.add("dropdown-produtos");
 

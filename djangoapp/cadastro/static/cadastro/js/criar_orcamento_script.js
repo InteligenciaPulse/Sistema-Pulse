@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        dropdown.innerHTML = "<div style='padding:8px; color:gray;'>Carregando...</div>";
+        dropdown.style.display = "block";
+        
         fetch(`/api/buscar_pacientes/?q=${query}`)
         .then(response => response.json())
         .then(data => {
@@ -622,6 +625,15 @@ function verificarValores(){
     // }
 }
 // -------------------------------------------------------------------------------------------------------------
+function mostrarCarregando() {
+  const overlay = document.getElementById("loading-overlay");
+  overlay.style.display = "flex";
+}
+
+function ocultarCarregando() {
+  const overlay = document.getElementById("loading-overlay");
+  overlay.style.display = "none";
+}
 
 function abrirModalTabela() {
     document.getElementById("modal-tabela").style.display = "flex";

@@ -129,6 +129,11 @@
         </div>
     </div>
 
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+
     <!-- Modal para Cadastro de Paciente -->
     <div id="modal-paciente" class="modal" style="display: none;">
         <div class="modal-content">
@@ -230,27 +235,27 @@
             <form id="form-configuracao">
                 <div class="form-row">
                     <label for="comissao">Comissão de indicação (R$):</label>
-                    <input type="number" id="comissao-indicacao" name="comissao-indicacao" value='0' min="0" step="0.01" placeholder="Digite a comissão...">
+                    <input type="number" id="comissao-indicacao" name="comissao-indicacao" value='250.00' min="0" step="0.01" placeholder="Digite a comissão...">
                 </div>
                 <div class="form-row">
                     <label for="comissao">Comissão de venda (%):</label>
-                    <input type="number" id="comissao-venda" name="comissao-venda" value='0' min="0" step="0.01" placeholder="Digite a comissão...">
+                    <input type="number" id="comissao-venda" name="comissao-venda" value='3.50' min="0" step="0.01" placeholder="Digite a comissão...">
                 </div>
                 <div class="form-row">
                     <label for="brindes">Brindes (R$):</label>
-                    <input type="number" id="brindes" name="brindes" value='0' min="0" step="0.01" placeholder="Digite os brindes...">
+                    <input type="number" id="brindes" name="brindes" value='150.00' min="0" step="0.01" placeholder="Digite os brindes...">
                 </div>
                 <div class="form-row">
                     <label for="impostos">Impostos (%):</label>
-                    <input type="number" id="impostos" name="impostos" value='0' min="0" max="100" step="0.01" placeholder="Digite os impostos...">
+                    <input type="number" id="impostos" name="impostos" value='6.50' min="0" max="100" step="0.01" placeholder="Digite os impostos...">
                 </div>
                 <div class="form-row">
                     <label for="cartoes">Cartões (%):</label>
-                    <input type="number" id="cartoes" name="cartoes" value='0' min="0" max="100" step="0.01" placeholder="Digite os cartões...">
+                    <input type="number" id="cartoes" name="cartoes" value='0.00' min="0" max="100" step="0.01" placeholder="Digite os cartões...">
                 </div>
                 <div class="form-row">
                     <label for="margem_lucro">Margem de Lucro (%):</label>
-                    <input type="number" id="margem_lucro" name="margem_lucro" value='0' min="0" max="100" step="0.01" placeholder="Digite a margem de lucro...">
+                    <input type="number" id="margem_lucro" name="margem_lucro" value='15' min="0" max="100" step="0.01" placeholder="Digite a margem de lucro...">
                 </div>
                 <button type="button" onclick="aplicarValores()">Aplicar Valores</button>
             </form>
