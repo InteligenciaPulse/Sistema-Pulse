@@ -159,7 +159,10 @@
         </div>
 
         <div class="total-container">
-          <h3 id="total-geral">Total: R$ {{ orcamento.valor_total|intcomma }}</h3>
+          <div class="total-edit">
+            <h3 id="total-geral">Total: R$ {{ orcamento.valor_total|intcomma }}</h3>
+            <span id="editar-total" style="cursor: pointer; color: gray;">✏️</span>
+          </div>
           <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
         </div>
     </div>
