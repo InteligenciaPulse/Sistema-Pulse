@@ -552,7 +552,15 @@ function recalcularMargem(novoValorVenda) {
     let novaMargem = (1 - (fixos * (1 - impostosPerc)) / novoValorVenda) - (impostosPerc + cartoesPerc + comissaoPerc);
     margem = (novaMargem * 100).toFixed(2);
 
-    aplicarValores();
+    // aplicarValores();
+
+    parceiroCards.forEach(function(parceiroCard) {
+        const produtoItems = parceiroCard.querySelectorAll(".produto-item");
+
+        produtoItems.forEach(function(produto) {
+            produto.setAttribute("margem_lucro", margem);
+        });
+    });
     
     document.getElementById("margem_lucro").value = margem;
 }
