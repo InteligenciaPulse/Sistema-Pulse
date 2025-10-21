@@ -551,6 +551,8 @@ function recalcularMargem(novoValorVenda) {
 
     let novaMargem = (1 - (fixos * (1 - impostosPerc)) / novoValorVenda) - (impostosPerc + cartoesPerc + comissaoPerc);
     margem = (novaMargem * 100).toFixed(2);
+
+    aplicarValores();
     
     document.getElementById("margem_lucro").value = margem;
 }
