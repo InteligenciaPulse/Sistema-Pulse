@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 # Create your models here.
 class Endereco(models.Model):
@@ -21,11 +22,11 @@ class Endereco(models.Model):
     
 class Paciente(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome")
-    cpf = models.CharField(max_length=14, unique=True, null=True, blank=True, verbose_name="CPF") # cpf não obrigatório
+    cpf = models.CharField(max_length=14, null=True, blank=True, verbose_name="CPF") # cpf não obrigatório
     telefone = models.CharField(max_length=15, unique=True, null=True, blank=True, verbose_name="Telefone") # tem que ser único
     email = models.EmailField(null=True, blank=True, verbose_name="E-mail")
     endereco = models.ForeignKey('Endereco', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Endereço")
-    data_nascimento = models.DateField(null=True, blank=True, verbose_name="Data de Nascimento")
+    data_nascimento = models.DateField(null=True, blank=True, verbose_name="Data de Nascimento", default=None)
     genero = models.CharField(max_length=10, choices=[
         ('M', 'Masculino'),
         ('F', 'Feminino'),

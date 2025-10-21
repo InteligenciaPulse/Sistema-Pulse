@@ -3,6 +3,7 @@ import json
 import logging
 import tempfile
 import openpyxl
+from datetime import datetime
 from django.conf import settings
 from weasyprint import HTML, CSS
 from django.db import transaction
@@ -383,6 +384,12 @@ def salvar_paciente(request):
                 data_nascimento = request.POST.get('data_nascimento')
                 genero = request.POST.get('genero')
                 anamnese = request.POST.get('anamnese', '')
+
+                if not data_nascimento:
+                    data_nascimento = None
+                else:
+                    # Garante que o formato é válido
+                    data_nascimento = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
 
                 # Criando e salvando paciente
                 paciente = Paciente.objects.create(
