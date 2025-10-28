@@ -419,7 +419,12 @@ def salvar_orcamento(request):
                 orcamento = Orcamento.objects.create(
                     status=status,
                     valor_total=data.get("valor_total"),
-                    data_criacao=now()
+                    data_criacao=now(),
+                    tipo_orcamento=data.get("tipo_orcamento"),
+                    responsavel=data.get("responsavel"),
+                    observacoes=data.get("observacoes"),
+                    pagamento=data.get("pagamento"),
+                    canal=data.get("canal"),
                 )
 
                 solicitacao = SolicitacaoOrcamento.objects.create(

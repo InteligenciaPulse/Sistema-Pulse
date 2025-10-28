@@ -70,7 +70,11 @@ class ParceiroProdutosAdmin(admin.ModelAdmin):
 
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total', 'data_cirurgia', 'custo_total', 'lucro_total')
+    list_display = (
+        'id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total',
+        'data_cirurgia', 'custo_total', 'lucro_total', 'tipo_orcamento',
+        'responsavel', 'observacoes', 'pagamento', 'canal'
+    )
 
 @admin.register(OrcamentoParceiros)
 class OrcamentoParceirosAdmin(admin.ModelAdmin):
@@ -106,7 +110,7 @@ class OrcamentoPacotesAdmin(admin.ModelAdmin):
 class CustosAdmin(admin.ModelAdmin):
     list_display = ('comissao_venda', 'comissao_indicacao', 'brindes', 'imposto', 'cartao')
     list_filter = ('comissao_venda', 'comissao_indicacao', 'brindes', 'imposto', 'cartao')
-    search_fields = ('comissao', 'brindes', 'imposto', 'cartao')
+    search_fields = ('comissao_venda', 'comissao_indicacao', 'brindes', 'imposto', 'cartao')
 
 
 # ==============================================================================

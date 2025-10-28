@@ -172,11 +172,17 @@ class Orcamento(models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name="Status")
     data_criacao = models.DateField(null=True, blank=True, verbose_name="Data de Criação")
     data_aprovacao = models.DateField(null=True, blank=True, verbose_name="Data de Aprovação")
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
     data_cirurgia = models.DateField(null=True, blank=True, verbose_name="Data da Cirurgia")
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
     custo_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo Total")
     lucro_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Lucro Total")
     # coluna = models.ForeignKey('Coluna', null=True, blank=True, on_delete=models.SET_NULL, related_name='orcamentos')
+    
+    tipo_orcamento = models.CharField(max_length=50, unique=False, null=True, blank=True, verbose_name="Tipo do Orçamento")
+    responsavel = models.CharField(max_length=50, unique=False, null=True, blank=True, verbose_name="Responsável")
+    observacoes = models.TextField(null=True, blank=True, unique=False, verbose_name="Observações")
+    pagamento = models.CharField(max_length=50, unique=False, null=True, blank=True, verbose_name="Pagamento")
+    canal = models.CharField(max_length=50, unique=False, null=True, blank=True, verbose_name="Canal")
     
     class Meta:
         db_table = 'sistema_pulse"."orcamento'

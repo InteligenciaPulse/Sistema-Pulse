@@ -29,10 +29,34 @@
                             </option>
                         {% endfor %} -->
 
-                        <option value="1">Consulta / Exame</option>
-                        <option value="2">Cirurgia</option>
-                        <option value="3">Procedimento</option>
+                        <option value="Consulta / Exame">Consulta / Exame</option>
+                        <option value="Cirurgia">Cirurgia</option>
+                        <option value="Procedimento">Procedimento</option>
                     </select>
+                </div>
+
+                <div class="filter-pagamento">
+                    <label for="pagamento">Forma de pagamento:</label>
+                    <div class="pagamento-container">
+                        <select id="pagamento" name="pagamento">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Crédito">Crédito</option>
+                            <option value="Débito">Débito</option>
+                            <option value="PIX">PIX</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-canal">
+                    <label for="canal">Canal de aquisição:</label>
+                    <div class="canal-container">
+                        <select id="canal" name="canal">
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Indicação de amigo">Indicação de amigo</option>
+                            <option value="Telefone">Telefone</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="status-container">

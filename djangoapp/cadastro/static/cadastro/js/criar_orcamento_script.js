@@ -252,12 +252,23 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
     valorStr = valorStr.replace(/\./g, "").replace(",", ".");
     const valorTotal = parseFloat(valorStr);
 
+    const tipo_orcamento = document.getElementById("classify")?.value || "";
+    const responsavel = document.getElementById("parcrespon")?.value.trim() || "";
+    const observacoes = document.getElementById("observacoes")?.value.trim() || "";
+    const pagamento = document.getElementById("pagamento")?.value || "";
+    const canal = document.getElementById("canal")?.value || "";
+
     const payload = {
         paciente_id: pacienteId,
         status: statusSelecionado,
         valor_total: valorTotal.toFixed(2),
         produtos: produtosSelecionados,
         procedimentos: procedimentosSelecionados,
+        tipo_orcamento: tipo_orcamento,
+        responsavel: responsavel,
+        observacoes: observacoes,
+        pagamento: pagamento,
+        canal: canal,
         coluna_id: colunaId
     };
 
