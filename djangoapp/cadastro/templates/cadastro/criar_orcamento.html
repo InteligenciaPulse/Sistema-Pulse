@@ -20,6 +20,21 @@
                     <button id="abrir-modal-btn" onclick="abrirModalTabela()">Resumo</button>
                 </div>
 
+                <div class="classify-container">
+                    <label for="classify">Tipo do Orçamento:</label>
+                    <select id="classify" name="classify">
+                        <!-- {% for status in status_list %}
+                            <option value="{{ status.id }}">
+                                {{ status.nome }}
+                            </option>
+                        {% endfor %} -->
+
+                        <option value="1">Consulta / Exame</option>
+                        <option value="2">Cirurgia</option>
+                        <option value="3">Procedimento</option>
+                    </select>
+                </div>
+
                 <div class="status-container">
                     <label for="status">Status do Orçamento:</label>
                     <select id="status" name="status">
@@ -38,6 +53,15 @@
                         <button id="novo-paciente">➕</button>
                     </div>
                     <div id="sugestoes-pacientes" class="dropdown"></div>
+                </div>
+                
+                <div class="filter-parcrespon">
+                    <label for="parcrespon">Parceiro reponsável:</label>
+                    <div class="parcrespon-container">
+                        <input type="text" id="parcrespon" placeholder="Digite o nome do responsável...">
+                        <!-- <button id="novo-parcrespon">➕</button> -->
+                    </div>
+                    <!-- <div id="sugestoes-pacientes" class="dropdown"></div> -->
                 </div>
 
                 <div class="filter-procedimentos">
@@ -68,6 +92,16 @@
                         <div id="procedimentos-list">
                             <!-- Os procedimentos aparecerão aqui -->
                         </div>
+                    </div>
+
+                    <div class="filter-observacoes">
+                        <label for="observacoes">Observações:</label>
+                        <div class="observacoes-container">
+                            <textarea id="observacoes" placeholder="Digite suas observações..." rows="4"></textarea>
+                            <!-- <input type="text" id="observacoes" placeholder="Digite o nome do responsável..."> -->
+                            <!-- <button id="novo-observacoes">➕</button> -->
+                        </div>
+                        <!-- <div id="sugestoes-pacientes" class="dropdown"></div> -->
                     </div>
                 </div>
                 
@@ -127,11 +161,6 @@
                 <button id="proximo-passo">Finalizar Orçamento</button>
             </div>
         </div>
-    </div>
-
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
     </div>
 
     <!-- Modal para Cadastro de Paciente -->

@@ -1,0 +1,38 @@
+
+0 Adicionar classificação do orçamento:
+	- Consulta / Exame
+	- Cirurgia
+	- Procedimento
+
+1 Acrescentar opção de buscar valor de venda na tabela para tipo Consultas/Exames e Procedimentos
+
+2 Sempre perguntar quem é o parceiro responsável
+
+3 Adicionar no card o parceiro responsável
+
+4 Busca por digitação
+
+5 Adicionar filtro por especialidade (no orçamento)
+
+6 Adicionar opção de editar manualmente o valor de venda
+
+7 Adicionar campo para observação
+
+8 Datas
+	- Data do orçamento
+	- Data da aprovação
+	- Data do agendamento
+
+9 Forma de pagamento
+
+10 Canal de aquisição
+
+12 Os valores globais já estarem aplicados quando iniciar a cotação
+
+13 Status com tempo de permanência na etapa (coluna)
+
+14 Opção de anexar arquivos
+
+15 Exportação de arquivos
+	- Orçamento para cliente
+	- Guia médico (documento para paciente apresentar ao parceiro)

@@ -249,13 +249,6 @@ function recalcularMargem(novoValorVenda) {
         produtoItems.forEach(function(produto) {
             total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
             total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
-
-            produto.setAttribute("comissao-venda", comissao_venda);
-            produto.setAttribute("comissao_indicacao", comissao_indicacao);
-            produto.setAttribute("brindes", brindes);
-            produto.setAttribute("impostos", impostos);
-            produto.setAttribute("cartoes", cartoes);
-            produto.setAttribute("margem_lucro", margem);
         });
     });
 
