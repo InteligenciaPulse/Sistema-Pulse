@@ -12,10 +12,6 @@
 	- Data da aprovação
 	- Data do agendamento
 
-9 Forma de pagamento
-
-10 Canal de aquisição
-
 -----------------------------------------------------------------------
 13 Status com tempo de permanência na etapa (coluna)
 

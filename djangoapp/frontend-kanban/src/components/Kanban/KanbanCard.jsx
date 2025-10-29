@@ -63,19 +63,19 @@ const KanbanCard = ({ card, visibleFields, onDelete }) => {
         </p>
       )}
 
-      {orcamento?.tipo_orcamento && (
+      {/* {orcamento?.tipo_orcamento && (
         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
           <strong>Tipo:</strong> {orcamento.tipo_orcamento}
         </p>
-      )}
+      )} */}
 
-      {/*       
       {orcamento?.responsavel && (
         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
           <strong>Responsável:</strong> {orcamento.responsavel}
         </p>
       )}
 
+      {/*
       {orcamento?.pagamento && (
         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
           <strong>Pagamento:</strong> {orcamento.pagamento}
