@@ -63,6 +63,44 @@ const KanbanCard = ({ card, visibleFields, onDelete }) => {
         </p>
       )}
 
+      {orcamento?.tipo_orcamento && (
+        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+          <strong>Tipo:</strong> {orcamento.tipo_orcamento}
+        </p>
+      )}
+
+      {/*       
+      {orcamento?.responsavel && (
+        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+          <strong>Responsável:</strong> {orcamento.responsavel}
+        </p>
+      )}
+
+      {orcamento?.pagamento && (
+        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+          <strong>Pagamento:</strong> {orcamento.pagamento}
+        </p>
+      )}
+
+      {orcamento?.canal && (
+        <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+          <strong>Canal:</strong> {orcamento.canal}
+        </p>
+      )}
+
+      {orcamento?.observacoes && (
+        <p
+          style={{
+            margin: '4px 0',
+            fontSize: '0.85rem',
+            color: '#444',
+            whiteSpace: 'pre-line',
+          }}
+        >
+          <strong>Obs.:</strong> {orcamento.observacoes}
+        </p>
+      )} */}
+
       {visibleFields?.paciente && orcamento?.paciente_nome && (
         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
           <strong>Paciente:</strong> {orcamento.paciente_nome}

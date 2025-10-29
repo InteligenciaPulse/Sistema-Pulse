@@ -9,9 +9,19 @@ class OrcamentoKanbanSerializer(serializers.ModelSerializer):
     valor_total = serializers.SerializerMethodField()
     status_nome = serializers.SerializerMethodField()
 
+    tipo_orcamento = serializers.CharField(read_only=True)
+    responsavel = serializers.CharField(read_only=True)
+    observacoes = serializers.CharField(read_only=True)
+    pagamento = serializers.CharField(read_only=True)
+    canal = serializers.CharField(read_only=True)
+
     class Meta:
         model = Orcamento
-        fields = ['id', 'title', 'description', 'paciente_nome', 'data_criacao', 'valor_total', 'status_nome']
+        fields = ['id', 'title', 'description', 'paciente_nome',
+                  'data_criacao', 'valor_total', 'status_nome',
+                  'tipo_orcamento', 'responsavel', 'observacoes',
+                  'pagamento', 'canal',
+                ]
 
     def get_title(self, obj):
         return f"Orçamento #{obj.id}"
