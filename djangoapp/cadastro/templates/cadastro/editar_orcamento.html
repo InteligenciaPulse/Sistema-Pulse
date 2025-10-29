@@ -22,6 +22,31 @@
               <button id="abrir-modal-btn" onclick="abrirModalTabela()">Resumo</button>
             </div>
 
+            <div class="classify-container">
+              <label for="classify">Tipo do Orçamento:</label>
+              <select id="classify" name="classify" disabled>
+                <option value="{{ orcamento.tipo_orcamento }}">{{ orcamento.tipo_orcamento }}</option>
+              </select>
+            </div>
+
+            <div class="filter-pagamento">
+              <label for="pagamento">Forma de pagamento:</label>
+              <div class="pagamento-container">
+                <select id="pagamento" name="pagamento" disabled>
+                  <option value="{{ orcamento.pagamento }}">{{ orcamento.pagamento }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-canal">
+              <label for="canal">Canal de aquisição:</label>
+              <div class="canal-container">
+                <select id="canal" name="canal" disabled>
+                  <option value="{{ orcamento.canal }}">{{ orcamento.canal }}</option>
+                </select>
+              </div>
+            </div>
+
             <div class="status-container">
               <label for="status">Status do Orçamento:</label>
               <select id="status" name="status">
@@ -39,6 +64,13 @@
                 <div class="paciente-container">
                     <input type="text" id="paciente" value="{{ paciente.nome }}" disabled>
                 </div>
+            </div>
+
+            <div class="filter-parcrespon">
+              <label for="parcrespon">Parceiro reponsável:</label>
+              <div class="parcrespon-container">
+                <input type="text" id="parcrespon" value="{{ orcamento.responsavel }}" disabled>
+              </div>
             </div>
 
             <!-- Procedimentos -->
@@ -76,6 +108,13 @@
                       </li>
                     {% endfor %}
                   </div>
+              </div>
+            </div>
+
+            <div class="filter-observacoes">
+              <label for="observacoes">Observações:</label>
+              <div class="observacoes-container">
+                <textarea id="observacoes" rows="4">{{ orcamento.observacoes }}</textarea>
               </div>
             </div>
           </div>

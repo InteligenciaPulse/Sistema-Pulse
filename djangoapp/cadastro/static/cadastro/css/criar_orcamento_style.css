@@ -1149,7 +1149,7 @@ observacoes-container {
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  resize: vertical;
+  resize: None;
   font-family: inherit;
   font-size: 14px;
   background-color: #fff;

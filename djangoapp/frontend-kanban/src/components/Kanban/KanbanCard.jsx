@@ -57,9 +57,9 @@ const KanbanCard = ({ card, visibleFields, onDelete }) => {
 
       <strong>{orcamento?.id ? `Orçamento #${orcamento.id}` : 'Orçamento'}</strong>
 
-      {visibleFields?.valor_total && orcamento?.valor_total && (
+      {visibleFields?.valor_total && orcamento?.valor_total != null && (
         <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
-          <strong>Valor:</strong> R$ {parseFloat(orcamento.valor_total).toFixed(2)}
+          <strong>Valor:</strong> R$ {Number(orcamento.valor_total).toFixed(2)}
         </p>
       )}
 
