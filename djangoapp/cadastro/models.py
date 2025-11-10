@@ -96,7 +96,7 @@ class Parceiro(models.Model):
         return self.nome
 
 class Produto(models.Model):
-    nome = models.CharField(max_length=255, verbose_name="Nome")
+    nome = models.CharField(max_length=500, verbose_name="Nome")
 
     class Meta:
         db_table = 'sistema_pulse"."produto'

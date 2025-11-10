@@ -215,82 +215,95 @@ function getQueryParam(param) {
 }
 
 document.getElementById("proximo-passo").addEventListener("click", function () {
-    const pacienteId = document.getElementById("paciente").dataset.id;
-    const statusSelecionado = document.getElementById("status").value;
-    const colunaId = getQueryParam("coluna_id");
+    const btnFinalizar = document.getElementById("proximo-passo");
 
-    if (!pacienteId) {
-        alert("Selecione um paciente antes de finalizar o orçamento.");
-        return;
-    }
+    btnFinalizar.addEventListener("click", async function () {
+        if (btnFinalizar.disabled) return;
 
-    let produtosSelecionados = [];
-    document.querySelectorAll(".produto-item").forEach(item => {
-        produtosSelecionados.push({
-            parceiro_id: item.getAttribute("data-parceiro-id"),
-            produto_id: item.getAttribute("data-id"),
-            valor_venda: parseFloat(item.querySelector("input").value || 0),
-            comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
-            comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
-            brindes: parseFloat(item.getAttribute("brindes") || 0),
-            impostos: parseFloat(item.getAttribute("impostos") || 0),
-            cartoes: parseFloat(item.getAttribute("cartoes") || 0),
-            margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
-        });
-    });
+        const pacienteId = document.getElementById("paciente").dataset.id;
+        const statusSelecionado = document.getElementById("status").value;
+        const colunaId = getQueryParam("coluna_id");
 
-    let procedimentosSelecionados = [];
-    document.querySelectorAll(".procedimento-item").forEach(item => {
-        procedimentosSelecionados.push({
-            procedimento_id: item.getAttribute("data-id")
-        });
-    });
-    
-    // const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
-    const valorElemento = document.getElementById("total-geral").textContent;
-    let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
-    valorStr = valorStr.replace(/\./g, "").replace(",", ".");
-    const valorTotal = parseFloat(valorStr);
-
-    const tipo_orcamento = document.getElementById("classify")?.value || "";
-    const responsavel = document.getElementById("parcrespon")?.value.trim() || "";
-    const observacoes = document.getElementById("observacoes")?.value.trim() || "";
-    const pagamento = document.getElementById("pagamento")?.value || "";
-    const canal = document.getElementById("canal")?.value || "";
-
-    const payload = {
-        paciente_id: pacienteId,
-        status: statusSelecionado,
-        valor_total: valorTotal.toFixed(2),
-        produtos: produtosSelecionados,
-        procedimentos: procedimentosSelecionados,
-        tipo_orcamento: tipo_orcamento,
-        responsavel: responsavel,
-        observacoes: observacoes,
-        pagamento: pagamento,
-        canal: canal,
-        coluna_id: colunaId
-    };
-
-    fetch("/api/salvar_orcamento/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCSRFToken()
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("Orçamento criado com sucesso!");
-            // window.location.href = `/visualizar-orcamento-html/${data.orcamento_id}/`;
-            window.location.href = 'https://sistema-pulse-production.up.railway.app/';
-        } else {
-            alert("Erro ao criar orçamento: " + data.error);
+        if (!pacienteId) {
+            alert("Selecione um paciente antes de finalizar o orçamento.");
+            return;
         }
-    })
-    .catch(error => console.error("Erro ao salvar orçamento:", error));
+
+        btnFinalizar.disabled = true;
+        const textoOriginal = btnFinalizar.textContent;
+        btnFinalizar.textContent = "Salvando... ⏳";
+
+        try {
+            const produtosSelecionados = Array.from(document.querySelectorAll(".produto-item")).map(item => ({
+                parceiro_id: item.getAttribute("data-parceiro-id"),
+                produto_id: item.getAttribute("data-id"),
+                valor_venda: parseFloat(item.querySelector("input").value || 0),
+                comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
+                comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
+                brindes: parseFloat(item.getAttribute("brindes") || 0),
+                impostos: parseFloat(item.getAttribute("impostos") || 0),
+                cartoes: parseFloat(item.getAttribute("cartoes") || 0),
+                margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
+            }));
+
+            const procedimentosSelecionados = Array.from(document.querySelectorAll(".procedimento-item")).map(item => ({
+                procedimento_id: item.getAttribute("data-id")
+            }));
+            
+            const valorElemento = document.getElementById("total-geral").textContent;
+            let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
+            valorStr = valorStr.replace(/\./g, "").replace(",", ".");
+            const valorTotal = parseFloat(valorStr);
+
+            const tipo_orcamento = document.getElementById("classify")?.value || "";
+            const responsavel = document.getElementById("parcrespon")?.value.trim() || "";
+            const observacoes = document.getElementById("observacoes")?.value.trim() || "";
+            const pagamento = document.getElementById("pagamento")?.value || "";
+            const canal = document.getElementById("canal")?.value || "";
+
+            const payload = {
+                paciente_id: pacienteId,
+                status: statusSelecionado,
+                valor_total: valorTotal.toFixed(2),
+                produtos: produtosSelecionados,
+                procedimentos: procedimentosSelecionados,
+                tipo_orcamento: tipo_orcamento,
+                responsavel: responsavel,
+                observacoes: observacoes,
+                pagamento: pagamento,
+                canal: canal,
+                coluna_id: colunaId
+            };
+
+            const response = await fetch("/api/salvar_orcamento/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                btnFinalizar.textContent = "Salvo ✅";
+                alert("Orçamento criado com sucesso!");
+                window.location.href = 'https://sistema-pulse-production.up.railway.app/';
+            } else {
+                throw new Error(data.error || "Erro ao criar orçamento.");
+            }
+        } catch (error) {
+            console.error("Erro ao salvar orçamento:", error);
+            alert("Erro ao salvar orçamento. Tente novamente.");
+            btnFinalizar.textContent = "Erro ❌";
+        } finally {
+            setTimeout(() => {
+                btnFinalizar.disabled = false;
+                btnFinalizar.textContent = textoOriginal;
+            }, 2000);
+        }
+    });
 });
 
 // =================================================== PACOTES
