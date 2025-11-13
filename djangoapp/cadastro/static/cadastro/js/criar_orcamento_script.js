@@ -492,50 +492,78 @@ function fecharModal() {
     document.getElementById("modal-configuracao").style.display = "none";
 }
 
+document.getElementById("classify").addEventListener("change", function () {
+    aplicarValores();
+});
+
 function aplicarValores() {
-    const parceiroCards = document.querySelectorAll(".parceiro-card");
+    const tipo = document.getElementById("classify").value;
+    console.log(tipo);
 
-    const comissao_venda = document.getElementById("comissao-venda").value;
-    const comissao_indicacao = document.getElementById("comissao-indicacao").value;
-    const brindes = document.getElementById("brindes").value;
-    const impostos = document.getElementById("impostos").value;
-    const cartoes = document.getElementById("cartoes").value;
-    const margem = document.getElementById("margem_lucro").value;
+    if (tipo === "Consulta / Exame" || tipo === "Procedimento") {
+        let produtosSelecionados = [];
+        var total_particular = 0;
 
-    var total_repasse = 0;
-    var total_particular = 0;
-
-    parceiroCards.forEach(function(parceiroCard) {
-        const produtoItems = parceiroCard.querySelectorAll(".produto-item");
-
-        produtoItems.forEach(function(produto) {
-            total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
-            total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
-
-            produto.setAttribute("comissao-venda", comissao_venda);
-            produto.setAttribute("comissao_indicacao", comissao_indicacao);
-            produto.setAttribute("brindes", brindes);
-            produto.setAttribute("impostos", impostos);
-            produto.setAttribute("cartoes", cartoes);
-            produto.setAttribute("margem_lucro", margem);
-            // produto.setAttribute("valor_venda", margem);
+        document.querySelectorAll(".produto-item").forEach(item => {
+            produtosSelecionados.push({
+                valor_venda: parseFloat(item.querySelector("input").value || 0),
+                total_particular: total_particular + parseFloat(item.getAttribute('data-valor-particular'))
+            });
         });
-    });
 
-    let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
-    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
+        const valorTotal = produtosSelecionados.reduce((total, p) => total + p.valor_venda, 0);
+
+        document.getElementById("total-geral").textContent = `Total: R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        fecharModal();
+        return;
+    } else {
     
-    // let valor_venda_total = fixos / (1 - variaveis);
-    let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
-    
-    // let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
+        const parceiroCards = document.querySelectorAll(".parceiro-card");
 
-    document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const comissao_venda = document.getElementById("comissao-venda").value;
+        const comissao_indicacao = document.getElementById("comissao-indicacao").value;
+        const brindes = document.getElementById("brindes").value;
+        const impostos = document.getElementById("impostos").value;
+        const cartoes = document.getElementById("cartoes").value;
+        const margem = document.getElementById("margem_lucro").value;
 
-    // verificarValores();
+        var total_repasse = 0;
+        var total_particular = 0;
 
-    fecharModal();
+        parceiroCards.forEach(function(parceiroCard) {
+            const produtoItems = parceiroCard.querySelectorAll(".produto-item");
+
+            produtoItems.forEach(function(produto) {
+                total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
+                total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
+
+                produto.setAttribute("comissao-venda", comissao_venda);
+                produto.setAttribute("comissao_indicacao", comissao_indicacao);
+                produto.setAttribute("brindes", brindes);
+                produto.setAttribute("impostos", impostos);
+                produto.setAttribute("cartoes", cartoes);
+                produto.setAttribute("margem_lucro", margem);
+                // produto.setAttribute("valor_venda", margem);
+            });
+        });
+
+        let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
+        let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
+        
+        // let valor_venda_total = fixos / (1 - variaveis);
+        let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
+        
+        // let custo_total = fixos + valor_venda_total * parseFloat(impostos) / 100 + valor_venda_total * parseFloat(cartoes) / 100;
+
+        document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        // verificarValores();
+
+        fecharModal();
+    }
 }
 
 function recalcularMargem(novoValorVenda) {

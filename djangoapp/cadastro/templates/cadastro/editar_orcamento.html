@@ -180,7 +180,7 @@
                                 margem_lucro="{{ produto.margem_lucro }}">
 
                                   <span>{{ produto.produto_nome }}</span>
-                                  <input type="number" value="{{ produto.valor_venda|stringformat:'.2f' }}" step="0.01">
+                                  <input type="number" value="{{ produto.valor_venda|stringformat:'.2f' }}" step="0.01" disabled>
                                   <button class="remover-produto-btn">❌</button>
                               </div>
                               {% endfor %}

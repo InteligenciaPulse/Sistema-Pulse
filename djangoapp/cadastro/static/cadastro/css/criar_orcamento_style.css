@@ -356,7 +356,7 @@ body {
 }
 
 .produto-item input {
-  display: none;
+  /* display: none; */
   flex: 1;
   min-width: 80px;
   max-width: 100px;

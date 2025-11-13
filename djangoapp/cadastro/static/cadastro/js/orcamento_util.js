@@ -144,6 +144,8 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                 valorInput.min = 0;
                 valorInput.value = produto.valor_venda;
 
+                valorInput.disabled = true;
+
                 valorInput.addEventListener("input", function () {
                     // atualizarSubtotal(produtosContainer, subtotalElement);
                     aplicarValores()
