@@ -191,12 +191,19 @@ function fecharModalTabela() {
 function aplicarValores() {
     const parceiroCards = document.querySelectorAll(".parceiro-card");
 
-    const comissao_venda = document.getElementById("comissao-venda").value;
-    const comissao_indicacao = document.getElementById("comissao-indicacao").value;
-    const brindes = document.getElementById("brindes").value;
-    const impostos = document.getElementById("impostos").value;
-    const cartoes = document.getElementById("cartoes").value;
-    const margem = document.getElementById("margem_lucro").value;
+    const comissao_venda = toNumber(document.getElementById("comissao-venda").value);
+    const comissao_indicacao = toNumber(document.getElementById("comissao-indicacao").value);
+    const brindes = toNumber(document.getElementById("brindes").value);
+    const impostos = toNumber(document.getElementById("impostos").value);
+    const cartoes = toNumber(document.getElementById("cartoes").value);
+    const margem = toNumber(document.getElementById("margem_lucro").value);
+
+    // const comissao_venda = document.getElementById("comissao-venda").value;
+    // const comissao_indicacao = document.getElementById("comissao-indicacao").value;
+    // const brindes = document.getElementById("brindes").value;
+    // const impostos = document.getElementById("impostos").value;
+    // const cartoes = document.getElementById("cartoes").value;
+    // const margem = document.getElementById("margem_lucro").value;
 
     var total_repasse = 0;
     var total_particular = 0;
@@ -205,8 +212,11 @@ function aplicarValores() {
         const produtoItems = parceiroCard.querySelectorAll(".produto-item");
 
         produtoItems.forEach(function(produto) {
-            total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
-            total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
+            total_repasse += toNumber(produto.getAttribute('data-valor-repasse'));
+            total_particular += toNumber(produto.getAttribute('data-valor-particular'));
+
+            // total_repasse = total_repasse + parseFloat(produto.getAttribute('data-valor-repasse'));
+            // total_particular = total_particular + parseFloat(produto.getAttribute('data-valor-particular'));
 
             produto.setAttribute("comissao-venda", comissao_venda);
             produto.setAttribute("comissao_indicacao", comissao_indicacao);
@@ -217,14 +227,18 @@ function aplicarValores() {
         });
     });
 
-    let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
-    let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
+    const fixos = total_repasse + comissao_indicacao + brindes;
+    const variaveis = (impostos + cartoes + margem + comissao_venda) / 100;
+    const valor_venda_total = (fixos * (1 - (impostos / 100))) / (1 - variaveis);
+
+    // let fixos = total_repasse + parseFloat(comissao_indicacao) + parseFloat(brindes);
+    // let variaveis = parseFloat(impostos) / 100 + parseFloat(cartoes) / 100 + parseFloat(margem) / 100 + parseFloat(comissao_venda) / 100;
     
-    let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
+    // let valor_venda_total = (fixos * (1 - (parseFloat(impostos) / 100))) / (1 - variaveis)
     
     document.getElementById("total-geral").textContent = `Total: R$ ${valor_venda_total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
+    
     // verificarValores();
 
     fecharModal();

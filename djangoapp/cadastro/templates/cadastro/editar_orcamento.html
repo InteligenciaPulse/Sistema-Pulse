@@ -215,27 +215,55 @@
             <form id="form-configuracao">
                 <div class="form-row">
                     <label for="comissao">Comissão de indicação (R$):</label>
-                    <input type="number" id="comissao-indicacao" name="comissao-indicacao" value="{{ parceiros.0.produtos.0.custos.comissao_indicacao|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão...">
+                    {% with v=parceiros.0.produtos.0.custos.comissao_indicacao %}
+                      <input type="number" id="comissao-indicacao" value="{% if v %}{{ v }}{% else %}250.00{% endif %}">
+                    {% endwith %}
+                    <!-- <input type="number" id="comissao-indicacao" name="comissao-indicacao" value="{{ parceiros.0.produtos.0.custos.comissao_indicacao|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão..."> -->
                 </div>
                 <div class="form-row">
                     <label for="comissao">Comissão de venda (%):</label>
-                    <input type="number" id="comissao-venda" name="comissao-venda" value="{{ parceiros.0.produtos.0.custos.comissao_venda|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão...">
+                    {% with v=parceiros.0.produtos.0.custos.comissao_venda %}
+                      <input type="number" id="comissao-venda" name="comissao-venda"
+                          value="{% if v %}{{ v }}{% else %}4.25{% endif %}"
+                          min="0" step="0.01" placeholder="Digite a comissão...">
+                    {% endwith %}
+                    <!-- <input type="number" id="comissao-venda" name="comissao-venda" value="{{ parceiros.0.produtos.0.custos.comissao_venda|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite a comissão..."> -->
                 </div>
                 <div class="form-row">
                     <label for="brindes">Brindes (R$):</label>
-                    <input type="number" id="brindes" name="brindes" value="{{ parceiros.0.produtos.0.custos.brindes|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite os brindes...">
+                    {% with v=parceiros.0.produtos.0.custos.brindes %}
+                      <input type="number" id="brindes" name="brindes"
+                          value="{% if v %}{{ v }}{% else %}150.00{% endif %}"
+                          min="0" step="0.01" placeholder="Digite os brindes...">
+                    {% endwith %}
+                    <!-- <input type="number" id="brindes" name="brindes" value="{{ parceiros.0.produtos.0.custos.brindes|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" step="0.01" placeholder="Digite os brindes..."> -->
                 </div>
                 <div class="form-row">
                     <label for="impostos">Impostos (%):</label>
-                    <input type="number" id="impostos" name="impostos" value="{{ parceiros.0.produtos.0.custos.imposto|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os impostos...">
+                    {% with v=parceiros.0.produtos.0.custos.imposto %}
+                      <input type="number" id="impostos" name="impostos"
+                          value="{% if v %}{{ v }}{% else %}6.50{% endif %}"
+                          min="0" max="100" step="0.01" placeholder="Digite os impostos...">
+                    {% endwith %}
+                    <!-- <input type="number" id="impostos" name="impostos" value="{{ parceiros.0.produtos.0.custos.imposto|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os impostos..."> -->
                 </div>
                 <div class="form-row">
                     <label for="cartoes">Cartões (%):</label>
-                    <input type="number" id="cartoes" name="cartoes" value="{{ parceiros.0.produtos.0.custos.cartao|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os cartões...">
+                    {% with v=parceiros.0.produtos.0.custos.cartao %}
+                      <input type="number" id="cartoes" name="cartoes"
+                          value="{% if v %}{{ v }}{% else %}0.00{% endif %}"
+                          min="0" max="100" step="0.01" placeholder="Digite os cartões...">
+                    {% endwith %}
+                    <!-- <input type="number" id="cartoes" name="cartoes" value="{{ parceiros.0.produtos.0.custos.cartao|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite os cartões..."> -->
                 </div>
                 <div class="form-row">
                     <label for="margem_lucro">Margem de Lucro (%):</label>
-                    <input type="number" id="margem_lucro" name="margem_lucro" value="{{ parceiros.0.produtos.0.margem_lucro|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite a margem de lucro...">
+                    {% with v=parceiros.0.produtos.0.margem_lucro %}
+                      <input type="number" id="margem_lucro" name="margem_lucro"
+                          value="{% if v %}{{ v }}{% else %}15.00{% endif %}"
+                          min="0" max="100" step="0.01" placeholder="Digite a margem de lucro...">
+                    {% endwith %}
+                    <!-- <input type="number" id="margem_lucro" name="margem_lucro" value="{{ parceiros.0.produtos.0.margem_lucro|default:'0'|default_if_none:'0'|stringformat:'.2f'}}" min="0" max="100" step="0.01" placeholder="Digite a margem de lucro..."> -->
                 </div>
                 <button type="button" onclick="aplicarValores()">Aplicar Valores</button>
             </form>

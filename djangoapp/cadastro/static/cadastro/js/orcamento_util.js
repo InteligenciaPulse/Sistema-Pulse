@@ -43,6 +43,14 @@ function atualizarParticular() {
     document.getElementById("total-particular").textContent = `Total particular: R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
 }
 
+function toNumber(value) {
+    if (!value || value === "None" || value === "null" || value === "NaN") {
+        return 0;
+    }
+    value = value.replace(",", ".");
+    return Number(value) || 0;
+}
+
 // -------------------------------------- BUSCAR SUBTIPOS ---------------------------------------------
 function buscarSubTipos(subtipoSelect){
   fetch("/api/buscar_subtipos/")
