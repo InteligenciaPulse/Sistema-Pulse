@@ -807,3 +807,153 @@ from django.http import JsonResponse
 @ensure_csrf_cookie
 def get_csrf_token(request):
     return JsonResponse({"message": "Token set"})
+
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import io
+import pandas as pd
+from django.http import HttpResponse
+from rest_framework.views import APIView
+# from rest_framework.permissions import IsAuthenticated
+from .models import Orcamento
+from rest_framework.renderers import BaseRenderer
+
+class ExcelRenderer(BaseRenderer):
+    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    format = 'xlsx'
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return data
+    
+class OrcamentoRelatorioExcelView(APIView):
+    renderer_classes = [ExcelRenderer]
+
+    def get(self, request, *args, **kwargs):
+        selected_columns = request.GET.getlist("columns")
+
+        qs = Orcamento.objects.select_related(
+            "status"
+        ).prefetch_related(
+            "solicitacao_orcamento__paciente",
+            "orcamento_parceiros__parceiro",
+            "orcamento_parceiros__produto",
+            "orcamento_parceiros__custos",
+            "orcamentoprocedimentos_set__procedimento",
+        )
+
+        rows = []
+
+        for o in qs:
+            solicitacao = getattr(o, "solicitacao_orcamento", None)
+            paciente = solicitacao.paciente.nome if solicitacao else ""
+
+            # Procedimentos
+            procedimentos = [
+                p.procedimento.nome
+                for p in o.orcamentoprocedimentos_set.all()
+                if p.procedimento
+            ]
+            procedimentos_str = ", ".join(procedimentos)
+
+            # Uma linha para cada produto-relacionado (OrcamentoParceiros)
+            for rel in o.orcamento_parceiros.all():
+                custos = rel.custos
+
+                # Buscar VALOR PARTICULAR do parceiro-produto
+                try:
+                    parceiro_produto = rel.parceiro.parceiroprodutos_set.get(produto=rel.produto)
+                    valor_particular = parceiro_produto.valor_particular
+                except ParceiroProdutos.DoesNotExist:
+                    valor_particular = ""
+
+                row = {}
+
+                # ========== CAMPOS DO ORÇAMENTO ==========
+                if "orcamento" in selected_columns:
+                    row["Orçamento"] = o.id
+
+                if "tipo_do_orcamento" in selected_columns:
+                    row["Tipo do Orçamento"] = o.tipo_orcamento or ""
+
+                if "pagamento" in selected_columns:
+                    row["Pagamento"] = o.pagamento or ""
+
+                if "canal" in selected_columns:
+                    row["Canal"] = o.canal or ""
+
+                if "status" in selected_columns:
+                    row["Status"] = o.status.nome if o.status else ""
+
+                if "paciente" in selected_columns:
+                    row["Paciente"] = paciente
+
+                if "responsavel" in selected_columns:
+                    row["Responsável"] = o.responsavel or ""
+
+                if "procedimentos" in selected_columns:
+                    row["Procedimentos"] = procedimentos_str
+
+                if "observaoes" in selected_columns:
+                    row["Observações"] = o.observacoes or ""
+
+                if "data_criacao" in selected_columns:
+                    row["Data Criação"] = (
+                        o.data_criacao.strftime("%d/%m/%Y") if o.data_criacao else ""
+                    )
+
+                if "valor_total" in selected_columns:
+                    row["Valor Total"] = o.valor_total if o.valor_total is not None else ""
+
+                # ========== CAMPOS DO PARCEIRO/PRODUTO ==========
+                if "parceiros" in selected_columns:
+                    row["Parceiro"] = rel.parceiro.nome
+
+                if "produtos" in selected_columns:
+                    row["Produto"] = rel.produto.nome
+
+                if "produto_venda" in selected_columns:
+                    row["Valor Venda"] = rel.valor_venda
+
+                if "produto_repasse" in selected_columns:
+                    row["Valor Repasse"] = rel.valor_repasse
+
+                if "produto_particular" in selected_columns:
+                    row["Valor Particular"] = valor_particular
+
+                if "margem_lucro" in selected_columns:
+                    row["Margem Lucro"] = rel.margem_lucro
+
+                # ========== CUSTOS ==========
+                if custos:
+                    if "comissao_indicacao" in selected_columns:
+                        row["Comissão Indicação"] = custos.comissao_indicacao
+
+                    if "comissao_venda" in selected_columns:
+                        row["Comissão Venda"] = custos.comissao_venda
+
+                    if "brindes" in selected_columns:
+                        row["Brindes"] = custos.brindes
+
+                    if "impostos" in selected_columns:
+                        row["Impostos"] = custos.imposto
+
+                    if "cartoes" in selected_columns:
+                        row["Cartões"] = custos.cartao
+
+                rows.append(row)
+
+
+        df = pd.DataFrame(rows)
+
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine="openpyxl") as writer:
+            df.to_excel(writer, index=False, sheet_name="Relatório")
+
+        output.seek(0)
+
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = 'attachment; filename="relatorio_orcamentos.xlsx"'
+        return response

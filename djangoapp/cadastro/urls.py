@@ -5,6 +5,8 @@ from .views import salvar_orcamento, editar_orcamento, atualizar_orcamento, atua
 from .views import historico_api, kanban_board, atualizar_orcamento_status
 from .views import get_csrf_token, deletar_coluna
 
+from .views import OrcamentoRelatorioExcelView
+
 urlpatterns = [
     path('', home, name='home'),
     path('orcamentos/criar/', criar_orcamento, name='criar_orcamento'),
@@ -37,6 +39,8 @@ urlpatterns = [
     path('orcamentos/<int:pk>/', atualizar_orcamento_status),
     path('api/deletar_coluna/<int:coluna_id>/', deletar_coluna, name='deletar_coluna'),
     path('api/csrf/', get_csrf_token),
+
+    path( "relatorios/orcamentos/excel/", OrcamentoRelatorioExcelView.as_view(), name="relatorio_orcamentos_excel"),
 ]
 
 # ============================================

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/RelatoriosPage.css";
+import { API_BASE } from '../services/api';
 
 import { Menu } from "lucide-react";
 
@@ -39,6 +40,8 @@ const RelatoriosPage = () => {
     responsavel: "",
   });
 
+  const [loadingDownload, setLoadingDownload] = useState(false);
+
   const handleColumnToggle = (column) => {
     setSelectedColumns((prev) => ({
       ...prev,
@@ -53,10 +56,64 @@ const RelatoriosPage = () => {
     alert("Relatório gerado! Agora você pode baixar o Excel.");
   };
 
-  const baixarExcel = () => {
-    alert("Baixando Excel...");
-    // aqui você futuramente chamará: GET /api/relatorio?colunas=X&filtros=Y
+  const handleDownload = async () => {
+    setLoadingDownload(true);
+
+    try {
+      const params = new URLSearchParams();
+      Object.entries(selectedColumns).forEach(([key, value]) => {
+        if (value === true) params.append("columns", key);
+      });
+
+      const response = await fetch(
+        `${API_BASE}/relatorios/orcamentos/excel/?${params.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          }
+        }
+      );
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Erro do backend:", text);
+        alert("Erro ao gerar relatório.");
+        setLoadingDownload(false);
+        return;
+      }
+
+      const contentType = response.headers.get("Content-Type");
+      if (!contentType.includes("application/vnd.openxmlformats-officedocument")) {
+        const text = await response.text();
+        console.error("O backend não retornou Excel. Recebido:", text);
+        alert("Erro ao gerar Excel.");
+        setLoadingDownload(false);
+        return;
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = "relatorio_orcamentos.xlsx";
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+      console.error("Erro inesperado:", err);
+      alert("Erro ao gerar relatório.");
+    }
+
+    setLoadingDownload(false);
   };
+
+
 
   return (
     <div className="relatorios-container">
@@ -145,12 +202,16 @@ const RelatoriosPage = () => {
         </section>
 
         <div className="buttons-row">
-          <button className="btn gerar" onClick={gerarRelatorio}>
+          {/* <button className="btn gerar" onClick={gerarRelatorio}>
             Gerar Relatório
-          </button>
+          </button> */}
 
-          <button className="btn baixar" onClick={baixarExcel}>
-            Baixar Excel
+          <button
+            className="btn baixar"
+            onClick={handleDownload}
+            disabled={loadingDownload}
+          >
+            {loadingDownload ? "Gerando..." : "Baixar Excel"}
           </button>
         </div>
 
