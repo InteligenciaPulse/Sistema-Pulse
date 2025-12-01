@@ -1,41 +1,41 @@
-// src/pages/KanbanPage.jsx
-
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 import KanbanBoard from '../components/Kanban/KanbanBoard';
-// import CardSettingsModal from '../components/CardSettings';
+import Sidebar from '../components/Sidebar';
 import '../styles/Kanban/KanbanPage.css';
 
+import { Menu } from "lucide-react";
+
 const KanbanPage = ({ visibleFields, setVisibleFields }) => {
-  // const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="kanban-page-container">
+
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
       <header className="navbar">
+        <button
+          className="menu-btn"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <Menu size={26} />
+        </button>
+
         <h1>Sistema Pulse</h1>
       </header>
 
       <main className="content">
-        <div className="kanban-header">
-          {/* <CardSettingsModal visibleFields={visibleFields} setVisibleFields={setVisibleFields} /> */}
-          {/* <button className="settings-btn" onClick={() => setSettingsOpen(true)}>
-            ⚙️ Exibir Campos
-          </button> */}
-        </div>
-
         <KanbanBoard visibleFields={visibleFields} />
-
-        {/* {settingsOpen && (
-          <CardSettingsModal
-            visibleFields={visibleFields}
-            setVisibleFields={setVisibleFields}
-            onClose={() => setSettingsOpen(false)}
-          />
-        )} */}
       </main>
 
       <footer>
         &copy; 2025 Sistema Pulse - Todos os direitos reservados.
       </footer>
+
     </div>
   );
 };

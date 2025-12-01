@@ -515,7 +515,7 @@ function aplicarValores() {
 
         document.getElementById("total-geral").textContent = `Total: R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         document.getElementById("total-particular").textContent = `Total particular: R$ ${total_particular.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
+        
         fecharModal();
         return;
     } else {

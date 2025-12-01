@@ -7,13 +7,19 @@
 
 .navbar {
   background-color: #4A90E2;
-  padding: 1em;
-  text-align: center;
+  padding: 1em 1.5em;
   color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .navbar h1 {
   margin: 0;
+  font-size: 1.6rem;
+  font-weight: bold;
 }
 
 .login-container {
@@ -88,4 +94,32 @@ footer {
   text-align: center;
   color: #888;
   font-size: 0.9em;
+}
+
+.menu-btn {
+  position: absolute;
+  left: 1.5em;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: transparent;
+  border: none;
+  color: white;
+
+  cursor: pointer;
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.menu-btn:hover {
+  opacity: 1;
+}
+
+.menu-btn svg {
+  stroke-width: 2.2;
 }
