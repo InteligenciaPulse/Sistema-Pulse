@@ -1,9 +1,12 @@
 .kanban-page-container {
   font-family: 'Arial', sans-serif;
   background-color: #f7f8fc;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   color: #333;
 }
+
 
 .navbar {
   background-color: #4A90E2;
@@ -38,6 +41,19 @@
 .content {
   padding: 0.5em;
   /* text-align: center; */
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  /* max-height: 85vh; */
+  width: 100%;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.kanban-board {
+  display: flex;
+  flex-direction: row;
+  min-width: 150vw;
+  /* força largura maior que a tela */
 }
 
 .card-container {
@@ -94,6 +110,7 @@ footer {
   text-align: center;
   color: #888;
   font-size: 0.9em;
+  flex-shrink: 0;
 }
 
 .menu-btn {

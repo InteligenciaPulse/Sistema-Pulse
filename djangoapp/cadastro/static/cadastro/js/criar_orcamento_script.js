@@ -278,7 +278,7 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
                 data_agendamento: data_agendamento,
                 data_aprovacao: data_aprovacao
             };
-
+            
             const response = await fetch("/api/salvar_orcamento/", {
                 method: "POST",
                 headers: {

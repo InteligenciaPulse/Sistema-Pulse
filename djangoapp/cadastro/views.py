@@ -521,6 +521,7 @@ def editar_orcamento(request, orcamento_id):
     procedimento_list = Procedimento.objects.all().order_by('nome')
 
     orcamento = get_object_or_404(Orcamento, id=orcamento_id)
+    print("AG:", orcamento.data_agendamento, "AP:", orcamento.data_aprovacao)
 
     try:
         solicitacao = SolicitacaoOrcamento.objects.get(orcamento=orcamento)
