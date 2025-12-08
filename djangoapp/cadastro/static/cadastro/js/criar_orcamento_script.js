@@ -260,6 +260,8 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
             const observacoes = document.getElementById("observacoes")?.value.trim() || "";
             const pagamento = document.getElementById("pagamento")?.value || "";
             const canal = document.getElementById("canal")?.value || "";
+            const data_agendamento = document.getElementById("data_agendamento")?.value || null;
+            const data_aprovacao = document.getElementById("data_aprovacao")?.value || null;
 
             const payload = {
                 paciente_id: pacienteId,
@@ -272,7 +274,9 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
                 observacoes: observacoes,
                 pagamento: pagamento,
                 canal: canal,
-                coluna_id: colunaId
+                coluna_id: colunaId,
+                data_agendamento: data_agendamento,
+                data_aprovacao: data_aprovacao
             };
 
             const response = await fetch("/api/salvar_orcamento/", {

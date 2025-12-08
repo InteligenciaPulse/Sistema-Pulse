@@ -72,7 +72,7 @@ class ParceiroProdutosAdmin(admin.ModelAdmin):
 class OrcamentoAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total',
-        'data_cirurgia', 'custo_total', 'lucro_total', 'tipo_orcamento',
+        'data_agendamento', 'custo_total', 'lucro_total', 'tipo_orcamento',
         'responsavel', 'observacoes', 'pagamento', 'canal'
     )
 

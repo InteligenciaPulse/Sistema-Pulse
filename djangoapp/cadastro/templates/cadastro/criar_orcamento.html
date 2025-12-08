@@ -20,6 +20,26 @@
                     <button id="abrir-modal-btn" onclick="abrirModalTabela()">Resumo</button>
                 </div>
 
+                <div class="filter-datas">
+                    <label for="data_agendamento">Data de Agendamento:</label>
+                    <input 
+                        type="date" 
+                        id="data_agendamento" 
+                        name="data_agendamento"
+                        value="{{ orcamento.data_agendamento|date:'Y-m-d' }}"
+                    >
+                </div>
+
+                <div class="filter-datas">
+                    <label for="data_aprovacao">Data de Aprovação:</label>
+                    <input 
+                        type="date" 
+                        id="data_aprovacao" 
+                        name="data_aprovacao"
+                        value="{{ orcamento.data_aprovacao|date:'Y-m-d' }}"
+                    >
+                </div>
+
                 <div class="classify-container">
                     <label for="classify">Tipo do Orçamento:</label>
                     <select id="classify" name="classify">

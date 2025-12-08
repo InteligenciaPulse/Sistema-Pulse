@@ -425,6 +425,8 @@ def salvar_orcamento(request):
                     observacoes=data.get("observacoes"),
                     pagamento=data.get("pagamento"),
                     canal=data.get("canal"),
+                    data_agendamento=data.get("data_agendamento") or None,
+                    data_aprovacao=data.get("data_aprovacao") or None,
                 )
 
                 solicitacao = SolicitacaoOrcamento.objects.create(

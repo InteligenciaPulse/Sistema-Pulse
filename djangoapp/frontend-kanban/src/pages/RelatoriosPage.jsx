@@ -49,12 +49,12 @@ const RelatoriosPage = () => {
     }));
   };
 
-  const gerarRelatorio = () => {
-    console.log("Filtros:", filters);
-    console.log("Colunas:", selectedColumns);
+  // const gerarRelatorio = () => {
+  //   console.log("Filtros:", filters);
+  //   console.log("Colunas:", selectedColumns);
 
-    alert("Relatório gerado! Agora você pode baixar o Excel.");
-  };
+  //   alert("Relatório gerado! Agora você pode baixar o Excel.");
+  // };
 
   const handleDownload = async () => {
     setLoadingDownload(true);

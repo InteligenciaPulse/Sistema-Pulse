@@ -1157,4 +1157,16 @@ observacoes-container {
   box-sizing: border-box;
 }
 
+.filter-datas {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-datas input {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
 /* -------------------------- */

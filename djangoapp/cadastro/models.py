@@ -172,7 +172,10 @@ class Orcamento(models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name="Status")
     data_criacao = models.DateField(null=True, blank=True, verbose_name="Data de Criação")
     data_aprovacao = models.DateField(null=True, blank=True, verbose_name="Data de Aprovação")
-    data_cirurgia = models.DateField(null=True, blank=True, verbose_name="Data da Cirurgia")
+
+    # Trocar para data_agendamento
+    data_agendamento = models.DateField(null=True, blank=True, verbose_name="Data do Agendamento")
+    
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
     custo_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo Total")
     lucro_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Lucro Total")
@@ -276,7 +279,7 @@ class Custos(models.Model):
         verbose_name = "Custos"
     
     def __str__(self):
-        return f"Comissão {self.comissao}"
+        return f"Comissão {self.comissao_indicacao}"
     
 # ===========================================================================================
 class Coluna(models.Model):
