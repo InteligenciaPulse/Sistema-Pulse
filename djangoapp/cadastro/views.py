@@ -23,6 +23,9 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get('username')
@@ -816,7 +819,31 @@ from django.http import JsonResponse
 def get_csrf_token(request):
     return JsonResponse({"message": "Token set"})
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def listar_parceiros(request):
+    parceiros = Parceiro.objects.all().values("id", "nome", "desconto")
+    return Response(list(parceiros))
 
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def atualizar_desconto_parceiro(request, pk):
+    try:
+        parceiro = Parceiro.objects.get(pk=pk)
+    except Parceiro.DoesNotExist:
+        return Response({"erro": "Parceiro não encontrado"}, status=404)
+
+    novo_desconto = request.data.get("desconto")
+
+    try:
+        novo_desconto = float(novo_desconto)
+    except:
+        return Response({"erro": "Desconto inválido"}, status=400)
+
+    parceiro.desconto = novo_desconto
+    parceiro.save()
+
+    return Response({"status": "ok", "desconto": parceiro.desconto})
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import io
 import pandas as pd
