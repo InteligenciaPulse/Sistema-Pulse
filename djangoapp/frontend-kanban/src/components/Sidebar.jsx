@@ -37,6 +37,10 @@ const Sidebar = ({ isOpen, onClose }) => {
             <Package size={18} /> Produtos
           </button>
 
+          <button onClick={() => navigate("/descontos")}>
+            <Package size={18} /> Ajustar Descontos
+          </button>
+
           <button onClick={() => navigate("/configuracoes")}>
             <Settings size={18} /> Configurações
           </button>

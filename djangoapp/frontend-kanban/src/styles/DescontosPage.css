@@ -1,0 +1,60 @@
+.navbar {
+  background-color: #4A90E2;
+  padding: 1em;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.menu-btn {
+  position: absolute;
+  left: 1.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.descontos-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.descontos-content {
+  padding: 20px;
+}
+
+.desconto-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.desconto-nome {
+  flex: 1;
+  font-weight: 500;
+}
+
+.desconto-row input {
+  width: 70px;
+  margin-right: 10px;
+}
+
+.btn-salvar {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-salvar:hover {
+  background: #0d9a6d;
+}

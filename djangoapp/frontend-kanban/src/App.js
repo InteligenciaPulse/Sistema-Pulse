@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import KanbanPage from './pages/KanbanPage';
 import CriarOrcamento from "./pages/CriarOrcamento";
 import RelatoriosPage from "./pages/RelatoriosPage";
+import DescontosPage from "./pages/DescontosPage";
 
 function App() {
   useEffect(() => {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<KanbanPage visibleFields={visibleFields} setVisibleFields={setVisibleFields}/>} />
         <Route path='/create' element={<CriarOrcamento />}/>
         <Route path="/relatorios" element={<RelatoriosPage />} />
+        <Route path="/descontos" element={<DescontosPage />} />
       </Routes>
     </Router>
   );
