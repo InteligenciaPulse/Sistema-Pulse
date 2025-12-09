@@ -1169,4 +1169,25 @@ observacoes-container {
   border: 1px solid #ccc;
 }
 
+.desconto-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  opacity: 0.4;
+  transition: 0.25s;
+  font-size: 18px;
+}
+
+.desconto-icon.ativo {
+  opacity: 1;
+  color: #10b981;
+}
+
+.produto-item.desconto-ativo {
+  border: 2px dashed #10b981;
+  border-radius: 6px;
+  padding: 6px;
+  background-color: #f0fdf4;
+  transition: 0.2s;
+}
+
 /* -------------------------- */

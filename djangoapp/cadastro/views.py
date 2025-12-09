@@ -803,7 +803,12 @@ def deletar_coluna(request, coluna_id):
         return Response({'mensagem': 'Coluna excluída com sucesso'}, status=204)
     except Coluna.DoesNotExist:
         return Response({'erro': 'Coluna não encontrada'}, status=404)
-    
+
+@api_view(["GET"])
+def parceiro_desconto(request, pk):
+    parceiro = Parceiro.objects.get(id=pk)
+    return Response({"desconto": parceiro.desconto2produto})
+
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 

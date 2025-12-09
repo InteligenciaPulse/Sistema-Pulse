@@ -29,13 +29,13 @@ class SubtipoAdmin(admin.ModelAdmin):
 
 @admin.register(Parceiro)
 class ParceiroAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cpf_cnpj', 'tipo', 'subtipo', 'especialidade', 'telefone', 'email')
+    list_display = ('nome', 'cpf_cnpj', 'tipo', 'subtipo', 'especialidade', 'telefone', 'email', 'desconto2produto')
     list_filter = ('tipo', 'subtipo', 'especialidade')
     search_fields = ('nome', 'cpf_cnpj', 'email', 'telefone')
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome')
+    list_display = ('id', 'nome',)
     search_fields = ('nome',)
     list_filter = ('nome',)
 

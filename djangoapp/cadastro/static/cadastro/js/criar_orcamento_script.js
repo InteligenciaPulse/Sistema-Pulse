@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
             adicionarProdutoBtn.onclick = function () {
                 adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
             };
-    
+            
             let buttonsDiv = document.createElement("div");
             buttonsDiv.classList.add("produtos-container-buttons");
             buttonsDiv.appendChild(adicionarProdutoBtn);

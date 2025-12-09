@@ -3,7 +3,7 @@ from .views import home, criar_orcamento, historico, buscar_pacientes, buscar_pr
 from .views import visualizar_orcamento_pdf, visualizar_orcamento_html, salvar_paciente, buscar_especialidades, buscar_procedimentos_by
 from .views import salvar_orcamento, editar_orcamento, atualizar_orcamento, atualizar_status, buscar_status, exportar_historico_excel
 from .views import historico_api, kanban_board, atualizar_orcamento_status
-from .views import get_csrf_token, deletar_coluna
+from .views import get_csrf_token, deletar_coluna, parceiro_desconto
 
 from .views import OrcamentoRelatorioExcelView
 
@@ -37,6 +37,7 @@ urlpatterns = [
     path('historico/', historico_api, name='historico_api'),
     path('kanban_board/', kanban_board, name='kanban_board'),
     path('orcamentos/<int:pk>/', atualizar_orcamento_status),
+    path("parceiro/<int:pk>/desconto/", parceiro_desconto),
     path('api/deletar_coluna/<int:coluna_id>/', deletar_coluna, name='deletar_coluna'),
     path('api/csrf/', get_csrf_token),
 

@@ -87,6 +87,15 @@ class Parceiro(models.Model):
     subtipo = models.ForeignKey('Subtipo', on_delete=models.SET_NULL, null=True, verbose_name="Subtipo")
     especialidade = models.ForeignKey('Especialidade', on_delete=models.SET_NULL, null=True, verbose_name="Especialidade")
 
+    desconto2produto = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        default=0,
+        verbose_name="Desconto no 2° produto (%)"
+    )
+
     class Meta:
         db_table = 'sistema_pulse"."parceiro'
         verbose_name = "Parceiro"
