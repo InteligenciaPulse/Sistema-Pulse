@@ -111,6 +111,7 @@ class Produto(models.Model):
         db_table = 'sistema_pulse"."produto'
         verbose_name = "Produto"
         verbose_name_plural = "Produtos"
+        ordering = ['nome']
 
     def __str__(self):
         return self.nome

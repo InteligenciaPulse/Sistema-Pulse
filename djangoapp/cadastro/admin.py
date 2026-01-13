@@ -37,6 +37,7 @@ class ParceiroAdmin(admin.ModelAdmin):
 class ProdutoAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome',)
     search_fields = ('nome',)
+    ordering = ('nome',)
     list_filter = ('nome',)
 
 @admin.register(Procedimento)
@@ -67,6 +68,7 @@ class ParceiroProdutosAdmin(admin.ModelAdmin):
     list_display = ('parceiro', 'produto', 'valor_particular', 'valor_repasse', 'valor_venda')
     list_filter = ('parceiro', 'produto')
     search_fields = ('parceiro__nome', 'produto__nome')
+    autocomplete_fields = ('parceiro', 'produto')
 
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
