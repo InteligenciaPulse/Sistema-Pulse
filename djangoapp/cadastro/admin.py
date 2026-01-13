@@ -84,6 +84,23 @@ class OrcamentoParceirosAdmin(admin.ModelAdmin):
     list_filter = ('orcamento', 'parceiro', 'produto')
     search_fields = ('orcamento__id', 'parceiro__nome', 'produto__nome')
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related(
+            'orcamento',
+            'orcamento__solicitacao_orcamento',
+            'orcamento__solicitacao_orcamento__paciente',
+            'parceiro',
+            'produto',
+            'custos',
+        )
+
+    def get_paciente(self, obj):
+        so = getattr(obj.orcamento, 'solicitacao_orcamento', None)
+        return so.paciente.nome if so else '-'
+
+    get_paciente.short_description = 'Paciente'
+
 @admin.register(SolicitacaoOrcamento)
 class SolicitacaoOrcamentoAdmin(admin.ModelAdmin):
     list_display = ('id', 'data_solicitacao', 'paciente', 'orcamento', 'status')
