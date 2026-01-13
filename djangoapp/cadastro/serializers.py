@@ -2,29 +2,38 @@ from rest_framework import serializers
 from .models import Coluna, Card, Orcamento, Status, Procedimento, Especialidade, Parceiro, Subtipo
 
 class OrcamentoKanbanSerializer(serializers.ModelSerializer):
-    paciente_nome = serializers.SerializerMethodField()
-    data_criacao = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    title = serializers.SerializerMethodField()
-    valor_total = serializers.SerializerMethodField()
-    status_nome = serializers.SerializerMethodField()
+    paciente_nome = serializers.CharField(
+        source='solicitacao_orcamento.paciente.nome',
+        read_only=True
+    )
 
-    tipo_orcamento = serializers.CharField(read_only=True)
-    responsavel = serializers.CharField(read_only=True)
-    observacoes = serializers.CharField(read_only=True)
-    pagamento = serializers.CharField(read_only=True)
-    canal = serializers.CharField(read_only=True)
+    status_nome = serializers.CharField(
+        source='status.nome',
+        read_only=True
+    )
+
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    data_criacao = serializers.SerializerMethodField()
+
+    # valor_total = serializers.SerializerMethodField()
+
+    # tipo_orcamento = serializers.CharField(read_only=True)
+    # responsavel = serializers.CharField(read_only=True)
+    # observacoes = serializers.CharField(read_only=True)
+    # pagamento = serializers.CharField(read_only=True)
+    # canal = serializers.CharField(read_only=True)
 
     class Meta:
         model = Orcamento
         fields = ['id', 'title', 'description', 'paciente_nome',
                   'data_criacao', 'valor_total', 'status_nome',
-                  'tipo_orcamento', 'responsavel', 'observacoes',
-                  'pagamento', 'canal',
+                #   'tipo_orcamento', 'responsavel', 'observacoes',
+                #   'pagamento', 'canal',
                 ]
 
     def get_title(self, obj):
-        return f"Orçamento #{obj.id}"
+        return f"Orçamentos #{obj.id}"
 
     def get_description(self, obj):
         return f"R$ {obj.valor_total:.2f}"
@@ -32,17 +41,8 @@ class OrcamentoKanbanSerializer(serializers.ModelSerializer):
     def get_data_criacao(self, obj):
         return obj.data_criacao.strftime('%d/%m/%Y') if obj.data_criacao else ''
     
-    def get_valor_total(self, obj):
-        return obj.valor_total
-    
-    def get_paciente_nome(self, obj):
-        try:
-            return obj.solicitacao_orcamento.paciente.nome
-        except AttributeError:
-            return None
-    
-    def get_status_nome(self, obj):
-        return obj.status.nome if obj.status else None
+    # def get_valor_total(self, obj):
+    #     return obj.valor_total
 
 class OrcamentoSerializer(serializers.ModelSerializer):
     class Meta:

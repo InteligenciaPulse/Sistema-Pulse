@@ -13,6 +13,10 @@
   transition: transform 0.1s ease-in-out;
 }
 
+.kanban-card p {
+  text-wrap: auto;
+}
+
 .kanban-card:hover {
   transform: scale(1.02);
 }

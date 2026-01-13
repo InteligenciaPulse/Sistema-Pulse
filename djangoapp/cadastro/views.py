@@ -773,12 +773,49 @@ class ParceiroViewSet(viewsets.ModelViewSet):
     serializer_class = ParceiroSerializer
 
 # ---------------------------------------------------------------------------------------------------------
+from django.db.models import Prefetch
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+# @api_view(['GET'])
+# def kanban_board(request):
+#     colunas = Coluna.objects.order_by('ordem').prefetch_related('cards__orcamento__solicitacao_orcamento__paciente')
+#     serializer = ColunaSerializer(colunas, many=True)
+#     return Response(serializer.data)
 
 @api_view(['GET'])
+# @cache_page(30)
 def kanban_board(request):
-    colunas = Coluna.objects.order_by('ordem').prefetch_related('cards__orcamento__solicitacao_orcamento__paciente')
-    serializer = ColunaSerializer(colunas, many=True)
-    return Response(serializer.data)
+    cache_key = 'kanban_board_v1'
+    cached = cache.get(cache_key)
+    if cached:
+        return Response(cached)
+    
+    colunas = (
+        Coluna.objects
+        .order_by('ordem')
+        .prefetch_related(
+            Prefetch(
+                'cards',
+                queryset=Card.objects.select_related(
+                    'orcamento',
+                    'orcamento__status',
+                    'orcamento__solicitacao_orcamento__paciente',
+                ).order_by('prioridade')
+            )
+        )
+    )
+
+    # serializer = ColunaSerializer(colunas, many=True)
+    
+    # return Response(serializer.data)
+
+    data = ColunaSerializer(colunas, many = True).data
+    cache.set(cache_key, data, timeout = 30)
+
+    return Response(data)
 
 @api_view(['GET'])
 def historico_api(request):
