@@ -1373,3 +1373,12 @@ observacoes-container {
   color: var(--cor-primaria);
   text-align: center;
 }
+
+#classify {
+  border: 2px solid #dc2626;
+}
+
+#classify:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+}

@@ -1,68 +1,265 @@
 // ------------------------------------ SALVAR MODIFICACOES DO ORCAMENTO ----------------------------------------
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.getElementById("salvar-orcamento").addEventListener("click", function () {
+//     const urlPath = window.location.pathname;
+//     const orcamentoId = urlPath.split('/').filter(Boolean).pop();
+//     const statusSelecionado = document.getElementById("status").value;
+
+//     let produtosSelecionados = [];
+//     document.querySelectorAll(".produto-item").forEach(item => {
+//         produtosSelecionados.push({
+//             parceiro_id: item.getAttribute("data-parceiro-id"),
+//             produto_id: item.getAttribute("data-id"),
+//             valor_venda: parseFloat(item.querySelector("input").value || 0),
+//             comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
+//             comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
+//             brindes: parseFloat(item.getAttribute("brindes") || 0),
+//             impostos: parseFloat(item.getAttribute("impostos") || 0),
+//             cartoes: parseFloat(item.getAttribute("cartoes") || 0),
+//             margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
+//         });
+//     });
+
+//     let procedimentosSelecionados = [];
+//     document.querySelectorAll(".procedimento-item").forEach(item => {
+//         procedimentosSelecionados.push({
+//             procedimento_id: item.getAttribute("data-id")
+//         });
+//     });
+
+//     //   const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
+//     const valorElemento = document.getElementById("total-geral").textContent;
+//     let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
+//     valorStr = valorStr.replace(/\./g, "").replace(",", ".");
+//     const valorTotal = parseFloat(valorStr);
+
+//     const payload = {
+//         orcamento_id: orcamentoId,
+//         status: statusSelecionado,
+//         valor_total: valorTotal.toFixed(2),
+//         produtos: produtosSelecionados,
+//         procedimentos: procedimentosSelecionados
+//     };
+
+//     fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "X-CSRFToken": getCSRFToken()
+//         },
+//         body: JSON.stringify(payload)
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.message) {
+//             alert("Orçamento atualizado com sucesso!");
+//             window.location.href = "https://sistema-pulse-production.up.railway.app/";
+//         } else {
+//             alert("Erro ao atualizar orçamento: " + data.error);
+//         }
+//     })
+//     .catch(error => console.error("Erro ao atualizar orçamento:", error));
+//   });
+// });
+
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("salvar-orcamento").addEventListener("click", function () {
-    const urlPath = window.location.pathname;
-    const orcamentoId = urlPath.split('/').filter(Boolean).pop();
-    const statusSelecionado = document.getElementById("status").value;
+    const btnSalvar = document.getElementById("salvar-orcamento");
 
-    let produtosSelecionados = [];
-    document.querySelectorAll(".produto-item").forEach(item => {
-        produtosSelecionados.push({
-            parceiro_id: item.getAttribute("data-parceiro-id"),
-            produto_id: item.getAttribute("data-id"),
-            valor_venda: parseFloat(item.querySelector("input").value || 0),
-            comissao_indicacao: parseFloat(item.getAttribute("comissao_indicacao") || 0),
-            comissao_venda: parseFloat(item.getAttribute("comissao-venda") || 0),
-            brindes: parseFloat(item.getAttribute("brindes") || 0),
-            impostos: parseFloat(item.getAttribute("impostos") || 0),
-            cartoes: parseFloat(item.getAttribute("cartoes") || 0),
-            margem_lucro: parseFloat(item.getAttribute("margem_lucro") || 0),
-        });
-    });
+    if (!btnSalvar) return;
 
-    let procedimentosSelecionados = [];
-    document.querySelectorAll(".procedimento-item").forEach(item => {
-        procedimentosSelecionados.push({
-            procedimento_id: item.getAttribute("data-id")
-        });
-    });
+    btnSalvar.addEventListener("click", async function () {
+        if (btnSalvar.disabled) return;
 
-    //   const valorTotal = produtosSelecionados.reduce((total, proc) => total + proc.valor_venda, 0);
-    const valorElemento = document.getElementById("total-geral").textContent;
-    let valorStr = valorElemento.replace("Total:", "").replace("R$", "").trim();
-    valorStr = valorStr.replace(/\./g, "").replace(",", ".");
-    const valorTotal = parseFloat(valorStr);
+        const orcamentoId = btnSalvar.dataset.id;
+        const statusSelecionado = document.getElementById("status")?.value || "";
 
-    const payload = {
-        orcamento_id: orcamentoId,
-        status: statusSelecionado,
-        valor_total: valorTotal.toFixed(2),
-        produtos: produtosSelecionados,
-        procedimentos: procedimentosSelecionados
-    };
+        // ================= BLOQUEIO UI =================
+        btnSalvar.disabled = true;
+        const textoOriginal = btnSalvar.textContent;
+        btnSalvar.textContent = "Salvando... ⏳";
 
-    fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCSRFToken()
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert("Orçamento atualizado com sucesso!");
-            window.location.href = "https://sistema-pulse-production.up.railway.app/";
-        } else {
-            alert("Erro ao atualizar orçamento: " + data.error);
+        try {
+            // ================= PRODUTOS =================
+            const produtosSelecionados = [];
+
+            document.querySelectorAll(".produto-item").forEach(produto => {
+                const input = produto.querySelector("input");
+
+                produtosSelecionados.push({
+                    parceiro_id: produto.dataset.parceiroId,
+                    produto_id: produto.dataset.id,
+                    valor_venda: parseFloat(input?.value || 0),
+
+                    valor_repasse: parseFloat(produto.dataset.valorRepasse || 0),
+                    valor_particular: parseFloat(produto.dataset.valorParticular || 0),
+
+                    comissao_indicacao: parseFloat(produto.dataset.comissaoIndicacao || 0),
+                    comissao_venda: parseFloat(produto.dataset.comissaoVenda || 0),
+                    brindes: parseFloat(produto.dataset.brindes || 0),
+                    impostos: parseFloat(produto.dataset.impostos || 0),
+                    cartoes: parseFloat(produto.dataset.cartoes || 0),
+                    margem_lucro: parseFloat(produto.dataset.margemLucro || 0),
+                });
+            });
+
+            // ================= PROCEDIMENTOS =================
+            const procedimentosSelecionados = [];
+            document.querySelectorAll(".procedimento-item").forEach(item => {
+                procedimentosSelecionados.push({
+                    procedimento_id: item.dataset.id
+                });
+            });
+
+            // ================= TOTAL =================
+            const textoTotal = document.getElementById("total-geral")?.textContent || "";
+            const valorTotal = extrairValorMonetario(textoTotal);
+
+            // ================= PAYLOAD =================
+            const payload = {
+                orcamento_id: orcamentoId,
+                status: statusSelecionado,
+                valor_total: valorTotal.toFixed(2),
+                produtos: produtosSelecionados,
+                procedimentos: procedimentosSelecionados
+            };
+
+            // ================= FETCH =================
+            const response = await fetch(`/api/atualizar_orcamento/${orcamentoId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.message) {
+                btnSalvar.textContent = "Salvo ✅";
+                alert("Orçamento atualizado com sucesso!");
+                window.location.href = "/";
+            } else {
+                throw new Error(data.error || "Erro ao atualizar orçamento.");
+            }
+
+        } catch (error) {
+            console.error("Erro ao salvar orçamento:", error);
+            alert("Erro ao salvar orçamento. Tente novamente.");
+            btnSalvar.textContent = "Erro ❌";
+        } finally {
+            setTimeout(() => {
+                btnSalvar.disabled = false;
+                btnSalvar.textContent = textoOriginal;
+            }, 2000);
         }
-    })
-    .catch(error => console.error("Erro ao atualizar orçamento:", error));
-  });
+    });
 });
 
+function extrairValorMonetario(texto) {
+    const match = texto.match(/[\d.,]+/);
+    if (!match) return 0;
+    return parseFloat(match[0].replace(/\./g, "").replace(",", "."));
+}
+
+
+
 // -------------------------------------PARCEIROS-------------------------------------------------------
+// document.addEventListener("DOMContentLoaded", function () {
+//     const selectParceiro = document.getElementById("parceiro");
+//     const subtipoSelect = document.getElementById("subtipo-select");
+//     const listaParceiros = document.getElementById("parceiro-list");
+
+//     function atualizarParceiros(subtipoId) {
+//         const options = selectParceiro.querySelectorAll('option');
+//         options.forEach(option => {
+//             if (option.value) {
+//                 option.style.display = "none";
+//             }
+//         });
+
+//         if(subtipoId) {
+//             selectParceiro.value = "";
+
+//             const parceiroOptions = selectParceiro.querySelectorAll(`option[data-subtipo="${subtipoId}"]`);
+//             parceiroOptions.forEach(option => {
+//                 option.style.display = "block";
+//             });
+//         } else {
+//             options.forEach(option => {
+//                 if (option.value) {
+//                     option.style.display = "block";
+//                 }
+//             });
+//         }
+//     }
+
+//     subtipoSelect.addEventListener("change", function () {
+//         atualizarParceiros(subtipoSelect.value);
+//     });
+
+//     window.adicionarParceiro = function () {
+//         const idParceiro = selectParceiro.value;
+
+//         if (!idParceiro) {
+//             alert("Selecione um parceiro válido.");
+//             return;
+//         } else {
+//             const parceiroNome = selectParceiro.options[selectParceiro.selectedIndex].text;
+
+//             let parceiroDiv = document.createElement("div");
+//             parceiroDiv.classList.add("parceiro-card");
+//             parceiroDiv.setAttribute("data-id", idParceiro);
+
+//             let titulo = document.createElement("h5");
+//             titulo.textContent = parceiroNome;
+
+//             let subtotal = document.createElement("p");
+//             subtotal.classList.add("subtotal");
+//             subtotal.textContent = "Subtotal: R$ 0.00";
+            
+//             let produtosContainer = document.createElement("div");
+//             produtosContainer.classList.add("produtos-container");
+    
+//             let adicionarProdutoBtn = document.createElement("button");
+//             adicionarProdutoBtn.textContent = "Adicionar Produto";
+    
+//             adicionarProdutoBtn.onclick = function () {
+//                 adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+//             };
+    
+//             let buttonsDiv = document.createElement("div");
+//             buttonsDiv.classList.add("produtos-container-buttons");
+//             buttonsDiv.appendChild(adicionarProdutoBtn);
+    
+//             let removerParceiroBtn = document.createElement("button");
+//             removerParceiroBtn.textContent = "❌";
+//             removerParceiroBtn.onclick = function () {
+//                 parceiroDiv.remove();
+//             };
+    
+//             let headerDiv = document.createElement("div");
+//             headerDiv.classList.add("produtos-container-header");
+//             headerDiv.appendChild(removerParceiroBtn);
+//             headerDiv.appendChild(titulo)
+            
+//             parceiroDiv.appendChild(headerDiv);
+//             produtosContainer.appendChild(buttonsDiv);
+//             parceiroDiv.appendChild(produtosContainer);
+//             // parceiroDiv.appendChild(buttonsDiv);
+//             parceiroDiv.appendChild(subtotal);
+    
+//             listaParceiros.appendChild(parceiroDiv);
+//         }
+//     };
+
+//     if (subtipoSelect.value) {
+//         atualizarParceiros(subtipoSelect.value);
+//     }
+// });
+
+const cacheProdutosPorParceiro = {};
+
 document.addEventListener("DOMContentLoaded", function () {
     const selectParceiro = document.getElementById("parceiro");
     const subtipoSelect = document.getElementById("subtipo-select");
@@ -119,21 +316,59 @@ document.addEventListener("DOMContentLoaded", function () {
             let produtosContainer = document.createElement("div");
             produtosContainer.classList.add("produtos-container");
     
-            let adicionarProdutoBtn = document.createElement("button");
-            adicionarProdutoBtn.textContent = "Adicionar Produto";
+            // let adicionarProdutoBtn = document.createElement("button");
+            // adicionarProdutoBtn.textContent = "Adicionar Produto";
     
-            adicionarProdutoBtn.onclick = function () {
-                adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
-            };
-    
-            let buttonsDiv = document.createElement("div");
-            buttonsDiv.classList.add("produtos-container-buttons");
-            buttonsDiv.appendChild(adicionarProdutoBtn);
-    
+            // adicionarProdutoBtn.onclick = function () {
+            //     adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+            // };
+            
+            // let buttonsDiv = document.createElement("div");
+            // buttonsDiv.classList.add("produtos-container-buttons");
+            // buttonsDiv.appendChild(adicionarProdutoBtn);
+
+            // ----------
+            let comboProduto = document.createElement("div");
+            comboProduto.classList.add("combo-box-produto");
+
+            let inputProduto = document.createElement("input");
+            inputProduto.type = "text";
+            inputProduto.placeholder = "Selecione o produto";
+            inputProduto.classList.add("input-produto");
+            inputProduto.autocomplete = "off";
+
+            inputProduto.addEventListener("focus", function () {
+                adicionarProdutoBy(produtosContainer, idParceiro, parceiroNome, subtotal);
+            });
+
+            inputProduto.addEventListener("input", function () {
+                adicionarProdutoBy(produtosContainer, idParceiro, parceiroNome, subtotal);
+            });
+
+            let dropdownProdutos = document.createElement("div");
+            dropdownProdutos.classList.add("dropdown-produtos");
+
+            comboProduto.appendChild(inputProduto);
+            comboProduto.appendChild(dropdownProdutos);
+
+            produtosContainer.appendChild(comboProduto);
+            // -------
+
             let removerParceiroBtn = document.createElement("button");
             removerParceiroBtn.textContent = "❌";
             removerParceiroBtn.onclick = function () {
+                const parceiroId = parceiroDiv.getAttribute("data-id");
                 parceiroDiv.remove();
+
+                if (typeof resumoOrcamento !== "undefined") {
+                    resumoOrcamento = resumoOrcamento.filter(item =>
+                        String(item.parceiro_id) !== String(parceiroId)
+                    );
+                }
+
+                // atualizarSubtotal();
+                aplicarValores();
+                atualizarParticular()
             };
     
             let headerDiv = document.createElement("div");
@@ -142,12 +377,23 @@ document.addEventListener("DOMContentLoaded", function () {
             headerDiv.appendChild(titulo)
             
             parceiroDiv.appendChild(headerDiv);
-            produtosContainer.appendChild(buttonsDiv);
+            // produtosContainer.appendChild(buttonsDiv);
             parceiroDiv.appendChild(produtosContainer);
             // parceiroDiv.appendChild(buttonsDiv);
             parceiroDiv.appendChild(subtotal);
     
             listaParceiros.appendChild(parceiroDiv);
+
+            const inputParceiro = document.getElementById("input-parceiro");
+            if (inputParceiro) {
+                inputParceiro.value = "";
+                inputParceiro.removeAttribute("data-id");
+            }
+
+            // const selectParceiro = document.getElementById("parceiro");
+            // if (selectParceiro) {
+            //     selectParceiro.value = "";
+            // }
         }
     };
 
@@ -162,7 +408,16 @@ document.addEventListener("DOMContentLoaded", function () {
       button.addEventListener("click", function () {
           let parceiroCard = this.closest(".parceiro-card");
           if (parceiroCard) {
-              parceiroCard.remove();
+            const parceiroId = parceiroCard.getAttribute("data-parceiro-id");
+
+            parceiroCard.remove();
+
+            if (typeof resumoOrcamento !== "undefined") {
+                resumoOrcamento = resumoOrcamento.filter(item =>
+                    String(item.parceiro_id) !== String(parceiroId)
+                );
+            }
+
             //   atualizarTotalGeral();
               aplicarValores();
           }
@@ -181,11 +436,57 @@ function fecharModal() {
 
 function abrirModalTabela() {
     document.getElementById("modal-tabela").style.display = "flex";
-    // preencherTabela();
+    preencherTabelaResumo(resumoOrcamento);
 }
 
 function fecharModalTabela() {
     document.getElementById("modal-tabela").style.display = "none";
+}
+
+const dadosElement = document.getElementById("dados-orcamento");
+
+let resumoOrcamento = [];
+
+if (dadosElement) {
+    const parceirosEdicao = JSON.parse(dadosElement.textContent);
+
+    parceirosEdicao.forEach(parceiro => {
+        parceiro.produtos.forEach(produto => {
+            resumoOrcamento.push({
+                parceiro_id: parceiro.parceiro_id,
+                parceiro: parceiro.parceiro_nome,
+
+                produto_id: produto.produto_id,
+                produto: produto.produto_nome,
+
+                valor_venda: Number(produto.valor_venda),
+                valor_repasse: Number(produto.valor_repasse),
+                valor_particular: Number(produto.valor_particular),
+
+                comissao_indicacao: Number(produto.custos?.comissao_indicacao || 0),
+                comissao_venda: Number(produto.custos?.comissao_venda || 0),
+                brindes: Number(produto.custos?.brindes || 0),
+                impostos: Number(produto.custos?.imposto || 0),
+                cartoes: Number(produto.custos?.cartao || 0),
+                margem_lucro: Number(produto.margem_lucro || 0)
+            });
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (resumoOrcamento.length > 0) {
+        preencherTabelaResumo(resumoOrcamento);
+    }
+});
+
+function atualizarResumo(input) {
+    const index = input.dataset.index;
+    const campo = input.name;
+    const valor = Number(input.value || 0);
+
+    resumoOrcamento[index][campo] = valor;
+    preencherTabelaResumo(resumoOrcamento);
 }
 // ================================= ATUALIZAR VALOR GERAL DE FORMA DIFERENTE ==================================
 document.getElementById("classify").addEventListener("change", function () {
@@ -260,6 +561,7 @@ function aplicarValores() {
 
         fecharModal();
     }
+    atualizarMargem();
 }
 
 function recalcularMargem(novoValorVenda) {
@@ -303,6 +605,7 @@ function recalcularMargem(novoValorVenda) {
     // aplicarValores();
     
     document.getElementById("margem_lucro").value = margem;
+    atualizarMargem();
 }
 
 const editarTotalBtn = document.getElementById("editar-total");
@@ -399,19 +702,25 @@ document.addEventListener("DOMContentLoaded", function () {
 // -------------------- REMOVER PRODUTOS QUE JA ESTAVAM NO ORCAMENTO ----------------------
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".remover-produto-btn").forEach(button => {
-      button.addEventListener("click", function () {
+    button.addEventListener("click", function () {
         let parceiroCard = this.closest(".parceiro-card");
-        let subtotalElement = parceiroCard.querySelector(".subtotal");
-        let produtosContainer = parceiroCard.querySelector(".produtos-container");
         let produtoItem = this.closest(".produto-item");
 
-        if (produtoItem) {
-          produtoItem.remove();
-        //   atualizarSubtotal(produtosContainer, subtotalElement);
-          atualizarParticular();
-          aplicarValores();
+        let parceiroId = parceiroCard.getAttribute("data-parceiro-id");
+        let produtoId = produtoItem.getAttribute("data-id");
+
+        produtoItem.remove();
+
+        if (typeof resumoOrcamento !== "undefined") {
+            resumoOrcamento = resumoOrcamento.filter(item =>
+                !(String(item.parceiro_id) === String(parceiroId) &&
+                String(item.produto_id) === String(produtoId))
+            );
         }
-      });
+
+        atualizarParticular();
+        aplicarValores();
+    });
   });
 });
 
@@ -489,3 +798,139 @@ document.getElementById("procedimentos-list").addEventListener("click", function
     }
 });
 // ----------------------------------------------------------------------------------------------------------
+function normalizarProdutoItem(produtoItem) {
+    const produtosContainer = produtoItem.closest(".produtos-container");
+    const parceiroId = produtoItem.dataset.parceiroId;
+
+    if (!produtosContainer || !parceiroId) return;
+
+    // ===============================
+    // 🔹 Garantir data-valor-repasse-original
+    // ===============================
+    if (!produtoItem.dataset.valorRepasseOriginal) {
+        const repasse = produtoItem.getAttribute("valor_repasse") || produtoItem.dataset.valorRepasse;
+        if (repasse) {
+            produtoItem.dataset.valorRepasseOriginal = repasse;
+        }
+    }
+
+    // ===============================
+    // 🔹 MAPEAR E MIGRAR ATRIBUTOS
+    // ===============================
+    const mapAttrs = [
+        ["comissao-venda", "comissaoVenda"],
+        ["comissao-indicacao", "comissaoIndicacao"],
+        ["brindes", "brindes"],
+        ["impostos", "impostos"],
+        ["cartoes", "cartoes"],
+        ["margem_lucro", "margemLucro"],
+        ["valor_repasse", "valorRepasse"],
+        ["valor_particular", "valorParticular"],
+    ];
+
+    mapAttrs.forEach(([oldAttr, dataKey]) => {
+        if (produtoItem.hasAttribute(oldAttr)) {
+            produtoItem.dataset[dataKey] = produtoItem.getAttribute(oldAttr);
+            produtoItem.removeAttribute(oldAttr); // 🔥 REMOVE O LEGADO
+        }
+    });
+
+    // ===============================
+    // 🔹 Badge desconto 2º produto
+    // ===============================
+    if (!produtoItem.querySelector(".badge-segundo")) {
+        const badge = document.createElement("span");
+        badge.textContent = "2º";
+        badge.classList.add("badge-segundo");
+
+        badge.addEventListener("click", e => {
+            e.stopPropagation();
+            aplicarDescontoSegundoProduto(
+                produtoItem,
+                parceiroId,
+                produtosContainer,
+                badge
+            );
+        });
+
+        produtoItem.querySelector("input")?.after(badge);
+    }
+
+    // ===============================
+    // 🔹 Botão remover (bind único)
+    // ===============================
+    const removerBtn = produtoItem.querySelector(".remover-produto-btn");
+    if (removerBtn && !removerBtn.dataset.binded) {
+        removerBtn.onclick = () => {
+            produtoItem.remove();
+            validarDescontosMinimos(produtosContainer);
+            aplicarValores();
+            atualizarParticular();
+        };
+        removerBtn.dataset.binded = "true";
+    }
+}
+
+function inicializarProdutosEdicao() {
+    document.querySelectorAll(".produto-item").forEach(produtoItem => {
+        normalizarProdutoItem(produtoItem);
+    });
+}
+
+function normalizarComboProdutoEdicao(parceiroCard) {
+    const produtosContainer = parceiroCard.querySelector(".produtos-container");
+    if (!produtosContainer) return;
+
+    // 🔴 remove botão antigo se existir
+    const botaoAntigo = produtosContainer.querySelector(".adicionar-produto-btn");
+    if (botaoAntigo) {
+        botaoAntigo.remove();
+    }
+
+    // 🟢 se já existe combo, não recria
+    if (produtosContainer.querySelector(".combo-box-produto")) return;
+
+    const parceiroId = parceiroCard.dataset.parceiroId;
+    const parceiroNome = parceiroCard.querySelector(".parceiro-title")?.textContent?.trim();
+    const subtotal = parceiroCard.querySelector(".subtotal");
+
+    // ===== cria combo-box =====
+    const comboProduto = document.createElement("div");
+    comboProduto.classList.add("combo-box-produto");
+
+    const inputProduto = document.createElement("input");
+    inputProduto.type = "text";
+    inputProduto.placeholder = "Digite ou selecione o produto...";
+    inputProduto.classList.add("input-produto");
+    inputProduto.autocomplete = "off";
+
+    const dropdownProdutos = document.createElement("div");
+    dropdownProdutos.classList.add("dropdown-produtos");
+
+    inputProduto.addEventListener("focus", () => {
+        adicionarProdutoBy(produtosContainer, parceiroId, parceiroNome, subtotal);
+    });
+
+    inputProduto.addEventListener("input", () => {
+        adicionarProdutoBy(produtosContainer, parceiroId, parceiroNome, subtotal);
+    });
+
+    comboProduto.appendChild(inputProduto);
+    comboProduto.appendChild(dropdownProdutos);
+
+    // 🔹 sempre no topo do container
+    produtosContainer.prepend(comboProduto);
+}
+
+function inicializarCombosProdutosEdicao() {
+    document.querySelectorAll(".parceiro-card").forEach(parceiroCard => {
+        normalizarComboProdutoEdicao(parceiroCard);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    inicializarCombosProdutosEdicao();
+    inicializarProdutosEdicao();
+    aplicarValores();
+    atualizarParticular();
+});

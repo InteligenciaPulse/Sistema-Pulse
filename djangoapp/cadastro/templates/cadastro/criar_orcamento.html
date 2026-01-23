@@ -42,12 +42,16 @@
 
                 <div class="classify-container">
                     <label for="classify">Tipo do Orçamento:</label>
-                    <select id="classify" name="classify">
+                    <select id="classify" name="classify" required>
                         <!-- {% for status in status_list %}
                             <option value="{{ status.id }}">
                                 {{ status.nome }}
                             </option>
                         {% endfor %} -->
+
+                        <option value="" disabled selected>
+                            Selecione o tipo do orçamento
+                        </option>
 
                         <option value="Consulta / Exame">Consulta / Exame</option>
                         <option value="Cirurgia">Cirurgia</option>
@@ -224,9 +228,7 @@
                 <div class="total-edit">
                     <h3 id="total-geral">Total: R$ 0,00</h3>
                     <span id="editar-total" style="cursor: pointer; color: gray;">✏️</span>
-                    <small id="margem-exibida" style="margin-left: 10px; color: #666;">
-                        (Margem: 15%)
-                    </small>
+                    <small id="margem-exibida" style="margin-left: 10px; color: #666;">(Margem: 15%)</small>
                 </div>
                 <button id="proximo-passo">Finalizar Orçamento</button>
             </div>
@@ -373,7 +375,8 @@
                         <th>Valor de Venda</th>
                         <th>Valor de Repasse</th>
                         <th>Valor de Particular</th>
-                        <th>Comissão</th>
+                        <th>Comissão venda</th>
+                        <th>Comissão indicação</th>
                         <th>Brindes</th>
                         <th>Impostos</th>
                         <th>Cartões</th>
@@ -386,7 +389,6 @@
             </table>
         </div>
     </div>
-    
     
 </body>
 </html>

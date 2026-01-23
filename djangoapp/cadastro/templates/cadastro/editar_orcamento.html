@@ -2,6 +2,8 @@
 {% load humanize %}
 {% load numeric %}
 
+{{ parceiros|json_script:"dados-orcamento" }}
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -151,23 +153,37 @@
             <div id="filter-parceiro">
                 <label for="parceiro">Parceiro:</label>
                 <div id="parceiro-subtype">
-                    <select id="parceiro" name="parceiro">
-                        <option value>Selecione o parceiro</option>
-                        {% for parceiro in parceiro_list %}
-                            <option value="{{ parceiro.id }}" data-subtipo="{{ parceiro.subtipo.id }}">
-                                {{ parceiro.nome }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                  <div class="combo-box">
+                      <input
+                          type="text"
+                          id="input-parceiro"
+                          placeholder="Digite ou selecione o parceiro..."
+                          autocomplete="off"
+                      />
 
-                    <select id="subtipo-select">
-                        <option value>Todos</option>
-                        {% for subtipo in subtipo_list %}
-                            <option value="{{ subtipo.id }}">
-                                {{ subtipo.nome }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                      <div id="dropdown-parceiro" class="dropdown"></div>
+
+                      <select id="parceiro" name="parceiro" style="display: none;">
+                          <option value>Selecione o parceiro</option>
+                          {% for parceiro in parceiro_list %}
+                              <option
+                                  value="{{ parceiro.id }}"
+                                  data-subtipo="{{ parceiro.subtipo.id }}"
+                              >
+                                  {{ parceiro.nome }}
+                              </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+
+                  <select id="subtipo-select">
+                      <option value>Todos</option>
+                      {% for subtipo in subtipo_list %}
+                          <option value="{{ subtipo.id }}">
+                              {{ subtipo.nome }}
+                          </option>
+                      {% endfor %}
+                  </select>
                 </div>
                 
                 <button id= "filter-parceiro-add-button" onclick="adicionarParceiro()">Adicionar parceiro</button>
@@ -222,6 +238,7 @@
           <div class="total-edit">
             <h3 id="total-geral">Total: R$ {{ orcamento.valor_total|intcomma }}</h3>
             <span id="editar-total" style="cursor: pointer; color: gray;">✏️</span>
+            <small id="margem-exibida" style="margin-left: 10px; color: #666;">(Margem: 15%)</small>
           </div>
           <button id="salvar-orcamento" data-id="{{ orcamento.id }}">Salvar Alterações</button>
         </div>

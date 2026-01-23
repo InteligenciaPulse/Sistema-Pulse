@@ -745,110 +745,146 @@ function ocultarCarregando() {
 
 function abrirModalTabela() {
     document.getElementById("modal-tabela").style.display = "flex";
-    preencherTabela();
+    preencherTabelaCriacao();
 }
 
 function fecharModalTabela() {
     document.getElementById("modal-tabela").style.display = "none";
 }
 
-function preencherTabela() {
-    var vendaTotal = 0;
-    var repasseTotal = 0;
-    var particularTotal = 0;
-    var comissaoResumo = 0;
-    var brindesResumo = 0;
-    var impostosResumo = 0;
-    var cartoesResumo = 0;
-    var margemResumo = 0;
-    const table = document.querySelector('.tabela-parceiros')
-    const tbody = document.querySelector(".tabela-parceiros tbody");
-    tbody.innerHTML = "";
+// function preencherTabela() {
+//     var vendaTotal = 0;
+//     var repasseTotal = 0;
+//     var particularTotal = 0;
+//     var comissaoResumo = 0;
+//     var brindesResumo = 0;
+//     var impostosResumo = 0;
+//     var cartoesResumo = 0;
+//     var margemResumo = 0;
+//     const table = document.querySelector('.tabela-parceiros')
+//     const tbody = document.querySelector(".tabela-parceiros tbody");
+//     tbody.innerHTML = "";
 
+//     const parceiroCards = document.querySelectorAll(".parceiro-card");
+
+//     parceiroCards.forEach(function(parceiro) {
+//         const parceiroNome = parceiro.querySelector(".produtos-container-header h5").textContent;
+
+//         let produtos = [];
+//         const produtoContainer = parceiro.querySelector(".produtos-container");
+//         const produtoItems = produtoContainer.querySelectorAll(".produto-item");
+
+//         produtoItems.forEach(function(produto) {
+//             const produtoNome = produto.querySelector("span").textContent;
+//             const valorVenda = produto.querySelector("input").value;
+//             const valorRepasse = produto.getAttribute("data-valor-repasse");
+//             const valorParticular = produto.getAttribute("data-valor-particular");
+//             const comissao = produto.getAttribute("comissao");
+//             const brindes = produto.getAttribute("brindes");
+//             const impostos = produto.getAttribute("impostos");
+//             const cartoes = produto.getAttribute("cartoes");
+//             const margem_lucro = produto.getAttribute("margem_lucro");
+
+//             let produtoData = {
+//                 nome: produtoNome,
+//                 valor_venda: valorVenda,
+//                 valor_repasse: valorRepasse,
+//                 valor_particular: valorParticular,
+//                 comissao: comissao,
+//                 brindes: brindes,
+//                 impostos: impostos,
+//                 cartoes: cartoes,
+//                 margem_lucro: margem_lucro
+//             };
+    
+//             produtos.push(produtoData);
+//         });
+        
+        
+//         produtos.forEach(function(produto) {
+//             const tr = document.createElement("tr");
+//             tr.innerHTML = `
+//             <td>${parceiroNome}</td>
+//             <td>${produto.nome}</td>
+//             <td>R$ ${produto.valor_venda}</td>
+//             <td>R$ ${produto.valor_repasse}</td>
+//             <td>R$ ${produto.valor_particular}</td>
+//             <td></td>
+//             <td></td>
+//             <td></td>
+//             <td></td>
+//             <td></td>
+//             `;
+//             tbody.appendChild(tr);
+//         });
+        
+//         produtos.forEach(function(produto){
+//             comissaoResumo = produto.comissao;
+//             brindesResumo = produto.brindes;
+//             impostosResumo = produto.impostos;
+//             cartoesResumo = produto.cartoes;
+//             margemResumo = produto.margem_lucro;
+//             vendaTotal += parseFloat(produto.valor_venda);
+//             repasseTotal += parseFloat(produto.valor_repasse);
+//             particularTotal += parseFloat(produto.valor_particular);
+//         });
+//     });
+
+//     let tfoot = table.querySelector("tfoot");
+
+//     if (!tfoot) {
+//         tfoot = document.createElement("tfoot");
+//         table.appendChild(tfoot);
+//     }
+    
+//     tfoot.innerHTML = "";
+//     tfoot.innerHTML = `
+//     <td></td>
+//     <td>Total</td>
+//     <td>R$ ${vendaTotal}</td>
+//     <td>R$ ${repasseTotal}</td>
+//     <td>R$ ${particularTotal}</td>
+//     <td>R$ ${comissaoResumo}</td>
+//     <td>R$ ${brindesResumo}</td>
+//     <td>${impostosResumo}%</td>
+//     <td>${cartoesResumo}%</td>
+//     <td>${margemResumo}%</td>
+//     `;
+//     table.appendChild(tfoot);
+// }
+
+function coletarDadosCriacao() {
+    const dados = [];
     const parceiroCards = document.querySelectorAll(".parceiro-card");
 
-    parceiroCards.forEach(function(parceiro) {
-        const parceiroNome = parceiro.querySelector(".produtos-container-header h5").textContent;
+    parceiroCards.forEach(parceiro => {
+        const parceiroNome =
+            parceiro.querySelector(".produtos-container-header h5").textContent;
 
-        let produtos = [];
-        const produtoContainer = parceiro.querySelector(".produtos-container");
-        const produtoItems = produtoContainer.querySelectorAll(".produto-item");
+        const produtos =
+            parceiro.querySelectorAll(".produtos-container .produto-item");
 
-        produtoItems.forEach(function(produto) {
-            const produtoNome = produto.querySelector("span").textContent;
-            const valorVenda = produto.querySelector("input").value;
-            const valorRepasse = produto.getAttribute("data-valor-repasse");
-            const valorParticular = produto.getAttribute("data-valor-particular");
-            const comissao = produto.getAttribute("comissao");
-            const brindes = produto.getAttribute("brindes");
-            const impostos = produto.getAttribute("impostos");
-            const cartoes = produto.getAttribute("cartoes");
-            const margem_lucro = produto.getAttribute("margem_lucro");
-
-            let produtoData = {
-                nome: produtoNome,
-                valor_venda: valorVenda,
-                valor_repasse: valorRepasse,
-                valor_particular: valorParticular,
-                comissao: comissao,
-                brindes: brindes,
-                impostos: impostos,
-                cartoes: cartoes,
-                margem_lucro: margem_lucro
-            };
-    
-            produtos.push(produtoData);
-        });
-        
-        
-        produtos.forEach(function(produto) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-            <td>${parceiroNome}</td>
-            <td>${produto.nome}</td>
-            <td>R$ ${produto.valor_venda}</td>
-            <td>R$ ${produto.valor_repasse}</td>
-            <td>R$ ${produto.valor_particular}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            `;
-            tbody.appendChild(tr);
-        });
-        
-        produtos.forEach(function(produto){
-            comissaoResumo = produto.comissao;
-            brindesResumo = produto.brindes;
-            impostosResumo = produto.impostos;
-            cartoesResumo = produto.cartoes;
-            margemResumo = produto.margem_lucro;
-            vendaTotal += parseFloat(produto.valor_venda);
-            repasseTotal += parseFloat(produto.valor_repasse);
-            particularTotal += parseFloat(produto.valor_particular);
+        produtos.forEach(produto => {
+            dados.push({
+                parceiro: parceiroNome,
+                produto: produto.querySelector("span").textContent,
+                valor_venda: Number(produto.querySelector("input").value || 0),
+                valor_repasse: Number(produto.getAttribute("data-valor-repasse") || 0),
+                valor_particular: Number(produto.getAttribute("data-valor-particular") || 0),
+                comissao_indicacao: Number(produto.getAttribute("comissao") || 0),
+                comissao_venda: Number(produto.getAttribute("comissao_venda") || 0),
+                brindes: Number(produto.getAttribute("brindes") || 0),
+                impostos: Number(produto.getAttribute("impostos") || 0),
+                cartoes: Number(produto.getAttribute("cartoes") || 0),
+                margem_lucro: Number(produto.getAttribute("margem_lucro") || 0)
+            });
         });
     });
 
-    let tfoot = table.querySelector("tfoot");
+    return dados;
+}
 
-    if (!tfoot) {
-        tfoot = document.createElement("tfoot");
-        table.appendChild(tfoot);
-    }
-    
-    tfoot.innerHTML = "";
-    tfoot.innerHTML = `
-    <td></td>
-    <td>Total</td>
-    <td>R$ ${vendaTotal}</td>
-    <td>R$ ${repasseTotal}</td>
-    <td>R$ ${particularTotal}</td>
-    <td>R$ ${comissaoResumo}</td>
-    <td>R$ ${brindesResumo}</td>
-    <td>${impostosResumo}%</td>
-    <td>${cartoesResumo}%</td>
-    <td>${margemResumo}%</td>
-    `;
-    table.appendChild(tfoot);
+function preencherTabelaCriacao() {
+    const dados = coletarDadosCriacao();
+    preencherTabelaResumo(dados);
 }

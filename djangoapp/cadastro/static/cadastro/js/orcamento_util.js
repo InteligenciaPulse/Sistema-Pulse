@@ -178,7 +178,7 @@ document.addEventListener("click", (e) => {
 
 
 // --------------------------------------- ADICIONAR PRODUTOS ------------------------------------
-function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
+function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement, onProdutoCriado = null) {
 
     const comboBox = produtosContainer.querySelector(".combo-box-produto");
     const inputProduto = comboBox ? comboBox.querySelector(".input-produto") : null;
@@ -238,10 +238,41 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                         );
                     });
 
+                    const produtoCriado = {
+                        parceiro_id: parceiroId,
+                        parceiro: nomeParceiro,
+
+                        produto_id: produto.id,
+                        produto: produto.nome,
+
+                        valor_venda: Number(produto.valor_venda || 0),
+                        valor_repasse: Number(produto.valor_repasse || 0),
+                        valor_particular: Number(produto.valor_particular || 0),
+
+                        comissao_indicacao: 0,
+                        comissao_venda: 0,
+                        brindes: 0,
+                        impostos: 0,
+                        cartoes: 0,
+                        margem_lucro: 15.0
+                    };
+
+                    if (typeof resumoOrcamento !== "undefined") {
+                        resumoOrcamento.push(produtoCriado);
+                    }
+
                     let removerProdutoBtn = document.createElement("button");
                     removerProdutoBtn.textContent = "❌";
                     removerProdutoBtn.onclick = function () {
                         produtoItem.remove();
+
+                        if (typeof resumoOrcamento !== "undefined") {
+                            resumoOrcamento = resumoOrcamento.filter(item =>
+                                !(String(item.parceiro_id) === String(parceiroId) &&
+                                String(item.produto_id) === String(produto.id))
+                            );
+                        }
+
                         validarDescontosMinimos(produtosContainer);
                         aplicarValores();
                         atualizarParticular();
@@ -392,6 +423,19 @@ function aplicarDesconto(produtoItem, parceiroId, descontoIcon) {
             const novoValor = repasseOriginal * (1 - desconto / 100);
             produtoItem.setAttribute("data-valor-repasse", novoValor.toFixed(2));
 
+            if (typeof resumoOrcamento !== "undefined") {
+                const produtoId = produtoItem.getAttribute("data-id");
+
+                resumoOrcamento.forEach(item => {
+                    if (
+                        String(item.parceiro_id) === String(parceiroId) &&
+                        String(item.produto_id) === String(produtoId)
+                    ) {
+                        item.valor_repasse = novoValor;
+                    }
+                });
+            }
+
             produtoItem.setAttribute("data-desconto-percentual", desconto);
 
             descontoIcon.textContent = `2º -${desconto}%`;
@@ -408,6 +452,20 @@ function removerDesconto(produtoItem, descontoIcon) {
 
     if (!isNaN(original)) {
         produtoItem.setAttribute("data-valor-repasse", original.toFixed(2));
+    }
+
+    if (typeof resumoOrcamento !== "undefined") {
+        const produtoId = produtoItem.getAttribute("data-id");
+        const parceiroId = produtoItem.getAttribute("data-parceiro-id");
+
+        resumoOrcamento.forEach(item => {
+            if (
+                String(item.parceiro_id) === String(parceiroId) &&
+                String(item.produto_id) === String(produtoId)
+            ) {
+                item.valor_repasse = original;
+            }
+        });
     }
 
     produtoItem.removeAttribute("data-desconto-percentual");
@@ -431,6 +489,68 @@ function validarDescontosMinimos(produtosContainer) {
     }
 }
 
+function preencherTabelaResumo(dados) {
+    const table = document.querySelector('.tabela-parceiros');
+    const tbody = table.querySelector("tbody");
+
+    tbody.innerHTML = "";
+
+    let totais = {
+        venda: 0,
+        repasse: 0,
+        particular: 0,
+        comissao_indicacao: 0,
+        comissao_venda: 0,
+        brindes: 0
+    };
+
+    dados.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${item.parceiro}</td>
+            <td>${item.produto}</td>
+            <td>R$ ${item.valor_venda}</td>
+            <td>R$ ${item.valor_repasse}</td>
+            <td>R$ ${item.valor_particular}</td>
+            <td>R$ ${item.comissao_indicacao}</td>
+            <td>R$ ${item.comissao_venda}</td>
+            <td>R$ ${item.brindes}</td>
+            <td>${item.impostos}%</td>
+            <td>${item.cartoes}%</td>
+            <td>${item.margem_lucro}%</td>
+        `;
+        tbody.appendChild(tr);
+
+        totais.venda += Number(item.valor_venda || 0);
+        totais.repasse += Number(item.valor_repasse || 0);
+        totais.particular += Number(item.valor_particular || 0);
+        totais.comissao_indicacao += Number(item.comissao_indicacao || 0);
+        totais.comissao_venda += Number(item.comissao_venda || 0);
+        totais.brindes += Number(item.brindes || 0);
+    });
+
+    let tfoot = table.querySelector("tfoot");
+    if (!tfoot) {
+        tfoot = document.createElement("tfoot");
+        table.appendChild(tfoot);
+    }
+
+    tfoot.innerHTML = `
+        <tr>
+            <td></td>
+            <td>Total</td>
+            <td>R$ ${totais.venda}</td>
+            <td>R$ ${totais.repasse}</td>
+            <td>R$ ${totais.particular}</td>
+            <td>R$ ${totais.comissao_indicacao}</td>
+            <td>R$ ${totais.comissao_venda}</td>
+            <td>R$ ${totais.brindes}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    `;
+}
 // ---------------------------------------- BUSCAR STATUS --------------------------------------------------
 // document.addEventListener("DOMContentLoaded", function () {
 //     fetch("/buscar_status/")
