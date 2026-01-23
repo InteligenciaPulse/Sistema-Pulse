@@ -137,7 +137,7 @@ def historico(request):
 
 def buscar_pacientes(request):
     query = request.GET.get('q', '')
-    pacientes = Paciente.objects.filter(nome__icontains=query)[:10]
+    pacientes = Paciente.objects.filter(nome__icontains=query).order_by('nome')[:10]
     data = [{"id": p.id, "nome": p.nome} for p in pacientes]
     return JsonResponse(data, safe=False)
 

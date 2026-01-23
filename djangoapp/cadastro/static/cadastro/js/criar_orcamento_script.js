@@ -109,17 +109,36 @@ document.addEventListener("DOMContentLoaded", function () {
             let produtosContainer = document.createElement("div");
             produtosContainer.classList.add("produtos-container");
     
-            let adicionarProdutoBtn = document.createElement("button");
-            adicionarProdutoBtn.textContent = "Adicionar Produto";
+            // let adicionarProdutoBtn = document.createElement("button");
+            // adicionarProdutoBtn.textContent = "Adicionar Produto";
     
-            adicionarProdutoBtn.onclick = function () {
-                adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
-            };
+            // adicionarProdutoBtn.onclick = function () {
+            //     adicionarProdutoBy(produtosContainer, idParceiro, titulo.textContent.trim(), subtotal);
+            // };
             
-            let buttonsDiv = document.createElement("div");
-            buttonsDiv.classList.add("produtos-container-buttons");
-            buttonsDiv.appendChild(adicionarProdutoBtn);
-    
+            // let buttonsDiv = document.createElement("div");
+            // buttonsDiv.classList.add("produtos-container-buttons");
+            // buttonsDiv.appendChild(adicionarProdutoBtn);
+
+            // ----------
+            let comboProduto = document.createElement("div");
+            comboProduto.classList.add("combo-box-produto");
+
+            let inputProduto = document.createElement("input");
+            inputProduto.type = "text";
+            inputProduto.placeholder = "Selecione o produto";
+            inputProduto.classList.add("input-produto");
+            inputProduto.autocomplete = "off";
+
+            let dropdownProdutos = document.createElement("div");
+            dropdownProdutos.classList.add("dropdown-produtos");
+
+            comboProduto.appendChild(inputProduto);
+            comboProduto.appendChild(dropdownProdutos);
+
+            produtosContainer.appendChild(comboProduto);
+            // -------
+
             let removerParceiroBtn = document.createElement("button");
             removerParceiroBtn.textContent = "❌";
             removerParceiroBtn.onclick = function () {
@@ -135,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headerDiv.appendChild(titulo)
             
             parceiroDiv.appendChild(headerDiv);
-            produtosContainer.appendChild(buttonsDiv);
+            // produtosContainer.appendChild(buttonsDiv);
             parceiroDiv.appendChild(produtosContainer);
             // parceiroDiv.appendChild(buttonsDiv);
             parceiroDiv.appendChild(subtotal);
@@ -568,6 +587,7 @@ function aplicarValores() {
 
         fecharModal();
     }
+    atualizarMargem();
 }
 
 function recalcularMargem(novoValorVenda) {
@@ -619,6 +639,7 @@ function recalcularMargem(novoValorVenda) {
     });
     
     document.getElementById("margem_lucro").value = margem;
+    atualizarMargem();
 }
 
 // valorVendaSpan.textContent = valorVenda.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
