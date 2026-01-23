@@ -1374,11 +1374,62 @@ observacoes-container {
   text-align: center;
 }
 
-#classify {
-  border: 2px solid #dc2626;
+/* bloqueio funcional */
+.container.bloqueado {
+  pointer-events: none;
+  position: relative;
 }
 
-#classify:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+/* overlay escuro */
+.container.bloqueado::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+/* libera SOMENTE o container do classify */
+.container.bloqueado .classify-container {
+  pointer-events: auto;
+  position: relative;
+  z-index: 20;
+
+  /* mantém estilo original */
+  background: inherit;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+/* leve destaque, sem mudar fonte/tamanho */
+.container.bloqueado #classify {
+  background-color: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  cursor: pointer;
+}
+
+/* label apenas um pouco mais visível */
+.container.bloqueado .classify-container label {
+  color: #ffffff;
+}
+
+/* campo obrigatório ativo */
+.campo-obrigatorio {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5;
+}
+
+/* label do campo obrigatório */
+.campo-obrigatorio-label {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* texto de ajuda abaixo do campo */
+.mensagem-obrigatoria {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 4px;
 }

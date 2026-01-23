@@ -625,3 +625,32 @@ function buscarProcedimentos(dropdown, inputProcedimentos, especialidadeSelecion
         })
         .catch(error => console.error("Erro ao buscar prcoedimentos:", error));
   }
+
+// -------------------------------------- DATA APROVAÇÃO
+function aplicarIndicacaoDataAprovacao() {
+    const statusSelect = document.getElementById("status");
+    const dataAprovacao = document.getElementById("data_aprovacao");
+    const label = document.querySelector('label[for="data_aprovacao"]');
+    const msg = document.getElementById("msg-data-aprovacao");
+
+    if (!statusSelect || !dataAprovacao) return;
+
+    const statusTexto =
+        statusSelect.options[statusSelect.selectedIndex]?.text
+            ?.toLowerCase()
+            .trim();
+
+    if (statusTexto === "aprovado") {
+        dataAprovacao.required = true;
+        dataAprovacao.classList.add("campo-obrigatorio");
+        label?.classList.add("campo-obrigatorio-label");
+
+        if (msg) msg.style.display = "block";
+    } else {
+        dataAprovacao.required = false;
+        dataAprovacao.classList.remove("campo-obrigatorio");
+        label?.classList.remove("campo-obrigatorio-label");
+
+        if (msg) msg.style.display = "none";
+    }
+}

@@ -261,8 +261,22 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         if (btnFinalizar.disabled) return;
 
         const pacienteId = document.getElementById("paciente").dataset.id;
+        const statusSelect = document.getElementById("status");
         const statusSelecionado = document.getElementById("status").value;
         const colunaId = getQueryParam("coluna_id");
+
+        const dataAprovacao = document.getElementById("data_aprovacao");
+
+        const statusTexto =
+            statusSelect.options[statusSelect.selectedIndex]?.text
+                ?.toLowerCase()
+                .trim();
+
+        if (statusTexto === "aprovado" && !dataAprovacao.value) {
+            alert("Para status APROVADO, a data de aprovação é obrigatória.");
+            dataAprovacao.focus();
+            return;
+        }
 
         if (!pacienteId) {
             alert("Selecione um paciente antes de finalizar o orçamento.");
@@ -349,6 +363,38 @@ document.getElementById("proximo-passo").addEventListener("click", function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const statusSelect = document.getElementById("status");
+    if (!statusSelect) return;
+
+    aplicarIndicacaoDataAprovacao();
+    statusSelect.addEventListener("change", aplicarIndicacaoDataAprovacao);
+});
+// ------------------------- OBRIGAR CLASSIFY
+document.addEventListener("DOMContentLoaded", function () {
+  const classify = document.getElementById("classify");
+  const container = document.querySelector(".container");
+
+  // começa bloqueado se não tiver tipo
+  if (!classify.value) {
+    container.classList.add("bloqueado");
+  }
+
+  // edição: já tem valor → libera direto
+  if (classify.value) {
+    container.classList.remove("bloqueado");
+  }
+
+  classify.addEventListener("change", function () {
+    if (this.value) {
+      container.classList.remove("bloqueado");
+    } else {
+      container.classList.add("bloqueado");
+    }
+  });
+});
+// -------------------------
 
 // =================================================== PACOTES
 function adicionarPacote(container, produtosContainer, subtotalElement) {

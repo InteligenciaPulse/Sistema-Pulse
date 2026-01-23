@@ -43,20 +43,45 @@
                     name="data_aprovacao"
                     value="{{ orcamento.data_aprovacao|date:'Y-m-d' }}"
                 >
+                <div id="msg-data-aprovacao" class="mensagem-obrigatoria" style="display:none;"></div>
             </div>
 
             <div class="classify-container">
               <label for="classify">Tipo do Orçamento:</label>
-              <select id="classify" name="classify" disabled>
-                <option value="{{ orcamento.tipo_orcamento }}">{{ orcamento.tipo_orcamento }}</option>
+              <select id="classify" name="classify" required>
+                <option value="" disabled {% if not orcamento.tipo_orcamento %}selected{% endif %}>
+                    Selecione o tipo do orçamento
+                </option>
+
+                <option value="Consulta / Exame"
+                    {% if orcamento.tipo_orcamento == "Consulta / Exame" %}selected{% endif %}>
+                    Consulta / Exame
+                </option>
+
+                <option value="Cirurgia"
+                    {% if orcamento.tipo_orcamento == "Cirurgia" %}selected{% endif %}>
+                    Cirurgia
+                </option>
+
+                <option value="Procedimento"
+                    {% if orcamento.tipo_orcamento == "Procedimento" %}selected{% endif %}>
+                    Procedimento
+                </option>
               </select>
             </div>
 
             <div class="filter-pagamento">
               <label for="pagamento">Forma de pagamento:</label>
               <div class="pagamento-container">
-                <select id="pagamento" name="pagamento" disabled>
-                  <option value="{{ orcamento.pagamento }}">{{ orcamento.pagamento }}</option>
+                <select id="pagamento" name="pagamento">
+                  <option value="" disabled {% if not orcamento.pagamento %}selected{% endif %}>
+                    Selecione a forma de pagamento
+                  </option>
+
+                  <option value="Dinheiro" {% if orcamento.pagamento == "Dinheiro" %}selected{% endif %}>Dinheiro</option>
+                  <option value="Crédito" {% if orcamento.pagamento == "Crédito" %}selected{% endif %}>Crédito</option>
+                  <option value="Débito" {% if orcamento.pagamento == "Débito" %}selected{% endif %}>Débito</option>
+                  <option value="PIX" {% if orcamento.pagamento == "PIX" %}selected{% endif %}>PIX</option>
                 </select>
               </div>
             </div>
@@ -64,8 +89,17 @@
             <div class="filter-canal">
               <label for="canal">Canal de aquisição:</label>
               <div class="canal-container">
-                <select id="canal" name="canal" disabled>
-                  <option value="{{ orcamento.canal }}">{{ orcamento.canal }}</option>
+                <select id="canal" name="canal">
+                  <option value="" disabled {% if not orcamento.canal %}selected{% endif %}>
+                    Selecione a forma de pagamento
+                  </option>
+
+                  <option value="WhatsApp" {% if orcamento.canal == "WhatsApp" %}selected{% endif %}>WhatsApp</option>
+                  <option value="Instagram" {% if orcamento.canal == "Instagram" %}selected{% endif %}>Instagram</option>
+                  <option value="Indicação de amigo" {% if orcamento.canal == "Indicação de amigo" %}selected{% endif %}>
+                      Indicação de amigo
+                  </option>
+                  <option value="Telefone" {% if orcamento.canal == "Telefone" %}selected{% endif %}>Telefone</option>
                 </select>
               </div>
             </div>

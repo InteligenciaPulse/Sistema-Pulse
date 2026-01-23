@@ -71,7 +71,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (btnSalvar.disabled) return;
 
         const orcamentoId = btnSalvar.dataset.id;
-        const statusSelecionado = document.getElementById("status")?.value || "";
+        const statusSelect = document.getElementById("status");
+        const statusSelecionado = statusSelect?.value || "";
+        const dataAprovacao = document.getElementById("data_aprovacao");
+
+        const statusTexto =
+            statusSelect?.options[statusSelect.selectedIndex]?.text
+                ?.toLowerCase()
+                .trim();
+
+        if (statusTexto === "aprovado" && !dataAprovacao?.value) {
+            alert("Para status APROVADO, a data de aprovação é obrigatória.");
+            dataAprovacao.focus();
+            return;
+        }
 
         // ================= BLOQUEIO UI =================
         btnSalvar.disabled = true;
@@ -162,7 +175,13 @@ function extrairValorMonetario(texto) {
     return parseFloat(match[0].replace(/\./g, "").replace(",", "."));
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const statusSelect = document.getElementById("status");
+    if (!statusSelect) return;
 
+    aplicarIndicacaoDataAprovacao();
+    statusSelect.addEventListener("change", aplicarIndicacaoDataAprovacao);
+});
 
 // -------------------------------------PARCEIROS-------------------------------------------------------
 // document.addEventListener("DOMContentLoaded", function () {
