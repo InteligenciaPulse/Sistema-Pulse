@@ -179,9 +179,9 @@ document.addEventListener("click", (e) => {
 
 // --------------------------------------- ADICIONAR PRODUTOS ------------------------------------
 function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtotalElement) {
+
     const comboBox = produtosContainer.querySelector(".combo-box-produto");
     const inputProduto = comboBox ? comboBox.querySelector(".input-produto") : null;
-    
     const dropdownProdutos = comboBox
         ? comboBox.querySelector(".dropdown-produtos")
         : document.createElement("div");
@@ -191,33 +191,23 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
         produtosContainer.appendChild(dropdownProdutos);
     }
 
-    dropdownProdutos.innerHTML = "";
+    dropdownProdutos.style.display = "block";
 
-    const loadingMsg = document.createElement("div");
-    loadingMsg.textContent = "Carregando produtos...";
-    loadingMsg.classList.add("loading-indicator");
-    produtosContainer.appendChild(loadingMsg);
+    // =====================================================
+    // 🔹 FUNÇÃO DE INICIALIZAÇÃO (SEM FETCH DUPLICADO)
+    // =====================================================
+    function inicializarDropdown(produtos) {
 
-    fetch(`/api/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
-        .then(response => response.json())
-        .then(data => {
-            loadingMsg.remove();
-            let dropdownProdutos = document.createElement("div");
-            dropdownProdutos.classList.add("dropdown-produtos");
+        function renderizar(lista) {
+            dropdownProdutos.innerHTML = "";
 
-            if (data.length === 0) {
-                alert("Nenhum produto disponível para este parceiro.");
-                return;
-            }
-
-            data.forEach(produto => {
-                let option = document.createElement("div");
+            lista.forEach(produto => {
+                const option = document.createElement("div");
                 option.textContent = produto.nome;
                 option.classList.add("dropdown-item");
-                option.setAttribute("data-id", produto.id);
-                option.setAttribute("data-parceiro-id", parceiroId);
 
                 option.addEventListener("click", function () {
+
                     let produtoItem = document.createElement("div");
                     produtoItem.classList.add("produto-item");
 
@@ -230,30 +220,16 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                     valorInput.step = 0.01;
                     valorInput.min = 0;
                     valorInput.value = produto.valor_venda;
-
                     valorInput.disabled = true;
 
-                    valorInput.addEventListener("input", function () {
-                        // atualizarSubtotal(produtosContainer, subtotalElement);
-                        aplicarValores()
-                    });
+                    valorInput.addEventListener("input", aplicarValores);
 
                     let descontoIcon = document.createElement("span");
-                    descontoIcon.innerHTML = "💲";
-                    descontoIcon.title = "Aplicar/Remover desconto";
-                    descontoIcon.classList.add("desconto-icon");
+                    descontoIcon.textContent = "2º";
+                    descontoIcon.classList.add("badge-segundo");
+                    descontoIcon.title = "Aplicar desconto de segundo procedimento";
 
                     descontoIcon.addEventListener("click", function () {
-                        const jaAtivo = descontoIcon.classList.contains("ativo");
-
-                        if (jaAtivo) {
-                            descontoIcon.classList.remove("ativo");
-                            produtoItem.classList.remove("desconto-ativo");
-                        } else {
-                            descontoIcon.classList.add("ativo");
-                            produtoItem.classList.add("desconto-ativo");
-                        }
-                        
                         aplicarDescontoSegundoProduto(
                             produtoItem,
                             parceiroId,
@@ -266,18 +242,16 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                     removerProdutoBtn.textContent = "❌";
                     removerProdutoBtn.onclick = function () {
                         produtoItem.remove();
-                        // atualizarSubtotal(produtosContainer, subtotalElement);
-                        aplicarValores()
+                        validarDescontosMinimos(produtosContainer);
+                        aplicarValores();
                         atualizarParticular();
                     };
-                    
+
                     produtoItem.appendChild(produtoNome);
-                    //   produtoItem.appendChild(produtoConfig);
                     produtoItem.appendChild(valorInput);
-
                     produtoItem.appendChild(descontoIcon);
-
                     produtoItem.appendChild(removerProdutoBtn);
+
                     produtoItem.setAttribute("data-id", produto.id);
                     produtoItem.setAttribute("data-parceiro-id", parceiroId);
                     produtoItem.setAttribute("data-valor-particular", produto.valor_particular);
@@ -286,8 +260,10 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                     produtoItem.setAttribute("margem_lucro", 15.00);
 
                     produtosContainer.appendChild(produtoItem);
-                    dropdownProdutos.remove();
-                    // atualizarSubtotal(produtosContainer, subtotalElement);
+
+                    dropdownProdutos.style.display = "none";
+                    if (inputProduto) inputProduto.value = "";
+
                     aplicarValores();
                     atualizarParticular();
                 });
@@ -295,20 +271,81 @@ function adicionarProdutoBy(produtosContainer, parceiroId, nomeParceiro, subtota
                 dropdownProdutos.appendChild(option);
             });
 
-            produtosContainer.appendChild(dropdownProdutos);
+            dropdownProdutos.style.display = "block";
+        }
 
-            function handleClickOutside(event) {
-                if (!dropdownProdutos.contains(event.target)) {
-                    dropdownProdutos.remove();
-                    document.removeEventListener("click", handleClickOutside);
-                }
+        // 🔹 render inicial (lista completa)
+        renderizar(produtos);
+
+        // 🔹 filtro local (SEM FETCH)
+        if (inputProduto) {
+            inputProduto.oninput = function () {
+                const termo = inputProduto.value.toLowerCase();
+                renderizar(
+                    produtos.filter(p =>
+                        p.nome.toLowerCase().includes(termo)
+                    )
+                );
+            };
+
+            inputProduto.onfocus = function () {
+                renderizar(produtos);
+            };
+        }
+
+        // 🔹 fechar ao clicar fora
+        function handleClickOutside(event) {
+            if (
+                (!comboBox && !dropdownProdutos.contains(event.target)) ||
+                (comboBox && !comboBox.contains(event.target))
+            ) {
+                dropdownProdutos.style.display = "none";
+                document.removeEventListener("click", handleClickOutside);
             }
-                
-            setTimeout(() => {
-                document.addEventListener("click", handleClickOutside);
-            }, 0);
+        }
+
+        setTimeout(() => {
+            document.addEventListener("click", handleClickOutside);
+        }, 0);
+    }
+
+    // =====================================================
+    // 🔹 SE JÁ TEM CACHE → NÃO FAZ FETCH
+    // =====================================================
+    if (cacheProdutosPorParceiro[nomeParceiro]) {
+        inicializarDropdown(cacheProdutosPorParceiro[nomeParceiro]);
+        return;
+    }
+
+    // =====================================================
+    // 🔹 FETCH ÚNICO POR PARCEIRO
+    // =====================================================
+    dropdownProdutos.innerHTML = "";
+    const loadingMsg = document.createElement("div");
+    loadingMsg.textContent = "Carregando produtos...";
+    loadingMsg.classList.add("loading-indicator");
+    dropdownProdutos.appendChild(loadingMsg);
+
+    fetch(`/api/buscar_produtos_por_parceiro/?parceiro_nome=${encodeURIComponent(nomeParceiro)}`)
+        .then(response => response.json())
+        .then(data => {
+            loadingMsg.remove();
+
+            if (!data || data.length === 0) {
+                alert("Nenhum produto disponível para este parceiro.");
+                dropdownProdutos.style.display = "none";
+                return;
+            }
+
+            // 🔹 salva cache
+            cacheProdutosPorParceiro[nomeParceiro] = data;
+
+            inicializarDropdown(data);
         })
-        .catch(error => console.error("Erro ao buscar parceiros:", error));
+        .catch(error => {
+            console.error("Erro ao buscar produtos:", error);
+            dropdownProdutos.style.display = "none";
+        });
 }
 
 function atualizarMargem() {
@@ -321,47 +358,28 @@ function atualizarMargem() {
         : `(Margem: ${valor.toFixed(2)}%)`;
 }
 
-function aplicarDescontoSegundoProduto(
-    produtoItem,
-    parceiroId,
-    produtosContainer,
-    descontoIcon
-) {
+function aplicarDescontoSegundoProduto(produtoItem, parceiroId, produtosContainer, descontoIcon) {
 
     const produtos = produtosContainer.querySelectorAll(".produto-item");
 
-    // Regra: mínimo 2 produtos
     if (produtos.length < 2) {
-        alert("O desconto só pode ser aplicado se houver dois ou mais produtos deste parceiro.");
+        alert("O desconto de segundo procedimento exige pelo menos dois produtos.");
 
         descontoIcon.classList.remove("ativo");
         produtoItem.classList.remove("desconto-ativo");
         return;
     }
 
-    const descontoAtivo = descontoIcon.classList.contains("ativo");
+    const ativando = !descontoIcon.classList.contains("ativo");
 
-    // Se o usuário está desativando → só remover
-    if (!descontoAtivo) {
+    // 🔹 Se está desligando → apenas remove deste item
+    if (!ativando) {
         removerDesconto(produtoItem, descontoIcon);
-        // aplicarValores();
-        // atualizarParticular();
         return;
     }
 
-    // REMOVER O DESCONTO DOS OUTROS ITENS IMEDIATAMENTE
-    produtos.forEach(item => {
-        if (item !== produtoItem) {
-            const icon = item.querySelector(".desconto-icon");
-            if (icon && icon.classList.contains("ativo")) {
-                removerDesconto(item, icon);
-            }
-        }
-    });
-
     aplicarDesconto(produtoItem, parceiroId, descontoIcon);
 }
-
 
 function aplicarDesconto(produtoItem, parceiroId, descontoIcon) {
     let repasseOriginal = parseFloat(produtoItem.getAttribute("data-valor-repasse-original"));
@@ -374,7 +392,11 @@ function aplicarDesconto(produtoItem, parceiroId, descontoIcon) {
             const novoValor = repasseOriginal * (1 - desconto / 100);
             produtoItem.setAttribute("data-valor-repasse", novoValor.toFixed(2));
 
+            produtoItem.setAttribute("data-desconto-percentual", desconto);
+
+            descontoIcon.textContent = `2º -${desconto}%`;
             descontoIcon.classList.add("ativo");
+            produtoItem.classList.add("desconto-ativo");
 
             aplicarValores();
             // atualizarParticular();
@@ -388,11 +410,26 @@ function removerDesconto(produtoItem, descontoIcon) {
         produtoItem.setAttribute("data-valor-repasse", original.toFixed(2));
     }
 
+    produtoItem.removeAttribute("data-desconto-percentual");
+    descontoIcon.textContent = "2º";
+
     descontoIcon.classList.remove("ativo");
     produtoItem.classList.remove("desconto-ativo");
     aplicarValores();
 }
 
+function validarDescontosMinimos(produtosContainer) {
+    const produtos = produtosContainer.querySelectorAll(".produto-item");
+
+    if (produtos.length < 2) {
+        produtos.forEach(item => {
+            const icon = item.querySelector(".badge-segundo");
+            if (icon && icon.classList.contains("ativo")) {
+                removerDesconto(item, icon);
+            }
+        });
+    }
+}
 
 // ---------------------------------------- BUSCAR STATUS --------------------------------------------------
 // document.addEventListener("DOMContentLoaded", function () {

@@ -53,6 +53,8 @@ document.addEventListener("click", function(event) {
 });
 
 // -------------------------------------PARCEIROS-------------------------------------------------------
+const cacheProdutosPorParceiro = {};
+
 document.addEventListener("DOMContentLoaded", function () {
     const selectParceiro = document.getElementById("parceiro");
     const subtipoSelect = document.getElementById("subtipo-select");
@@ -130,6 +132,14 @@ document.addEventListener("DOMContentLoaded", function () {
             inputProduto.classList.add("input-produto");
             inputProduto.autocomplete = "off";
 
+            inputProduto.addEventListener("focus", function () {
+                adicionarProdutoBy(produtosContainer, idParceiro, parceiroNome, subtotal);
+            });
+
+            inputProduto.addEventListener("input", function () {
+                adicionarProdutoBy(produtosContainer, idParceiro, parceiroNome, subtotal);
+            });
+
             let dropdownProdutos = document.createElement("div");
             dropdownProdutos.classList.add("dropdown-produtos");
 
@@ -160,6 +170,17 @@ document.addEventListener("DOMContentLoaded", function () {
             parceiroDiv.appendChild(subtotal);
     
             listaParceiros.appendChild(parceiroDiv);
+
+            const inputParceiro = document.getElementById("input-parceiro");
+            if (inputParceiro) {
+                inputParceiro.value = "";
+                inputParceiro.removeAttribute("data-id");
+            }
+
+            // const selectParceiro = document.getElementById("parceiro");
+            // if (selectParceiro) {
+            //     selectParceiro.value = "";
+            // }
         }
     };
 

@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, Produto, Procedimento, Status, ParceiroProdutos, Orcamento, OrcamentoParceiros, SolicitacaoOrcamento, Pacote, PacoteProcedimentos, OrcamentoPacotes, ProcedimentoProdutos, Custos, OrcamentoProcedimentos
+from django.utils.html import format_html
+from django.utils import timezone
+from datetime import timedelta
+from .models import Parceiro
 
 # Register your models here.
 @admin.register(Endereco)
@@ -29,9 +33,51 @@ class SubtipoAdmin(admin.ModelAdmin):
 
 @admin.register(Parceiro)
 class ParceiroAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cpf_cnpj', 'tipo', 'subtipo', 'especialidade', 'telefone', 'email', 'desconto2produto')
-    list_filter = ('tipo', 'subtipo', 'especialidade')
+    list_display = (
+        'nome',
+        'cpf_cnpj',
+        'tipo',
+        'subtipo',
+        'especialidade',
+        'telefone',
+        'email',
+        'desconto2produto',
+        'data_validade',
+        'alerta_validade',
+    )
+    list_filter = ('tipo', 'subtipo', 'especialidade', 'data_validade')
     search_fields = ('nome', 'cpf_cnpj', 'email', 'telefone')
+
+    def alerta_validade(self, obj):
+        if not obj.data_validade:
+            return "-"
+
+        hoje = timezone.now().date()
+        dias = (obj.data_validade - hoje).days
+
+        if dias < 0:
+            return format_html(
+                '<span style="color: white; background: #dc2626; '
+                'padding: 4px 8px; border-radius: 6px; font-weight: bold;">'
+                'VENCIDO</span>'
+            )
+
+        if dias <= 7:
+            return format_html(
+                '<span style="color: #92400e; background: #fde68a; '
+                'padding: 4px 8px; border-radius: 6px; font-weight: bold;">'
+                '⚠ {} dias</span>',
+                dias
+            )
+
+        return format_html(
+            '<span style="color: #065f46; background: #d1fae5; '
+            'padding: 4px 8px; border-radius: 6px;">'
+            '{} dias</span>',
+            dias
+        )
+
+    alerta_validade.short_description = "Validade"
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):

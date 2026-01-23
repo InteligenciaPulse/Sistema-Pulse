@@ -890,6 +890,14 @@ from rest_framework.views import APIView
 from .models import Orcamento
 from rest_framework.renderers import BaseRenderer
 
+def fmt_decimal(valor):
+    if valor is None or valor == "":
+        return ""
+    try:
+        return f"{float(valor):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    except Exception:
+        return ""
+
 class ExcelRenderer(BaseRenderer):
     media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     format = 'xlsx'
@@ -974,7 +982,7 @@ class OrcamentoRelatorioExcelView(APIView):
                     )
 
                 if "valor_total" in selected_columns:
-                    row["Valor Total"] = o.valor_total if o.valor_total is not None else ""
+                    row["Valor Total"] = fmt_decimal(o.valor_total) if o.valor_total is not None else ""
 
                 # ========== CAMPOS DO PARCEIRO/PRODUTO ==========
                 if "parceiros" in selected_columns:
@@ -984,33 +992,33 @@ class OrcamentoRelatorioExcelView(APIView):
                     row["Produto"] = rel.produto.nome
 
                 if "produto_venda" in selected_columns:
-                    row["Valor Venda"] = rel.valor_venda
+                    row["Valor Venda"] = fmt_decimal(rel.valor_venda)
 
                 if "produto_repasse" in selected_columns:
-                    row["Valor Repasse"] = rel.valor_repasse
+                    row["Valor Repasse"] = fmt_decimal(rel.valor_repasse)
 
                 if "produto_particular" in selected_columns:
-                    row["Valor Particular"] = valor_particular
+                    row["Valor Particular"] = fmt_decimal(valor_particular)
 
                 if "margem_lucro" in selected_columns:
-                    row["Margem Lucro"] = rel.margem_lucro
+                    row["Margem Lucro"] = fmt_decimal(rel.margem_lucro)
 
                 # ========== CUSTOS ==========
                 if custos:
                     if "comissao_indicacao" in selected_columns:
-                        row["Comissão Indicação"] = custos.comissao_indicacao
+                        row["Comissão Indicação"] = fmt_decimal(custos.comissao_indicacao)
 
                     if "comissao_venda" in selected_columns:
-                        row["Comissão Venda"] = custos.comissao_venda
+                        row["Comissão Venda"] = fmt_decimal(custos.comissao_venda)
 
                     if "brindes" in selected_columns:
-                        row["Brindes"] = custos.brindes
+                        row["Brindes"] = fmt_decimal(custos.brindes)
 
                     if "impostos" in selected_columns:
-                        row["Impostos"] = custos.imposto
+                        row["Impostos"] = fmt_decimal(custos.imposto)
 
                     if "cartoes" in selected_columns:
-                        row["Cartões"] = custos.cartao
+                        row["Cartões"] = fmt_decimal(custos.cartao)
 
                 rows.append(row)
 

@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import date
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
 class Endereco(models.Model):
@@ -95,6 +97,19 @@ class Parceiro(models.Model):
         default=0,
         verbose_name="Desconto no 2° produto (%)"
     )
+
+    data_validade = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Data de validade dos valores"
+    )
+
+    def dias_para_vencer(self):
+        if not self.data_validade:
+            return None
+        return (self.data_validade - timezone.now().date()).days
+
+    dias_para_vencer.short_description = "Dias p/ vencer"
 
     class Meta:
         db_table = 'sistema_pulse"."parceiro'

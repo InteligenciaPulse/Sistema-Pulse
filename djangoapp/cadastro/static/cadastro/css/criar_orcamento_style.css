@@ -1169,25 +1169,34 @@ observacoes-container {
   border: 1px solid #ccc;
 }
 
-.desconto-icon {
+.badge-segundo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 28px;
+  height: 28px;
+
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: bold;
+
+  background-color: #e5e7eb;
+  color: #374151;
+
   cursor: pointer;
-  margin-left: 10px;
-  opacity: 0.4;
-  transition: 0.25s;
-  font-size: 18px;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
 }
 
-.desconto-icon.ativo {
-  opacity: 1;
-  color: #10b981;
+.badge-segundo:hover {
+  background-color: #d1d5db;
 }
 
-.produto-item.desconto-ativo {
-  border: 2px dashed #10b981;
-  border-radius: 6px;
-  padding: 6px;
-  background-color: #f0fdf4;
-  transition: 0.2s;
+.badge-segundo.ativo {
+  background-color: #10b981;
+  color: white;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
 
 /* -------------------------- */
@@ -1260,4 +1269,107 @@ observacoes-container {
 .dropdown-item.active {
   background-color: var(--cor-primaria);
   color: white;
+}
+
+/* =========================================================
+   COMBO BOX PRODUTOS (MESMO PADRÃO DO SISTEMA)
+   ========================================================= */
+
+.combo-box-produto {
+  position: relative;
+  width: 100%;
+}
+
+/* INPUT — visual de SELECT */
+.combo-box-produto .input-produto {
+  width: 100%;
+  padding: 10px;
+
+  background-color: white;
+  color: var(--cor-primaria);
+  font-weight: bold;
+  font-size: 14px;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  cursor: pointer;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* Placeholder igual parceiro */
+.combo-box-produto .input-produto::placeholder {
+  color: var(--cor-primaria);
+  font-weight: bold;
+  opacity: 1;
+}
+
+/* Foco padrão do sistema */
+.combo-box-produto .input-produto:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+/* =========================================================
+   DROPDOWN PRODUTOS
+   ========================================================= */
+
+.combo-box-produto .dropdown-produtos {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+
+  width: 100%;
+  max-height: 300px;
+
+  background: white;
+  border-radius: 6px;
+  border: 1px solid var(--cor-primaria);
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+
+  box-sizing: border-box;
+}
+
+/* Item da lista */
+.combo-box-produto .dropdown-produtos .dropdown-item {
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+
+  cursor: pointer;
+  border-bottom: 1px solid #f1f1f1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combo-box-produto .dropdown-produtos .dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* Hover / ativo */
+.combo-box-produto .dropdown-produtos .dropdown-item:hover,
+.combo-box-produto .dropdown-produtos .dropdown-item.active {
+  background-color: var(--cor-primaria);
+  color: white;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.combo-box-produto .loading-indicator {
+  padding: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--cor-primaria);
+  text-align: center;
 }
