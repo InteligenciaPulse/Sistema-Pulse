@@ -635,12 +635,16 @@ function aplicarIndicacaoDataAprovacao() {
 
     if (!statusSelect || !dataAprovacao) return;
 
-    const statusTexto =
-        statusSelect.options[statusSelect.selectedIndex]?.text
-            ?.toLowerCase()
-            .trim();
+    // const statusTexto =
+    //     statusSelect.options[statusSelect.selectedIndex]?.text
+    //         ?.toLowerCase()
+    //         .trim();
+    
+    const statusValue = statusSelect.value;
 
-    if (statusTexto === "aprovado") {
+    const statusComAprovacao = ["4", "7"];
+
+    if (statusComAprovacao.includes(statusSelect.value)) {
         dataAprovacao.required = true;
         dataAprovacao.classList.add("campo-obrigatorio");
         label?.classList.add("campo-obrigatorio-label");
