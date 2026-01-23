@@ -7,6 +7,13 @@ import { useNavigate } from "react-router-dom";
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
+  const disabledRoutes = [
+    "/pacientes",
+    "/produtos",
+    "/descontos",
+    "/configuracoes",
+  ];
+
   return (
     <div className={`sidebar-overlay ${isOpen ? "open" : ""}`} onClick={onClose}>
       <div className="sidebar" onClick={(e) => e.stopPropagation()}>
@@ -29,21 +36,34 @@ const Sidebar = ({ isOpen, onClose }) => {
             <BarChart2 size={18} /> Relatórios
           </button>
 
-          <button onClick={() => navigate("/pacientes")}>
+          {/* <button onClick={() => navigate("/pacientes")}>
+            <Users size={18} /> Pacientes
+          </button> */}
+          <button disabled className="sidebar-btn disabled" >
             <Users size={18} /> Pacientes
           </button>
 
-          <button onClick={() => navigate("/produtos")}>
+          {/* <button onClick={() => navigate("/produtos")}>
+            <Package size={18} /> Produtos
+          </button> */}
+          <button disabled className="sidebar-btn disabled" >
             <Package size={18} /> Produtos
           </button>
 
-          <button onClick={() => navigate("/descontos")}>
+          {/* <button onClick={() => navigate("/descontos")}>
+            <Package size={18} /> Ajustar Descontos
+          </button> */}
+          <button disabled className="sidebar-btn disabled" >
             <Package size={18} /> Ajustar Descontos
           </button>
 
-          <button onClick={() => navigate("/configuracoes")}>
+          {/* <button onClick={() => navigate("/configuracoes")}>
+            <Settings size={18} /> Configurações
+          </button> */}
+          <button disabled className="sidebar-btn disabled" >
             <Settings size={18} /> Configurações
           </button>
+
         </nav>
       </div>
     </div>

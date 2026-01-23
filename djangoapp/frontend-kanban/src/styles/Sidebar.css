@@ -79,3 +79,34 @@
 .sidebar-nav button:hover {
   background: #e1ecf7;
 }
+
+.sidebar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  color: var(--cor-primaria);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-btn:hover {
+  background-color: #ffffffcc;
+}
+
+/* 🔒 DESATIVADO */
+.sidebar-btn.disabled,
+.sidebar-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.sidebar-btn.disabled svg {
+  color: #9ca3af;
+}

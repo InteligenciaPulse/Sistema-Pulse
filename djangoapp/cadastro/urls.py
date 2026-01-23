@@ -8,6 +8,8 @@ from .views import listar_parceiros, atualizar_desconto_parceiro
 
 from .views import OrcamentoRelatorioExcelView
 
+from .views import DebugRelatorioView
+
 urlpatterns = [
     path('', home, name='home'),
     path('orcamentos/criar/', criar_orcamento, name='criar_orcamento'),
@@ -45,6 +47,7 @@ urlpatterns = [
     path("api/parceiro/<int:pk>/atualizar_desconto/", atualizar_desconto_parceiro, name="atualizar_desconto_parceiro"),
 
     path( "relatorios/orcamentos/excel/", OrcamentoRelatorioExcelView.as_view(), name="relatorio_orcamentos_excel"),
+    path('relatorios/debug/', DebugRelatorioView.as_view(), name='debug-relatorio'),
 ]
 
 # ============================================

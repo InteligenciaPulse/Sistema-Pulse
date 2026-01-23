@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/RelatoriosPage.css";
 import { API_BASE } from '../services/api';
@@ -7,6 +7,7 @@ import { Menu } from "lucide-react";
 
 const RelatoriosPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [statusList, setStatusList] = useState([]);
 
   const [selectedColumns, setSelectedColumns] = useState({
     orcamento: true,
@@ -34,13 +35,33 @@ const RelatoriosPage = () => {
   });
 
   const [filters, setFilters] = useState({
+    tipo_data: "criacao",
     data_inicio: "",
     data_fim: "",
     status: "",
     responsavel: "",
+    paciente: "",
+    parceiro: "",
+    valor_min: "",
+    valor_max: "",
   });
 
   const [loadingDownload, setLoadingDownload] = useState(false);
+
+  // Buscar lista de status ao carregar o componente
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/buscar_status/`);
+        const data = await response.json();
+        setStatusList(data.status || []);
+      } catch (error) {
+        console.error("Erro ao buscar status:", error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
 
   const handleColumnToggle = (column) => {
     setSelectedColumns((prev) => ({
@@ -49,20 +70,20 @@ const RelatoriosPage = () => {
     }));
   };
 
-  // const gerarRelatorio = () => {
-  //   console.log("Filtros:", filters);
-  //   console.log("Colunas:", selectedColumns);
-
-  //   alert("Relatório gerado! Agora você pode baixar o Excel.");
-  // };
-
   const handleDownload = async () => {
     setLoadingDownload(true);
 
     try {
       const params = new URLSearchParams();
+
+      // colunas
       Object.entries(selectedColumns).forEach(([key, value]) => {
         if (value === true) params.append("columns", key);
+      });
+
+      // filtros
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value);
       });
 
       const response = await fetch(
@@ -113,8 +134,6 @@ const RelatoriosPage = () => {
     setLoadingDownload(false);
   };
 
-
-
   return (
     <div className="relatorios-container">
 
@@ -130,11 +149,11 @@ const RelatoriosPage = () => {
 
       <main className="relatorios-content">
 
+        {/* ================= COLUNAS ================= */}
         <section className="relatorio-section">
           <h2>Selecionar Colunas</h2>
 
           <div className="checkbox-grid">
-
             {Object.keys(selectedColumns).map((col) => (
               <label key={col} className="checkbox-item">
                 <input
@@ -145,14 +164,30 @@ const RelatoriosPage = () => {
                 {col.replace("_", " ").toUpperCase()}
               </label>
             ))}
-
           </div>
         </section>
 
+        {/* ================= FILTROS ================= */}
         <section className="relatorio-section">
           <h2>Filtros</h2>
 
           <div className="form-grid">
+
+            {/* TIPO DE DATA */}
+            <label>
+              Tipo de Data:
+              <select
+                value={filters.tipo_data}
+                onChange={(e) =>
+                  setFilters({ ...filters, tipo_data: e.target.value })
+                }
+              >
+                <option value="criacao">Data de Criação</option>
+                <option value="aprovacao">Data de Aprovação</option>
+                <option value="agendamento">Data de Agendamento</option>
+              </select>
+            </label>
+
             <label>
               Data Início:
               <input
@@ -175,16 +210,22 @@ const RelatoriosPage = () => {
               />
             </label>
 
+            {/* STATUS - AGORA É SELECT */}
             <label>
               Status:
-              <input
-                type="text"
-                placeholder="Ex: Aprovado"
+              <select
                 value={filters.status}
                 onChange={(e) =>
                   setFilters({ ...filters, status: e.target.value })
                 }
-              />
+              >
+                <option value="">Todos</option>
+                {statusList.map((status) => (
+                  <option key={status.id} value={status.nome}>
+                    {status.nome}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label>
@@ -198,14 +239,63 @@ const RelatoriosPage = () => {
                 }
               />
             </label>
+
+            <label>
+              Paciente:
+              <input
+                type="text"
+                placeholder="Nome do paciente"
+                value={filters.paciente}
+                onChange={(e) =>
+                  setFilters({ ...filters, paciente: e.target.value })
+                }
+              />
+            </label>
+
+            {/* PARCEIRO */}
+            <label>
+              Parceiro:
+              <input
+                type="text"
+                placeholder="Nome do parceiro"
+                value={filters.parceiro}
+                onChange={(e) =>
+                  setFilters({ ...filters, parceiro: e.target.value })
+                }
+              />
+            </label>
+
+            {/* VALOR MÍNIMO */}
+            <label>
+              Valor mínimo:
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Ex: 1000"
+                value={filters.valor_min}
+                onChange={(e) =>
+                  setFilters({ ...filters, valor_min: e.target.value })
+                }
+              />
+            </label>
+
+            {/* VALOR MÁXIMO */}
+            <label>
+              Valor máximo:
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Ex: 5000"
+                value={filters.valor_max}
+                onChange={(e) =>
+                  setFilters({ ...filters, valor_max: e.target.value })
+                }
+              />
+            </label>
           </div>
         </section>
 
         <div className="buttons-row">
-          {/* <button className="btn gerar" onClick={gerarRelatorio}>
-            Gerar Relatório
-          </button> */}
-
           <button
             className="btn baixar"
             onClick={handleDownload}

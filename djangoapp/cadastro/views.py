@@ -884,50 +884,121 @@ def atualizar_desconto_parceiro(request, pk):
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import io
 import pandas as pd
+from decimal import Decimal, InvalidOperation
 from django.http import HttpResponse
 from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-from .models import Orcamento
 from rest_framework.renderers import BaseRenderer
+import numbers as py_numbers
 
-def fmt_decimal(valor):
-    if valor is None or valor == "":
-        return ""
-    try:
-        return f"{float(valor):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    except Exception:
-        return ""
+from .models import Orcamento, ParceiroProdutos
 
 class ExcelRenderer(BaseRenderer):
-    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    format = 'xlsx'
+    media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    format = "xlsx"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         return data
-    
+
+
 class OrcamentoRelatorioExcelView(APIView):
     renderer_classes = [ExcelRenderer]
 
     def get(self, request, *args, **kwargs):
+        # =========================
+        # COLUNAS SELECIONADAS
+        # =========================
         selected_columns = request.GET.getlist("columns")
 
-        qs = Orcamento.objects.select_related(
-            "status"
+        # =========================
+        # FILTROS
+        # =========================
+        tipo_data = request.GET.get("tipo_data", "criacao")
+        data_inicio = request.GET.get("data_inicio")
+        data_fim = request.GET.get("data_fim")
+
+        status = request.GET.get("status")
+        responsavel = request.GET.get("responsavel")
+        paciente = request.GET.get("paciente")
+        parceiro = request.GET.get("parceiro")
+
+        valor_min = request.GET.get("valor_min")
+        valor_max = request.GET.get("valor_max")
+
+        # =========================
+        # QUERYSET BASE (SEM prefetch para evitar problemas)
+        # =========================
+        qs = Orcamento.objects.all()
+
+        # =========================
+        # FILTRO DE DATA
+        # =========================
+        if tipo_data == "aprovacao":
+            campo_data = "data_aprovacao"
+        elif tipo_data == "agendamento":
+            campo_data = "data_agendamento"
+        else:
+            campo_data = "data_criacao"
+
+        # Filtro de data início
+        if data_inicio:
+            qs = qs.filter(**{f"{campo_data}__gte": data_inicio})
+
+        # Filtro de data fim
+        if data_fim:
+            qs = qs.filter(**{f"{campo_data}__lte": data_fim})
+            
+        # =========================
+        # FILTROS TEXTUAIS
+        # =========================
+        if status:
+            qs = qs.filter(status__nome__icontains=status)
+
+        if responsavel:
+            qs = qs.filter(responsavel__icontains=responsavel)
+
+        if paciente:
+            qs = qs.filter(solicitacao_orcamento__paciente__nome__icontains=paciente)
+
+        # =========================
+        # FILTROS NUMÉRICOS
+        # =========================
+        if valor_min:
+            try:
+                valor_min_decimal = Decimal(valor_min)
+                qs = qs.filter(valor_total__gte=valor_min_decimal)
+            except (ValueError, InvalidOperation):
+                pass
+
+        if valor_max:
+            try:
+                valor_max_decimal = Decimal(valor_max)
+                qs = qs.filter(valor_total__lte=valor_max_decimal)
+            except (ValueError, InvalidOperation):
+                pass
+
+        # Aplicar distinct
+        qs = qs.distinct()
+
+        # Agora aplicar select_related e prefetch_related DEPOIS dos filtros
+        qs = qs.select_related(
+            "status",
+            "solicitacao_orcamento__paciente"
         ).prefetch_related(
-            "solicitacao_orcamento__paciente",
             "orcamento_parceiros__parceiro",
             "orcamento_parceiros__produto",
             "orcamento_parceiros__custos",
             "orcamentoprocedimentos_set__procedimento",
         )
 
+        # =========================
+        # GERAR LINHAS DO RELATÓRIO
+        # =========================
         rows = []
 
         for o in qs:
             solicitacao = getattr(o, "solicitacao_orcamento", None)
-            paciente = solicitacao.paciente.nome if solicitacao else ""
+            paciente_nome = solicitacao.paciente.nome if solicitacao and solicitacao.paciente else ""
 
-            # Procedimentos
             procedimentos = [
                 p.procedimento.nome
                 for p in o.orcamentoprocedimentos_set.all()
@@ -935,20 +1006,30 @@ class OrcamentoRelatorioExcelView(APIView):
             ]
             procedimentos_str = ", ".join(procedimentos)
 
-            # Uma linha para cada produto-relacionado (OrcamentoParceiros)
-            for rel in o.orcamento_parceiros.all():
+            # Filtrar parceiros do orçamento
+            parceiros_do_orcamento = o.orcamento_parceiros.all()
+            
+            # Aplicar filtro de parceiro se fornecido
+            if parceiro:
+                parceiros_do_orcamento = parceiros_do_orcamento.filter(
+                    parceiro__nome__icontains=parceiro
+                )
+            
+            # Se há filtro de parceiro e nenhum parceiro corresponde, pular este orçamento
+            if parceiro and not parceiros_do_orcamento.exists():
+                continue
+
+            for rel in parceiros_do_orcamento:
                 custos = rel.custos
 
-                # Buscar VALOR PARTICULAR do parceiro-produto
                 try:
                     parceiro_produto = rel.parceiro.parceiroprodutos_set.get(produto=rel.produto)
                     valor_particular = parceiro_produto.valor_particular
                 except ParceiroProdutos.DoesNotExist:
-                    valor_particular = ""
+                    valor_particular = None
 
                 row = {}
 
-                # ========== CAMPOS DO ORÇAMENTO ==========
                 if "orcamento" in selected_columns:
                     row["Orçamento"] = o.id
 
@@ -965,7 +1046,7 @@ class OrcamentoRelatorioExcelView(APIView):
                     row["Status"] = o.status.nome if o.status else ""
 
                 if "paciente" in selected_columns:
-                    row["Paciente"] = paciente
+                    row["Paciente"] = paciente_nome
 
                 if "responsavel" in selected_columns:
                     row["Responsável"] = o.responsavel or ""
@@ -977,14 +1058,11 @@ class OrcamentoRelatorioExcelView(APIView):
                     row["Observações"] = o.observacoes or ""
 
                 if "data_criacao" in selected_columns:
-                    row["Data Criação"] = (
-                        o.data_criacao.strftime("%d/%m/%Y") if o.data_criacao else ""
-                    )
+                    row["Data Criação"] = o.data_criacao.strftime("%d/%m/%Y") if o.data_criacao else ""
 
                 if "valor_total" in selected_columns:
-                    row["Valor Total"] = fmt_decimal(o.valor_total) if o.valor_total is not None else ""
+                    row["Valor Total"] = o.valor_total
 
-                # ========== CAMPOS DO PARCEIRO/PRODUTO ==========
                 if "parceiros" in selected_columns:
                     row["Parceiro"] = rel.parceiro.nome
 
@@ -992,42 +1070,74 @@ class OrcamentoRelatorioExcelView(APIView):
                     row["Produto"] = rel.produto.nome
 
                 if "produto_venda" in selected_columns:
-                    row["Valor Venda"] = fmt_decimal(rel.valor_venda)
+                    row["Valor Venda"] = rel.valor_venda
 
                 if "produto_repasse" in selected_columns:
-                    row["Valor Repasse"] = fmt_decimal(rel.valor_repasse)
+                    row["Valor Repasse"] = rel.valor_repasse
 
                 if "produto_particular" in selected_columns:
-                    row["Valor Particular"] = fmt_decimal(valor_particular)
+                    row["Valor Particular"] = valor_particular
 
                 if "margem_lucro" in selected_columns:
-                    row["Margem Lucro"] = fmt_decimal(rel.margem_lucro)
+                    row["Margem Lucro"] = rel.margem_lucro
 
-                # ========== CUSTOS ==========
                 if custos:
                     if "comissao_indicacao" in selected_columns:
-                        row["Comissão Indicação"] = fmt_decimal(custos.comissao_indicacao)
-
+                        row["Comissão Indicação"] = custos.comissao_indicacao
                     if "comissao_venda" in selected_columns:
-                        row["Comissão Venda"] = fmt_decimal(custos.comissao_venda)
-
+                        row["Comissão Venda"] = custos.comissao_venda
                     if "brindes" in selected_columns:
-                        row["Brindes"] = fmt_decimal(custos.brindes)
-
+                        row["Brindes"] = custos.brindes
                     if "impostos" in selected_columns:
-                        row["Impostos"] = fmt_decimal(custos.imposto)
-
+                        row["Impostos"] = custos.imposto
                     if "cartoes" in selected_columns:
-                        row["Cartões"] = fmt_decimal(custos.cartao)
+                        row["Cartões"] = custos.cartao
 
                 rows.append(row)
 
-
+        # =========================
+        # DATAFRAME + EXCEL
+        # =========================
         df = pd.DataFrame(rows)
+
+        colunas_monetarias = [
+            "Valor Total",
+            "Valor Venda",
+            "Valor Repasse",
+            "Valor Particular",
+            "Comissão Indicação",
+            # "Comissão Venda",
+            "Brindes",
+            # "Impostos",
+            # "Cartões",
+            # "Margem Lucro",
+        ]
+
+        for col in colunas_monetarias:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+
+        df = df.where(pd.notnull(df), None)
 
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
             df.to_excel(writer, index=False, sheet_name="Relatório")
+
+            ws = writer.book["Relatório"]
+            header_cells = next(ws.iter_rows(min_row=1, max_row=1))
+            col_index = {cell.value: cell.col_idx for cell in header_cells}
+
+            moeda_fmt = '"R$" #,##0.00'
+
+            for nome_col in colunas_monetarias:
+                if nome_col not in col_index:
+                    continue
+
+                j = col_index[nome_col]
+                for row_cells in ws.iter_rows(min_row=2, min_col=j, max_col=j):
+                    cell = row_cells[0]
+                    if isinstance(cell.value, py_numbers.Number):
+                        cell.number_format = moeda_fmt
 
         output.seek(0)
 
@@ -1036,4 +1146,118 @@ class OrcamentoRelatorioExcelView(APIView):
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
         response["Content-Disposition"] = 'attachment; filename="relatorio_orcamentos.xlsx"'
+
         return response
+
+# -------------------------------------------------------
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from decimal import Decimal, InvalidOperation
+from .models import Orcamento
+
+class DebugRelatorioView(APIView):
+    """View temporária para debugar filtros"""
+    
+    def get(self, request, *args, **kwargs):
+        # Coletar todos os parâmetros
+        params_recebidos = dict(request.GET.items())
+        
+        # Filtros específicos
+        tipo_data = request.GET.get("tipo_data", "criacao")
+        data_inicio = request.GET.get("data_inicio")
+        data_fim = request.GET.get("data_fim")
+        status = request.GET.get("status")
+        responsavel = request.GET.get("responsavel")
+        paciente = request.GET.get("paciente")
+        parceiro = request.GET.get("parceiro")
+        valor_min = request.GET.get("valor_min")
+        valor_max = request.GET.get("valor_max")
+        
+        # Queryset base
+        qs = Orcamento.objects.all()
+        total_inicial = qs.count()
+        
+        # Aplicar filtro de data
+        if tipo_data == "aprovacao":
+            campo_data = "data_aprovacao"
+        elif tipo_data == "agendamento":
+            campo_data = "data_agendamento"
+        else:
+            campo_data = "data_criacao"
+        
+        if data_inicio:
+            qs = qs.filter(**{f"{campo_data}__gte": data_inicio})
+        
+        total_apos_data_inicio = qs.count()
+        
+        if data_fim:
+            qs = qs.filter(**{f"{campo_data}__lte": data_fim})
+        
+        total_apos_data_fim = qs.count()
+        
+        # Aplicar outros filtros
+        if status:
+            qs = qs.filter(status__nome__icontains=status)
+        total_apos_status = qs.count()
+        
+        if responsavel:
+            qs = qs.filter(responsavel__icontains=responsavel)
+        total_apos_responsavel = qs.count()
+        
+        if paciente:
+            qs = qs.filter(solicitacao_orcamento__paciente__nome__icontains=paciente)
+        total_apos_paciente = qs.count()
+        
+        if valor_min:
+            try:
+                qs = qs.filter(valor_total__gte=Decimal(valor_min))
+            except (ValueError, InvalidOperation):
+                pass
+        total_apos_valor_min = qs.count()
+        
+        if valor_max:
+            try:
+                qs = qs.filter(valor_total__lte=Decimal(valor_max))
+            except (ValueError, InvalidOperation):
+                pass
+        total_apos_valor_max = qs.count()
+        
+        # Pegar alguns exemplos de datas dos registros
+        exemplos = []
+        for o in qs[:5]:
+            exemplos.append({
+                "id": o.id,
+                "data_criacao": str(o.data_criacao) if o.data_criacao else None,
+                "data_aprovacao": str(o.data_aprovacao) if o.data_aprovacao else None,
+                "data_agendamento": str(o.data_agendamento) if o.data_agendamento else None,
+                "valor_total": str(o.valor_total) if o.valor_total else None,
+                "status": o.status.nome if o.status else None,
+            })
+        
+        return Response({
+            "params_recebidos": params_recebidos,
+            "filtros": {
+                "tipo_data": tipo_data,
+                "campo_data_usado": campo_data,
+                "data_inicio": data_inicio,
+                "data_fim": data_fim,
+                "status": status,
+                "responsavel": responsavel,
+                "paciente": paciente,
+                "parceiro": parceiro,
+                "valor_min": valor_min,
+                "valor_max": valor_max,
+            },
+            "contagens": {
+                "total_inicial": total_inicial,
+                "apos_data_inicio": total_apos_data_inicio,
+                "apos_data_fim": total_apos_data_fim,
+                "apos_status": total_apos_status,
+                "apos_responsavel": total_apos_responsavel,
+                "apos_paciente": total_apos_paciente,
+                "apos_valor_min": total_apos_valor_min,
+                "apos_valor_max": total_apos_valor_max,
+            },
+            "exemplos_registros": exemplos,
+            "query_sql": str(qs.query),
+        })
