@@ -23,11 +23,15 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 index_view = never_cache(TemplateView.as_view(template_name="index.html"))
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('cadastro.urls')),
+    path("api/auth/login/", TokenObtainPairView.as_view()),
+    path("api/auth/refresh/", TokenRefreshView.as_view()),
 
     # path('', include('cadastro.urls')),
     path('', index_view, name='home'),

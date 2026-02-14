@@ -3,7 +3,7 @@ from .models import Endereco, Paciente, Especialidade, Tipo, Subtipo, Parceiro, 
 from django.utils.html import format_html
 from django.utils import timezone
 from datetime import timedelta
-from .models import Parceiro
+from .models import Parceiro, AuditLog
 
 # Register your models here.
 @admin.register(Endereco)
@@ -116,12 +116,16 @@ class ParceiroProdutosAdmin(admin.ModelAdmin):
     search_fields = ('parceiro__nome', 'produto__nome')
     autocomplete_fields = ('parceiro', 'produto')
 
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+    list_display = ('user', 'action', 'model', 'object_id', 'description', 'created_at')
+
 @admin.register(Orcamento)
 class OrcamentoAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'status', 'data_criacao', 'data_aprovacao', 'valor_total',
         'data_agendamento', 'custo_total', 'lucro_total', 'tipo_orcamento',
-        'responsavel', 'observacoes', 'pagamento', 'canal'
+        'responsavel', 'observacoes', 'pagamento', 'canal', 'created_by'
     )
 
 @admin.register(OrcamentoParceiros)

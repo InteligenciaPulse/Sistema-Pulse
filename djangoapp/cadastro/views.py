@@ -26,6 +26,12 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .permissions import IsAdminGroup
+from rest_framework import status
+from .models import AuditLog
+
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get('username')
@@ -37,9 +43,6 @@ def login_view(request):
     else:
         return JsonResponse({"error": "Invalid credentials"}, status=400)
     
-
-    
-
 def home(request):
     return render(request, 'cadastro/home.html')
 
@@ -430,6 +433,7 @@ def salvar_orcamento(request):
                     canal=data.get("canal"),
                     data_agendamento=data.get("data_agendamento") or None,
                     data_aprovacao=data.get("data_aprovacao") or None,
+                    created_by=request.user
                 )
 
                 solicitacao = SolicitacaoOrcamento.objects.create(
@@ -743,10 +747,29 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ColunaSerializer, CardSerializer, OrcamentoSerializer, StatusSerializer
 from .serializers import ProcedimentoSerializer, EspecialidadeSerializer, SubtipoSerializer, ParceiroSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class ColumnViewSet(viewsets.ModelViewSet):
     queryset = Coluna.objects.all().order_by('ordem')
     serializer_class = ColunaSerializer
+
+    def get_permissions(self):
+        if self.action == "destroy":
+            return [IsAuthenticated(), IsAdminGroup()]
+        return [IsAuthenticated()]
+
+    def destroy(self, request, *args, **kwargs):
+        coluna = self.get_object()
+
+        AuditLog.objects.create(
+            user=request.user,
+            action="DELETE",
+            model="Coluna",
+            object_id=coluna.id,
+            description=f"Coluna '{coluna.titulo}' deletada"
+        )
+
+        return super().destroy(request, *args, **kwargs)
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all().order_by('prioridade')
@@ -786,7 +809,7 @@ from django.core.cache import cache
 #     return Response(serializer.data)
 
 @api_view(['GET'])
-# @cache_page(30)
+@permission_classes([IsAuthenticated])
 def kanban_board(request):
     cache_key = 'kanban_board_v1'
     cached = cache.get(cache_key)
@@ -840,7 +863,7 @@ def deletar_coluna(request, coluna_id):
     try:
         coluna = Coluna.objects.get(id=coluna_id)
         coluna.delete()
-        return Response({'mensagem': 'Coluna excluída com sucesso'}, status=204)
+        return Response({'mensagem': '>>> ENTREI NA VIEW deletar_coluna DRF <<< Coluna excluída com sucesso'}, status=204)
     except Coluna.DoesNotExist:
         return Response({'erro': 'Coluna não encontrada'}, status=404)
 

@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Endereco(models.Model):
@@ -198,7 +199,14 @@ class Orcamento(models.Model):
     data_criacao = models.DateField(null=True, blank=True, verbose_name="Data de Criação")
     data_aprovacao = models.DateField(null=True, blank=True, verbose_name="Data de Aprovação")
 
-    # Trocar para data_agendamento
+    created_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="orcamentos_criados"
+    )
+
     data_agendamento = models.DateField(null=True, blank=True, verbose_name="Data do Agendamento")
     
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Valor Total")
@@ -219,7 +227,29 @@ class Orcamento(models.Model):
 
     def __str__(self):
         return f"Orçamento {self.id}"
+
+class AuditLog(models.Model):
+    ACTION_CHOICES = [
+        ("DELETE", "Delete"),
+        ("CREATE", "Create"),
+        ("UPDATE", "Update"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    action = models.CharField(max_length=10, choices=ACTION_CHOICES)
+    model = models.CharField(max_length=50)
+    object_id = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return f"{self.created_at} - {self.user} - {self.action} {self.model}"
+        
 class OrcamentoParceiros(models.Model):
     orcamento = models.ForeignKey('Orcamento', on_delete=models.CASCADE, verbose_name="Orçamento", related_name='orcamento_parceiros')
     parceiro = models.ForeignKey('Parceiro', on_delete=models.CASCADE, verbose_name="Parceiro")
